@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="гитары, купить гитару, музыкальные инструменты, электрогитара, акустическая гитара, бас-гитара">
+    <meta name="description" content="MusicStore - лучший магазин гитар в городе. Широкий выбор, гарантия качества, рассрочка и кредит">
+    <title>MusicStore - Магазин гитар</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="js/main.js" defer></script>
+</head>
+<body class="page">
+<header class="header">
+    <div class="container">
+        <h1 class="header__title">MusicStore</h1>
+        <nav class="nav">
+            <ul class="nav__list">
+                <li class="nav__item"><a href="index.html" class="nav__link">Главная</a></li>
+                <li class="nav__item"><a href="catalog.html" class="nav__link">Каталог</a></li>
+                <li class="nav__item"><a href="about.html" class="nav__link">О нас</a></li>
+                <li class="nav__item"><a href="credit.html" class="nav__link">Кредит</a></li>
+                <li class="nav__item"><a href="cart.html" class="nav__link">Корзина</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="main">
+    <section id="hero" class="hero">
+        <div class="container">
+            <h2 class="hero__title">Лучшие гитары для вашего творчества</h2>
+            <p class="hero__text">Мы предлагаем широкий выбор качественных гитар от проверенных производителей с гарантией и возможностью рассрочки.</p>
+        </div>
+    </section>
+
+    <section id="popular-products" class="products">
+        <div class="container">
+            <h2 class="section-title">Популярные товары</h2>
+            <div class="products__grid">
+                <article class="product-card" data-product-id="squier-hellokitty">
+                    <h3 class="product-card__title">
+                        <a href="#squier-hello-kitty" class="product-card__link">Squier Hello Kitty Stratocaster</a>
+                    </h3>
+                    <div class="product-card__image-wrapper">
+                        <img src="images/guitars/hellokitty.png" alt="Squier Hello Kitty" class="product-card__image">
+                        <span class="image-caption">Лимитированная серия</span>
+                    </div>
+                    <p class="product-card__description">Лимитированная гитара, в честь 50-летия Hello Kitty.</p>
+                    <p class="product-card__price">
+                        <strong class="price--current">65 000 руб.</strong>
+                        <del class="price--old">70 000 руб.</del>
+                    </p>
+                    <button class="button button--primary add-to-cart" data-product-id="squier-hellokitty">В корзину</button>
+                </article>
+
+                <article class="product-card" data-product-id="bcrich-kkv">
+                    <h3 class="product-card__title">
+                        <a href="#bc-rich-kk-v" class="product-card__link">B.C. Rich Kerry King V</a>
+                    </h3>
+                    <div class="product-card__image-wrapper">
+                        <img src="images/guitars/bcrich.jpg" alt="B.C. Rich KKV" class="product-card__image">
+                        <span class="image-caption">Агрессивный дизайн</span>
+                    </div>
+                    <p class="product-card__description">Популярная модель с агрессивной формой.</p>
+                    <p class="product-card__price">
+                        <strong class="price--current">68 000 руб.</strong>
+                        <del class="price--old">75 000 руб.</del>
+                    </p>
+                    <button class="button button--primary add-to-cart" data-product-id="bcrich-kkv">В корзину</button>
+                </article>
+
+                <article class="product-card" data-product-id="epiphone-thunderbird">
+                    <h3 class="product-card__title">
+                        <a href="#epiphone-thunderbird" class="product-card__link">Epiphone Thunderbird IV</a>
+                    </h3>
+                    <div class="product-card__image-wrapper">
+                        <img src="images/guitars/bass1.jpg" alt="Epiphone Thunderbird IV" class="product-card__image">
+                        <span class="image-caption">Классический бас</span>
+                    </div>
+                    <p class="product-card__description">Легендарная бас-гитара с топом из махагони.</p>
+                    <p class="product-card__price">
+                        <strong class="price--current">43 500 руб.</strong>
+                        <del class="price--old">55 000 руб.</del>
+                    </p>
+                    <button class="button button--primary add-to-cart" data-product-id="epiphone-thunderbird">В корзину</button>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="comparison-section">
+        <div class="container">
+            <h2 class="section-title">Сравнение характеристик</h2>
+            <div class="table-container">
+                <table class="comparison-table">
+                    <thead>
+                    <tr>
+                        <th>Характеристика</th>
+                        <th>Squier Hello Kitty</th>
+                        <th>B.C. Rich KKV</th>
+                        <th>Epiphone Thunderbird</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Тип</td>
+                        <td>Электрогитара</td>
+                        <td>Электрогитара</td>
+                        <td>Бас-гитара</td>
+                    </tr>
+                    <tr>
+                        <td>Мензура</td>
+                        <td>25.5"</td>
+                        <td>24.75"</td>
+                        <td>34"</td>
+                    </tr>
+                    <tr>
+                        <td>Лады</td>
+                        <td>21</td>
+                        <td>22</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>Звукосниматели</td>
+                        <td>1 хамбакер</td>
+                        <td>2 хамбакера</td>
+                        <td>2 хамбакера</td>
+                    </tr>
+                    <tr>
+                        <td>Материал грифа</td>
+                        <td>Клен</td>
+                        <td>Махагони</td>
+                        <td>Махагони</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery-section">
+        <div class="container">
+            <h2 class="section-title">Галерея наших инструментов</h2>
+            <div class="swiper gallery-swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="images/guitars/hellokitty.png" alt="Hello Kitty гитара">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/guitars/ibanez-rg550.jpg" alt="Ibanez RG550 гитара">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/guitars/fender-strat.png" alt="Fender Strat гитара">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/guitars/ibanez_gio_grx120.jpg" alt="Ibanez Gio-Grx120">
+                    </div>
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="guitar-image" class="guitar-showcase">
+        <div class="container">
+            <h2 class="section-title">Наш магазин</h2>
+            <div class="guitar-showcase__image-wrapper">
+                <img src="images/shop/shop.jpg" alt="Интерьер магазина MusicStore" class="guitar-showcase__image">
+            </div>
+            <blockquote class="quote">
+                <p class="quote__text">«Между жизнью и смертью — я выбираю гитару»</p>
+                <cite class="quote__author">Пабло Неруда</cite>
+            </blockquote>
+        </div>
+    </section>
+
+    <section id="credit-form" class="credit-section">
+        <div class="container">
+            <h2 class="section-title">Оформите рассрочку онлайн</h2>
+            <p class="credit-section__intro">Получите быстрое предварительное решение по кредиту на покупку инструмента.</p>
+
+            <form class="form" id="credit-form-element">
+                <div class="form__group">
+                    <label for="name" class="form__label">ФИО:</label>
+                    <input type="text" id="name" name="name" class="form__input" required>
+                </div>
+                <div class="form__group">
+                    <label for="phone" class="form__label">Телефон:</label>
+                    <input type="tel" id="phone" name="phone" class="form__input" required
+                           placeholder="+7 (___) ___-__-__">
+                </div>
+                <div class="form__group">
+                    <label for="amount" class="form__label">Желаемая сумма:</label>
+                    <input type="number" id="amount" name="amount" class="form__input" required min="5000" max="500000">
+                </div>
+
+                <button type="submit" class="button button--primary">Отправить заявку</button>
+            </form>
+
+            <div class="formula">
+                <h4 class="formula__title">Формула расчета аннуитетного платежа</h4>
+                <div class="formula__expression">
+                    ЕП = S × (P + P ÷ ((1 + P)<sup>N</sup> - 1))
+                </div>
+                <div class="formula__legend">
+                    <span class="formula__variable">ЕП</span> — ежемесячный платеж<br>
+                    <span class="formula__variable">S</span> — сумма кредита<br>
+                    <span class="formula__variable">P</span> — процентная ставка (месячная)<br>
+                    <span class="formula__variable">N</span> — срок кредита (в месяцах)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="code-snippet" class="code-section">
+        <div class="container">
+            <h2 class="section-title">Для разработчиков</h2>
+            <div class="code-container">
+                <div class="code-block-wrapper">
+                    <h3 class="code-block__title">Генератор музыкальных аккордов</h3>
+                    <pre class="code-block"><code class="code-snippet">
+// Функция для генерации аккордов
+function generateChord(root, type) {
+    const chords = {
+        'C-major': ['C', 'E', 'G'],
+        'G-major': ['G', 'B', 'D'],
+        'A-minor': ['A', 'C', 'E']
+    };
+    return chords[`${root}-${type}`] || ['Аккорд не найден'];
+}
+
+// Пример использования
+console.log(generateChord('C', 'major'));
+                    </code></pre>
+                </div>
+                <div class="code-output">
+                    <h3 class="code-output__title">Результат выполнения</h3>
+                    <div class="output-content">
+                        <span class="output-line">> ['C', 'E', 'G']</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <h2 class="footer__title">Контакты</h2>
+        <address class="footer__address">
+            <p class="footer__text">г. Санкт-Петербург, ул. Пушкина, д. 15</p>
+            <p class="footer__text">Телефон: <a href="tel:+74951234567" class="footer__link">+7 (495) 123-45-67</a></p>
+            <p class="footer__text">Email: <a href="mailto:info@musicstore.ru" class="footer__link">info@musicstore.ru</a></p>
+        </address>
+
+        <pre class="ascii-art">
+                              ,
+                          ,   |
+       _,,._              |  0'
+     ,'     `.__,--.     0'
+    /   .--.        |           ,,,
+    | [=========|==|==|=|==|=|==___]
+    \   "--"  __    |           '''
+     `._   _,'  `--'
+        ""'     ,   ,0     ,
+    hjm         |)  |)   ,'|
+      ____     0'   '   | 0'
+      |  |             0'
+     0' 0'
+        </pre>
+
+        <div class="load-time-info"></div>
+        <p class="footer__copyright">&copy; 2025 MusicStore. Все права защищены.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
+</body>
+</html>

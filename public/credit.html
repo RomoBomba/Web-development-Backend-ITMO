@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="кредит на гитару, рассрочка, покупка гитары в кредит">
+    <meta name="description" content="Оформите кредит или рассрочку на покупку гитары в MusicStore. Выгодные условия, быстрое оформление">
+    <title>MusicStore - Кредит и рассрочка</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="js/main.js" defer></script>
+</head>
+<body class="page">
+<header class="header">
+    <div class="container">
+        <h1 class="header__title">MusicStore</h1>
+        <nav class="nav">
+            <ul class="nav__list">
+                <li class="nav__item"><a href="index.html" class="nav__link">Главная</a></li>
+                <li class="nav__item"><a href="catalog.html" class="nav__link">Каталог</a></li>
+                <li class="nav__item"><a href="about.html" class="nav__link">О нас</a></li>
+                <li class="nav__item"><a href="credit.html" class="nav__link">Кредит</a></li>
+                <li class="nav__item"><a href="cart.html" class="nav__link">Корзина</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="main">
+    <section class="hero">
+        <div class="container">
+            <h2 class="hero__title">Кредит и рассрочка</h2>
+            <p class="hero__text">Купите гитару мечты сейчас, а платите потом! Выгодные условия от наших партнеров</p>
+        </div>
+    </section>
+
+    <section class="credit-options">
+        <div class="container">
+            <h2 class="section-title">Выберите способ оплаты</h2>
+            <div class="options-grid">
+                <div class="option-card">
+                    <h3>💳 Рассрочка 0%</h3>
+                    <div class="option-features">
+                        <p>✓ Без переплаты</p>
+                        <p>✓ Срок до 12 месяцев</p>
+                        <p>✓ Первый взнос от 10%</p>
+                        <p>✓ Решение за 15 минут</p>
+                    </div>
+                    <button class="button button--primary" onclick="showForm('installment')">Оформить рассрочку</button>
+                </div>
+
+                <div class="option-card">
+                    <h3>🏦 Кредит</h3>
+                    <div class="option-features">
+                        <p>✓ Ставка от 5.9% годовых</p>
+                        <p>✓ Срок до 36 месяцев</p>
+                        <p>✓ Сумма до 500,000 руб.</p>
+                        <p>✓ Оформление онлайн</p>
+                    </div>
+                    <button class="button button--primary" onclick="showForm('credit')">Оформить кредит</button>
+                </div>
+
+                <div class="option-card">
+                    <h3>🎁 Trade-In</h3>
+                    <div class="option-features">
+                        <p>✓ Скидка до 30%</p>
+                        <p>✓ Оценка вашего инструмента</p>
+                        <p>✓ Быстрый выезд эксперта</p>
+                        <p>✓ Доплата в рассрочку</p>
+                    </div>
+                    <button class="button button--primary" onclick="showForm('tradein')">Обменять гитару</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="credit-form" class="credit-section">
+        <div class="container">
+            <h2 class="section-title">Оформите заявку онлайн</h2>
+            <p class="credit-section__intro">Получите быстрое предварительное решение по кредиту на покупку инструмента.</p>
+
+            <form class="form" id="creditApplicationForm">
+                <div class="form__group">
+                    <label for="application-type" class="form__label">Тип заявки:</label>
+                    <select id="application-type" name="application-type" class="form__input" required>
+                        <option value="">Выберите тип заявки</option>
+                        <option value="installment">Рассрочка 0%</option>
+                        <option value="credit">Кредит</option>
+                        <option value="tradein">Trade-In</option>
+                    </select>
+                </div>
+
+                <div class="form__group">
+                    <label for="name" class="form__label">ФИО:</label>
+                    <input type="text" id="name" name="name" class="form__input" required placeholder="Иванов Иван Иванович">
+                </div>
+
+                <div class="form__group">
+                    <label for="phone" class="form__label">Телефон:</label>
+                    <input type="tel" id="phone" name="phone" class="form__input" required placeholder="+7 (999) 123-45-67">
+                </div>
+
+                <div class="form__group">
+                    <label for="email" class="form__label">Email:</label>
+                    <input type="email" id="email" name="email" class="form__input" required placeholder="example@mail.ru">
+                </div>
+
+                <div class="form__group">
+                    <label for="amount" class="form__label">Желаемая сумма, руб.:</label>
+                    <input type="number" id="amount" name="amount" class="form__input" required min="5000" max="500000" placeholder="50000">
+                </div>
+
+                <div class="form__group">
+                    <label for="period" class="form__label">Срок, месяцев:</label>
+                    <select id="period" name="period" class="form__input" required>
+                        <option value="">Выберите срок</option>
+                        <option value="6">6 месяцев</option>
+                        <option value="12">12 месяцев</option>
+                        <option value="24">24 месяца</option>
+                        <option value="36">36 месяцев</option>
+                    </select>
+                </div>
+
+                <div class="form__group">
+                    <label class="form__label">
+                        <input type="checkbox" name="agreement" required>
+                        Я соглашаюсь с обработкой персональных данных и условиями кредитования
+                    </label>
+                </div>
+
+                <button type="submit" class="button button--primary">Отправить заявку</button>
+            </form>
+
+            <div class="calculator-section">
+                <h3 class="calculator-title">Кредитный калькулятор</h3>
+                <div class="calculator">
+                    <div class="calculator-inputs">
+                        <div class="calc-group">
+                            <label for="calc-amount">Сумма кредита (руб.):</label>
+                            <input type="range" id="calc-amount" min="10000" max="500000" step="10000" value="100000">
+                            <span id="calc-amount-value">100,000 руб.</span>
+                        </div>
+
+                        <div class="calc-group">
+                            <label for="calc-period">Срок (мес.):</label>
+                            <input type="range" id="calc-period" min="6" max="36" step="6" value="12">
+                            <span id="calc-period-value">12 мес.</span>
+                        </div>
+                    </div>
+
+                    <div class="calculator-results">
+                        <div class="result-item">
+                            <span>Ежемесячный платеж:</span>
+                            <strong id="monthly-payment">8,792 руб.</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>Общая сумма:</span>
+                            <strong id="total-amount">105,504 руб.</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>Переплата:</span>
+                            <strong id="overpayment">5,504 руб.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula">
+                <h4 class="formula__title">Формула расчета аннуитетного платежа</h4>
+                <div class="formula__expression">
+                    ЕП = S × (P + P ÷ ((1 + P)<sup>N</sup> - 1))
+                </div>
+                <div class="formula__legend">
+                    <span class="formula__variable">ЕП</span> — ежемесячный платеж<br>
+                    <span class="formula__variable">S</span> — сумма кредита<br>
+                    <span class="formula__variable">P</span> — процентная ставка (месячная)<br>
+                    <span class="formula__variable">N</span> — срок кредита (в месяцах)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="partners-section">
+        <div class="container">
+            <h2 class="section-title">Наши партнеры</h2>
+            <div class="partners-grid">
+                <div class="partner-logo">
+                    <img src="images/partners/sberbank.png" alt="Сбербанк" class="partner-image">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partners/tinkoff.png" alt="Тинькофф" class="partner-image">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partners/alfa-bank.png" alt="Альфа-Банк" class="partner-image">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partners/vtb.png" alt="ВТБ" class="partner-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Частые вопросы</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Какие документы нужны для оформления?</h3>
+                    <p>Для рассрочки достаточно паспорта. Для кредита может потребоваться справка о доходах.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Сколько времени занимает рассмотрение заявки?</h3>
+                    <p>Предварительное решение по рассрочке - 15 минут, по кредиту - до 1 рабочего дня.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Можно ли досрочно погасить кредит?</h3>
+                    <p>Да, досрочное погашение возможно без штрафов и комиссий.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Какие гитары можно купить в рассрочку?</h3>
+                    <p>Любые гитары из нашего каталога стоимостью от 10,000 рублей.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <h2 class="footer__title">Контакты</h2>
+        <address class="footer__address">
+            <p class="footer__text">г. Санкт-Петербург, ул. Пушкина, д. 15</p>
+            <p class="footer__text">Телефон: <a href="tel:+74951234567" class="footer__link">+7 (495) 123-45-67</a></p>
+            <p class="footer__text">Email: <a href="mailto:info@musicstore.ru" class="footer__link">info@musicstore.ru</a></p>
+        </address>
+
+        <pre class="ascii-art">
+                              ,
+                          ,   |
+       _,,._              |  0'
+     ,'     `.__,--.     0'
+    /   .--.        |           ,,,
+    | [=========|==|==|=|==|=|==___]
+    \   "--"  __    |           '''
+     `._   _,'  `--'
+        ""'     ,   ,0     ,
+    hjm         |)  |)   ,'|
+      ____     0'   '   | 0'
+      |  |             0'
+     0' 0'
+            </pre>
+
+        <p class="footer__copyright">&copy; 2025 MusicStore. Все права защищены.</p>
+    </div>
+</footer>
+
+<script>
+    function showForm(type) {
+        const form = document.getElementById('creditApplicationForm');
+        const typeSelect = document.getElementById('application-type');
+
+        if (type === 'installment') {
+            typeSelect.value = 'installment';
+        } else if (type === 'credit') {
+            typeSelect.value = 'credit';
+        } else if (type === 'tradein') {
+            typeSelect.value = 'tradein';
+        }
+
+        form.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    const amountSlider = document.getElementById('calc-amount');
+    const periodSlider = document.getElementById('calc-period');
+    const amountValue = document.getElementById('calc-amount-value');
+    const periodValue = document.getElementById('calc-period-value');
+    const monthlyPayment = document.getElementById('monthly-payment');
+    const totalAmount = document.getElementById('total-amount');
+    const overpayment = document.getElementById('overpayment');
+
+    function updateCalculator() {
+        const amount = parseInt(amountSlider.value);
+        const period = parseInt(periodSlider.value);
+        const annualRate = 0.059;
+        const monthlyRate = annualRate / 12;
+
+        const monthlyPay = amount * (monthlyRate + monthlyRate / (Math.pow(1 + monthlyRate, period) - 1));
+        const total = monthlyPay * period;
+        const overpay = total - amount;
+
+        amountValue.textContent = amount.toLocaleString() + ' руб.';
+        periodValue.textContent = period + ' мес.';
+        monthlyPayment.textContent = Math.round(monthlyPay).toLocaleString() + ' руб.';
+        totalAmount.textContent = Math.round(total).toLocaleString() + ' руб.';
+        overpayment.textContent = Math.round(overpay).toLocaleString() + ' руб.';
+    }
+
+    amountSlider.addEventListener('input', updateCalculator);
+    periodSlider.addEventListener('input', updateCalculator);
+</script>
+</body>
+</html>
