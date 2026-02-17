@@ -1,0 +1,22 @@
+<ul class="nav__list">
+    <li class="nav__item">
+        <a href="/" class="nav__link <%= currentPage === 'index' ? 'nav__link--active' : '' %>">Главная</a>
+    </li>
+    <li class="nav__item">
+        <a href="/catalog" class="nav__link <%= currentPage === 'catalog' ? 'nav__link--active' : '' %>">Каталог</a>
+    </li>
+    <li class="nav__item">
+        <a href="/about" class="nav__link <%= currentPage === 'about' ? 'nav__link--active' : '' %>">О нас</a>
+    </li>
+    <li class="nav__item">
+        <a href="/credit" class="nav__link <%= currentPage === 'credit' ? 'nav__link--active' : '' %>">Кредит</a>
+    </li>
+    <li class="nav__item">
+        <a href="/cart" class="nav__link <%= currentPage === 'cart' ? 'nav__link--active' : '' %>">
+            Корзина
+            <% if (cartCount > 0) { %>
+                <span class="cart-badge"><%= cartCount %></span>
+            <% } %>
+        </a>
+    </li>
+</ul>

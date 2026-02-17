@@ -1,0 +1,19 @@
+<article class="product-card" data-product-id="<%= product.id %>">
+    <h3 class="product-card__title">
+        <a href="#<%= product.id %>" class="product-card__link"><%= product.name %></a>
+    </h3>
+    <div class="product-card__image-wrapper">
+        <img src="<%= product.image %>" alt="<%= product.name %>" class="product-card__image">
+        <% if (product.caption) { %>
+            <span class="image-caption"><%= product.caption %></span>
+        <% } %>
+    </div>
+    <p class="product-card__description"><%= product.description %></p>
+    <p class="product-card__price">
+        <strong class="price--current"><%= product.currentPrice.toLocaleString() %> руб.</strong>
+        <% if (product.oldPrice) { %>
+            <del class="price--old"><%= product.oldPrice.toLocaleString() %> руб.</del>
+        <% } %>
+    </p>
+    <button class="button button--primary add-to-cart" data-product-id="<%= product.id %>">В корзину</button>
+</article>

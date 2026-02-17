@@ -1,257 +1,170 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="корзина, заказ, покупка гитары, оформление заказа">
-    <meta name="description" content="Корзина покупок MusicStore. Оформление заказа на гитары и музыкальное оборудование">
-    <title>MusicStore - Корзина</title>
+<%- include('../partials/header', {
+title: 'MusicStore - Корзина',
+metaKeywords: 'корзина, заказ, покупка гитары, оформление заказа',
+metaDescription: 'Корзина покупок MusicStore. Оформление заказа на гитары и музыкальное оборудование',
+currentPage: 'cart',
+useSwiper: false,
+useInputMask: true,
+pageScript: 'main.js',
+cartCount: cartItemsCount,
+isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : false
+}) %>
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script src="js/main.js" defer></script>
-</head>
-<body class="page">
-<header class="header">
+<section class="hero">
     <div class="container">
-        <h1 class="header__title">MusicStore</h1>
-        <nav class="nav">
-            <ul class="nav__list">
-                <li class="nav__item"><a href="index.html" class="nav__link">Главная</a></li>
-                <li class="nav__item"><a href="catalog.html" class="nav__link">Каталог</a></li>
-                <li class="nav__item"><a href="about.html" class="nav__link">О нас</a></li>
-                <li class="nav__item"><a href="credit.html" class="nav__link">Кредит</a></li>
-                <li class="nav__item"><a href="cart.html" class="nav__link">Корзина</a></li>
-            </ul>
-        </nav>
+        <h2 class="hero__title">Корзина покупок</h2>
+        <p class="hero__text">Проверьте ваш заказ перед оформлением</p>
     </div>
-</header>
+</section>
 
-<main class="main">
-    <section class="hero">
-        <div class="container">
-            <h2 class="hero__title">Корзина покупок</h2>
-            <p class="hero__text">Проверьте ваш заказ перед оформлением</p>
-        </div>
-    </section>
+<section class="cart-section">
+    <div class="container">
+        <div class="cart-layout">
+            <div class="cart-items">
+                <h2 class="cart-title">Товары в корзине</h2>
 
-    <section class="cart-section">
-        <div class="container">
-            <div class="cart-layout">
-                <div class="cart-items">
-                    <h2 class="cart-title">Товары в корзине</h2>
-
-                    <div class="custom-product-form">
-                        <div class="form-header">
-                            <button type="button" class="form-toggle-button" id="serviceFormToggle">
-                                <span class="toggle-icon">+</span>
-                                <h3>Добавить услугу по настройке</h3>
-                            </button>
-                            <button type="button" class="button button--secondary" id="cancelEditBtn" style="display: none;">
-                                Отменить редактирование
-                            </button>
-                        </div>
-                        <form class="service-form" id="serviceForm" style="display: none;">
-                            <div class="form-row">
-                                <div class="form__group">
-                                    <label for="service-type" class="form__label">Тип услуги *</label>
-                                    <select id="service-type" name="serviceType" class="form__input" required>
-                                        <option value="">Выберите услугу</option>
-                                        <option value="full-setup">Полная настройка гитары</option>
-                                        <option value="partial-setup">Частичная настройка</option>
-                                        <option value="polish">Полировка и уход</option>
-                                        <option value="strings">Замена струн</option>
-                                        <option value="electronics">Ремонт электроники</option>
-                                        <option value="custom">Индивидуальная услуга</option>
-                                    </select>
-                                </div>
-
-                                <div class="form__group">
-                                    <label for="service-price" class="form__label">Стоимость (руб) *</label>
-                                    <input type="number" id="service-price" name="price" class="form__input"
-                                           min="500" max="20000" step="50" required readonly>
-                                </div>
-                            </div>
-
-                            <div class="form__group">
-                                <label for="service-description" class="form__label">Описание услуги</label>
-                                <textarea id="service-description" name="description" class="form__input form__textarea"
-                                          placeholder="Опишите детали услуги (необязательно)" maxlength="200"></textarea>
-                                <div class="char-counter">
-                                    <span id="service-char-count">0</span>/200 символов
-                                </div>
-                            </div>
-
-                            <div class="form__group">
-                                <label for="client-name" class="form__label">Ваше имя *</label>
-                                <input type="text" id="client-name" name="clientName" class="form__input"
-                                       placeholder="Иван Иванов" required minlength="2" maxlength="50">
-                            </div>
-
-                            <div class="form__group">
-                                <label for="client-phone" class="form__label">Телефон *</label>
-                                <input type="tel" id="client-phone" name="clientPhone" class="form__input"
-                                       placeholder="+7 (999) 123-45-67" required
-                                       pattern="^(\+7|8)[\s\-]?\(?[0-9]{3}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$">
-                                <small class="form__hint">Формат: +7 (999) 123-45-67 или 89991234567</small>
-                            </div>
-
-                            <div class="form__group">
-                                <label class="form-checkbox">
-                                    <input type="checkbox" id="service-urgent" name="urgent">
-                                    <span class="checkmark"></span>
-                                    Срочный заказ (+50% к стоимости)
-                                </label>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="submit" class="button button--primary" id="submitBtn">Добавить услугу в корзину</button>
-                                <button type="button" class="button button--secondary" onclick="resetServiceForm()">Очистить форму</button>
-                            </div>
-                        </form>
+                <div class="custom-product-form">
+                    <div class="form-header">
+                        <button type="button" class="form-toggle-button" id="serviceFormToggle">
+                            <span class="toggle-icon">+</span>
+                            <h3>Добавить услугу по настройке</h3>
+                        </button>
+                        <button type="button" class="button button--secondary" id="cancelEditBtn" style="display: none;">
+                            Отменить редактирование
+                        </button>
                     </div>
+                    <form class="service-form" id="serviceForm" style="display: none;">
+                        <div class="form-row">
+                            <div class="form__group">
+                                <label for="service-type" class="form__label">Тип услуги *</label>
+                                <select id="service-type" name="serviceType" class="form__input" required>
+                                    <option value="">Выберите услугу</option>
+                                    <option value="full-setup">Полная настройка гитары</option>
+                                    <option value="partial-setup">Частичная настройка</option>
+                                    <option value="polish">Полировка и уход</option>
+                                    <option value="strings">Замена струн</option>
+                                    <option value="electronics">Ремонт электроники</option>
+                                    <option value="custom">Индивидуальная услуга</option>
+                                </select>
+                            </div>
 
+                            <div class="form__group">
+                                <label for="service-price" class="form__label">Стоимость (руб) *</label>
+                                <input type="number" id="service-price" name="price" class="form__input"
+                                       min="500" max="20000" step="50" required readonly>
+                            </div>
+                        </div>
+
+                        <div class="form__group">
+                            <label for="service-description" class="form__label">Описание услуги</label>
+                            <textarea id="service-description" name="description" class="form__input form__textarea"
+                                      placeholder="Опишите детали услуги (необязательно)" maxlength="200"></textarea>
+                            <div class="char-counter">
+                                <span id="service-char-count">0</span>/200 символов
+                            </div>
+                        </div>
+
+                        <div class="form__group">
+                            <label for="client-name" class="form__label">Ваше имя *</label>
+                            <input type="text" id="client-name" name="clientName" class="form__input"
+                                   placeholder="Иван Иванов" required minlength="2" maxlength="50">
+                        </div>
+
+                        <div class="form__group">
+                            <label for="client-phone" class="form__label">Телефон *</label>
+                            <input type="tel" id="client-phone" name="clientPhone" class="form__input phone-mask"
+                                   placeholder="+7 (999) 123-45-67" required>
+                            <small class="form__hint">Формат: +7 (999) 123-45-67 или 89991234567</small>
+                        </div>
+
+                        <div class="form__group">
+                            <label class="form-checkbox">
+                                <input type="checkbox" id="service-urgent" name="urgent">
+                                <span class="checkmark"></span>
+                                Срочный заказ (+50% к стоимости)
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="button button--primary" id="submitBtn">Добавить услугу в корзину</button>
+                            <button type="button" class="button button--secondary" onclick="resetServiceForm()">Очистить форму</button>
+                        </div>
+                    </form>
                 </div>
 
-                <div class="cart-summary">
-                    <h3 class="summary-title">Итого</h3>
+                <!-- Элементы корзины будут добавлены через JavaScript -->
+            </div>
 
-                    <div class="summary-details">
-                        <div class="summary-row">
-                            <span>Товары (<span id="items-count">0</span>)</span>
-                            <span id="subtotal">0 руб.</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Доставка</span>
-                            <span id="shipping-cost">0 руб.</span>
-                        </div>
-                        <div class="summary-row discount-row">
-                            <span>Скидка</span>
-                            <span id="discount">0 руб.</span>
-                        </div>
-                        <div class="summary-row total-row">
-                            <strong>К оплате</strong>
-                            <strong id="total-amount">0 руб.</strong>
-                        </div>
+            <div class="cart-summary">
+                <h3 class="summary-title">Итого</h3>
+
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span>Товары (<span id="items-count">0</span>)</span>
+                        <span id="subtotal">0 руб.</span>
                     </div>
-
-                    <div class="promo-code">
-                        <label for="promo-input">Промокод:</label>
-                        <div class="promo-input-group">
-                            <input type="text" id="promo-input" placeholder="Введите промокод">
-                            <button class="button button--secondary" onclick="applyPromo()">Применить</button>
-                        </div>
+                    <div class="summary-row">
+                        <span>Доставка</span>
+                        <span id="shipping-cost">0 руб.</span>
                     </div>
-
-                    <div class="shipping-options">
-                        <h4>Способ доставки</h4>
-                        <div class="shipping-option">
-                            <input type="radio" id="delivery-courier" name="shipping" checked>
-                            <label for="delivery-courier">Курьерская доставка - бесплатно</label>
-                        </div>
-                        <div class="shipping-option">
-                            <input type="radio" id="delivery-pickup" name="shipping">
-                            <label for="delivery-pickup">Самовывоз из магазина</label>
-                        </div>
+                    <div class="summary-row discount-row">
+                        <span>Скидка</span>
+                        <span id="discount">0 руб.</span>
                     </div>
+                    <div class="summary-row total-row">
+                        <strong>К оплате</strong>
+                        <strong id="total-amount">0 руб.</strong>
+                    </div>
+                </div>
 
-                    <button class="button button--primary checkout-btn" onclick="proceedToCheckout()">
-                        Перейти к оформлению
-                    </button>
+                <div class="promo-code">
+                    <label for="promo-input">Промокод:</label>
+                    <div class="promo-input-group">
+                        <input type="text" id="promo-input" placeholder="Введите промокод">
+                        <button class="button button--secondary" onclick="applyPromo()">Применить</button>
+                    </div>
+                </div>
 
-                    <div class="secure-payment">
-                        <p>Безопасная оплата</p>
-                        <h4>Бонус: попробуйте следующие промокоды</h4>
-                        <div class="promo-info">
-                            <p>MUSIC2024 для скидки 5000 руб</p>
-                            <p>GUITAR10 для скидки 10%</p>
-                            <p>FIRSTBUY для скидки 3000 руб</p>
-                        </div>
+                <div class="shipping-options">
+                    <h4>Способ доставки</h4>
+                    <div class="shipping-option">
+                        <input type="radio" id="delivery-courier" name="shipping" checked>
+                        <label for="delivery-courier">Курьерская доставка - бесплатно</label>
+                    </div>
+                    <div class="shipping-option">
+                        <input type="radio" id="delivery-pickup" name="shipping">
+                        <label for="delivery-pickup">Самовывоз из магазина</label>
+                    </div>
+                </div>
+
+                <button class="button button--primary checkout-btn" onclick="proceedToCheckout()">
+                    Перейти к оформлению
+                </button>
+
+                <div class="secure-payment">
+                    <p>Безопасная оплата</p>
+                    <h4>Бонус: попробуйте следующие промокоды</h4>
+                    <div class="promo-info">
+                        <p>MUSIC2024 для скидки 5000 руб</p>
+                        <p>GUITAR10 для скидки 10%</p>
+                        <p>FIRSTBUY для скидки 3000 руб</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="recommendations-section">
-        <div class="container">
-            <h2 class="section-title">Рекомендуем добавить</h2>
-            <div class="products__grid">
-                <article class="product-card" data-product-id="elixir-strings" data-product-name="Комплект струн Elixir" data-product-price="2200" data-product-image="images/addition/strings-elixir.png">
-                    <h3 class="product-card__title">
-                        <a href="#" class="product-card__link">Комплект струн Elixir</a>
-                    </h3>
-                    <div class="product-card__image-wrapper">
-                        <img src="images/addition/strings-elixir.png" alt="Струны Elixir" class="product-card__image">
-                    </div>
-                    <p class="product-card__description">Наноструктурное покрытие для долгого срока службы.</p>
-                    <p class="product-card__price">
-                        <strong class="price--current">2 200 руб.</strong>
-                    </p>
-                    <button class="button button--primary add-to-cart" data-product-id="elixir-strings">Добавить в корзину</button>
-                </article>
-
-                <article class="product-card" data-product-id="dunlop-picks" data-product-name="Медиаторы Dunlop" data-product-price="800" data-product-image="images/addition/picks-dunlop.png">
-                    <h3 class="product-card__title">
-                        <a href="#" class="product-card__link">Медиаторы Dunlop</a>
-                    </h3>
-                    <div class="product-card__image-wrapper">
-                        <img src="images/addition/picks-dunlop.png" alt="Медиаторы Dunlop" class="product-card__image">
-                    </div>
-                    <p class="product-card__description">Набор из 12 медиаторов разной толщины.</p>
-                    <p class="product-card__price">
-                        <strong class="price--current">800 руб.</strong>
-                    </p>
-                    <button class="button button--primary add-to-cart" data-product-id="dunlop-picks">Добавить в корзину</button>
-                </article>
-
-                <article class="product-card" data-product-id="cort-cable" data-product-name="Гитарный кабель Cort" data-product-price="1500" data-product-image="images/addition/cable.png">
-                    <h3 class="product-card__title">
-                        <a href="#" class="product-card__link">Гитарный кабель Cort</a>
-                    </h3>
-                    <div class="product-card__image-wrapper">
-                        <img src="images/addition/cable.png" alt="Гитарный кабель" class="product-card__image">
-                    </div>
-                    <p class="product-card__description">Качественный кабель длиной 3 метра.</p>
-                    <p class="product-card__price">
-                        <strong class="price--current">1 500 руб.</strong>
-                    </p>
-                    <button class="button button--primary add-to-cart" data-product-id="cort-cable">Добавить в корзину</button>
-                </article>
-            </div>
-        </div>
-    </section>
-</main>
-
-<footer class="footer">
-    <div class="container">
-        <h2 class="footer__title">Контакты</h2>
-        <address class="footer__address">
-            <p class="footer__text">г. Санкт-Петербург, ул. Пушкина, д. 15</p>
-            <p class="footer__text">Телефон: <a href="tel:+74951234567" class="footer__link">+7 (495) 123-45-67</a></p>
-            <p class="footer__text">Email: <a href="mailto:info@musicstore.ru" class="footer__link">info@musicstore.ru</a></p>
-        </address>
-
-        <pre class="ascii-art">
-                              ,
-                          ,   |
-       _,,._              |  0'
-     ,'     `.__,--.     0'
-    /   .--.        |           ,,,
-    | [=========|==|==|=|==|=|==___]
-    \   "--"  __    |           '''
-     `._   _,'  `--'
-        ""'     ,   ,0     ,
-    hjm         |)  |)   ,'|
-      ____     0'   '   | 0'
-      |  |             0'
-     0' 0'
-            </pre>
-
-        <p class="footer__copyright">&copy; 2025 MusicStore. Все права защищены.</p>
     </div>
-</footer>
+</section>
+
+<section class="recommendations-section">
+    <div class="container">
+        <h2 class="section-title">Рекомендуем добавить</h2>
+        <div class="products__grid">
+            <% recommendedProducts.forEach(product => { %>
+                <%- include('../partials/product-card', { product }) %>
+            <% }) %>
+        </div>
+    </div>
+</section>
 
 <script>
     let cartData = {
@@ -1084,5 +997,5 @@ ${orderSummary}
         }
     }
 </style>
-</body>
-</html>
+
+<%- include('../partials/footer', { loadTime: typeof loadTime !== 'undefined' ? loadTime : 0 }) %>

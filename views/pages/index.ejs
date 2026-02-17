@@ -1,0 +1,188 @@
+<%- include('../partials/header', {
+title: 'MusicStore - Магазин гитар',
+metaKeywords: 'гитары, купить гитару, музыкальные инструменты, электрогитара, акустическая гитара, бас-гитара',
+metaDescription: 'MusicStore - лучший магазин гитар в городе. Широкий выбор, гарантия качества, рассрочка и кредит',
+currentPage: 'index',
+useSwiper: true,
+useInputMask: true,
+pageScript: 'main.js',
+cartCount: typeof cartCount !== 'undefined' ? cartCount : 0,
+isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : false
+}) %>
+
+<section id="hero" class="hero">
+    <div class="container">
+        <h2 class="hero__title">Лучшие гитары для вашего творчества</h2>
+        <p class="hero__text">Мы предлагаем широкий выбор качественных гитар от проверенных производителей с гарантией и возможностью рассрочки.</p>
+    </div>
+</section>
+
+<section id="popular-products" class="products">
+    <div class="container">
+        <h2 class="section-title">Популярные товары</h2>
+        <div class="products__grid">
+            <% products.forEach(product => { %>
+                <%- include('../partials/product-card', { product }) %>
+            <% }) %>
+        </div>
+    </div>
+</section>
+
+<section class="comparison-section">
+    <div class="container">
+        <h2 class="section-title">Сравнение характеристик</h2>
+        <div class="table-container">
+            <table class="comparison-table">
+                <thead>
+                <tr>
+                    <th>Характеристика</th>
+                    <th>Squier Hello Kitty</th>
+                    <th>B.C. Rich KKV</th>
+                    <th>Epiphone Thunderbird</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Тип</td>
+                    <td>Электрогитара</td>
+                    <td>Электрогитара</td>
+                    <td>Бас-гитара</td>
+                </tr>
+                <tr>
+                    <td>Мензура</td>
+                    <td>25.5"</td>
+                    <td>24.75"</td>
+                    <td>34"</td>
+                </tr>
+                <tr>
+                    <td>Лады</td>
+                    <td>21</td>
+                    <td>22</td>
+                    <td>20</td>
+                </tr>
+                <tr>
+                    <td>Звукосниматели</td>
+                    <td>1 хамбакер</td>
+                    <td>2 хамбакера</td>
+                    <td>2 хамбакера</td>
+                </tr>
+                <tr>
+                    <td>Материал грифа</td>
+                    <td>Клен</td>
+                    <td>Махагони</td>
+                    <td>Махагони</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section class="gallery-section">
+    <div class="container">
+        <h2 class="section-title">Галерея наших инструментов</h2>
+        <div class="swiper gallery-swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="/images/guitars/hellokitty.png" alt="Hello Kitty гитара">
+                </div>
+                <div class="swiper-slide">
+                    <img src="/images/guitars/ibanez-rg550.jpg" alt="Ibanez RG550 гитара">
+                </div>
+                <div class="swiper-slide">
+                    <img src="/images/guitars/fender-strat.png" alt="Fender Strat гитара">
+                </div>
+                <div class="swiper-slide">
+                    <img src="/images/guitars/ibanez_gio_grx120.jpg" alt="Ibanez Gio-Grx120">
+                </div>
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<section id="guitar-image" class="guitar-showcase">
+    <div class="container">
+        <h2 class="section-title">Наш магазин</h2>
+        <div class="guitar-showcase__image-wrapper">
+            <img src="/images/shop/shop.jpg" alt="Интерьер магазина MusicStore" class="guitar-showcase__image">
+        </div>
+        <blockquote class="quote">
+            <p class="quote__text">«Между жизнью и смертью — я выбираю гитару»</p>
+            <cite class="quote__author">Пабло Неруда</cite>
+        </blockquote>
+    </div>
+</section>
+
+<section id="credit-form" class="credit-section">
+    <div class="container">
+        <h2 class="section-title">Оформите рассрочку онлайн</h2>
+        <p class="credit-section__intro">Получите быстрое предварительное решение по кредиту на покупку инструмента.</p>
+
+        <form class="form" id="credit-form-element">
+            <div class="form__group">
+                <label for="name" class="form__label">ФИО:</label>
+                <input type="text" id="name" name="name" class="form__input" required>
+            </div>
+            <div class="form__group">
+                <label for="phone" class="form__label">Телефон:</label>
+                <input type="tel" id="phone" name="phone" class="form__input phone-mask" required
+                       placeholder="+7 (___) ___-__-__">
+            </div>
+            <div class="form__group">
+                <label for="amount" class="form__label">Желаемая сумма:</label>
+                <input type="number" id="amount" name="amount" class="form__input" required min="5000" max="500000">
+            </div>
+
+            <button type="submit" class="button button--primary">Отправить заявку</button>
+        </form>
+
+        <div class="formula">
+            <h4 class="formula__title">Формула расчета аннуитетного платежа</h4>
+            <div class="formula__expression">
+                ЕП = S × (P + P ÷ ((1 + P)<sup>N</sup> - 1))
+            </div>
+            <div class="formula__legend">
+                <span class="formula__variable">ЕП</span> — ежемесячный платеж<br>
+                <span class="formula__variable">S</span> — сумма кредита<br>
+                <span class="formula__variable">P</span> — процентная ставка (месячная)<br>
+                <span class="formula__variable">N</span> — срок кредита (в месяцах)
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="code-snippet" class="code-section">
+    <div class="container">
+        <h2 class="section-title">Для разработчиков</h2>
+        <div class="code-container">
+            <div class="code-block-wrapper">
+                <h3 class="code-block__title">Генератор музыкальных аккордов</h3>
+                <pre class="code-block"><code class="code-snippet">
+// Функция для генерации аккордов
+function generateChord(root, type) {
+    const chords = {
+        'C-major': ['C', 'E', 'G'],
+        'G-major': ['G', 'B', 'D'],
+        'A-minor': ['A', 'C', 'E']
+    };
+    return chords[`${root}-${type}`] || ['Аккорд не найден'];
+}
+
+// Пример использования
+console.log(generateChord('C', 'major'));
+                </code></pre>
+            </div>
+            <div class="code-output">
+                <h3 class="code-output__title">Результат выполнения</h3>
+                <div class="output-content">
+                    <span class="output-line">> ['C', 'E', 'G']</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../partials/footer', { loadTime: typeof loadTime !== 'undefined' ? loadTime : 0 }) %>

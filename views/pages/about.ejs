@@ -1,237 +1,187 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="о магазине MusicStore, история, команда, отзывы">
-    <meta name="description" content="О магазине MusicStore - наша история, команда и философия. Более 10 лет на рынке музыкальных инструментов">
-    <title>MusicStore - О нас</title>
+<%- include('../partials/header', {
+title: 'MusicStore - О нас',
+metaKeywords: 'о магазине MusicStore, история, команда, отзывы',
+metaDescription: 'О магазине MusicStore - наша история, команда и философия. Более 10 лет на рынке музыкальных инструментов',
+currentPage: 'about',
+useSwiper: false,
+useInputMask: false,
+pageScript: 'main.js',
+cartCount: typeof cartCount !== 'undefined' ? cartCount : 0,
+isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : false
+}) %>
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script src="js/main.js" defer></script>
-    <script src="js/api.js" defer></script>
-</head>
-<body class="page">
-<header class="header">
+<section class="hero">
     <div class="container">
-        <h1 class="header__title">MusicStore</h1>
-        <nav class="nav">
-            <ul class="nav__list">
-                <li class="nav__item"><a href="index.html" class="nav__link">Главная</a></li>
-                <li class="nav__item"><a href="catalog.html" class="nav__link">Каталог</a></li>
-                <li class="nav__item"><a href="about.html" class="nav__link">О нас</a></li>
-                <li class="nav__item"><a href="credit.html" class="nav__link">Кредит</a></li>
-                <li class="nav__item"><a href="cart.html" class="nav__link">Корзина</a></li>
-            </ul>
-        </nav>
+        <h2 class="hero__title">О магазине MusicStore</h2>
+        <p class="hero__text">Более 10 лет мы помогаем музыкантам находить свой идеальный инструмент</p>
     </div>
-</header>
+</section>
 
-<main class="main">
-    <section class="hero">
-        <div class="container">
-            <h2 class="hero__title">О магазине MusicStore</h2>
-            <p class="hero__text">Более 10 лет мы помогаем музыкантам находить свой идеальный инструмент</p>
-        </div>
-    </section>
+<section class="about-history">
+    <div class="container">
+        <div class="history-content">
+            <h2 class="section-title">Наша история</h2>
+            <div class="history-text">
+                <p>MusicStore был основан в 2013 году группой энтузиастов-музыкантов, которые устали от безликих музыкальных магазинов. Мы верили, что покупка инструмента должна быть вдохновляющим опытом, а не просто транзакцией.</p>
 
-    <section class="about-history">
-        <div class="container">
-            <div class="history-content">
-                <h2 class="section-title">Наша история</h2>
-                <div class="history-text">
-                    <p>MusicStore был основан в 2013 году группой энтузиастов-музыкантов, которые устали от безликих музыкальных магазинов. Мы верили, что покупка инструмента должна быть вдохновляющим опытом, а не просто транзакцией.</p>
+                <p>Начиная с небольшого магазина в центре Санкт-Петербурга, мы выросли в один из крупнейших специализированных гитарных центров России. За эти годы мы помогли более чем 15,000 музыкантов найти свой уникальный звук.</p>
+            </div>
 
-                    <p>Начиная с небольшого магазина в центре Санкт-Петербурга, мы выросли в один из крупнейших специализированных гитарных центров России. За эти годы мы помогли более чем 15,000 музыкантов найти свой уникальный звук.</p>
+            <div class="milestones">
+                <div class="milestone">
+                    <h3>2013</h3>
+                    <p>Открытие первого магазина</p>
                 </div>
-
-                <div class="milestones">
-                    <div class="milestone">
-                        <h3>2013</h3>
-                        <p>Открытие первого магазина</p>
-                    </div>
-                    <div class="milestone">
-                        <h3>2016</h3>
-                        <p>Запуск интернет-магазина</p>
-                    </div>
-                    <div class="milestone">
-                        <h3>2019</h3>
-                        <p>Открытие сервисного центра</p>
-                    </div>
-                    <div class="milestone">
-                        <h3>2023</h3>
-                        <p>Более 15,000 довольных клиентов</p>
-                    </div>
+                <div class="milestone">
+                    <h3>2016</h3>
+                    <p>Запуск интернет-магазина</p>
                 </div>
-
-                <div class="history-image">
-                    <img src="images/shop/shop2.png" alt="Интерьер магазина" class="about-image">
-                    <p class="image-caption">Наш главный магазин в Санкт-Петербурге</p>
+                <div class="milestone">
+                    <h3>2019</h3>
+                    <p>Открытие сервисного центра</p>
                 </div>
+                <div class="milestone">
+                    <h3>2023</h3>
+                    <p>Более 15,000 довольных клиентов</p>
+                </div>
+            </div>
+
+            <div class="history-image">
+                <img src="/images/shop/shop2.png" alt="Интерьер магазина" class="about-image">
+                <p class="image-caption">Наш главный магазин в Санкт-Петербурге</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="team-section">
-        <div class="container">
-            <h2 class="section-title">Наша команда</h2>
-            <div class="team-grid">
-                <div class="team-member">
-                    <img src="images/shop/team-alexei.png" alt="Алексей Петров" class="team-photo">
-                    <h3>Алексей Петров</h3>
-                    <p class="team-role">Основатель, гитарный мастер</p>
-                    <p>Опыт работы с гитарами более 20 лет. Специализируется на ремонте и модификации электрогитар.</p>
-                </div>
+<section class="team-section">
+    <div class="container">
+        <h2 class="section-title">Наша команда</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="/images/shop/team-alexei.png" alt="Алексей Петров" class="team-photo">
+                <h3>Алексей Петров</h3>
+                <p class="team-role">Основатель, гитарный мастер</p>
+                <p>Опыт работы с гитарами более 20 лет. Специализируется на ремонте и модификации электрогитар.</p>
+            </div>
 
-                <div class="team-member">
-                    <img src="images/shop/team-maria.png" alt="Мария Иванова" class="team-photo">
-                    <h3>Мария Иванова</h3>
-                    <p class="team-role">Менеджер по продажам</p>
-                    <p>Поможет подобрать идеальный инструмент под ваш стиль и бюджет. Сама играет на бас-гитаре.</p>
-                </div>
+            <div class="team-member">
+                <img src="/images/shop/team-maria.png" alt="Мария Иванова" class="team-photo">
+                <h3>Мария Иванова</h3>
+                <p class="team-role">Менеджер по продажам</p>
+                <p>Поможет подобрать идеальный инструмент под ваш стиль и бюджет. Сама играет на бас-гитаре.</p>
+            </div>
 
-                <div class="team-member">
-                    <img src="images/shop/team-dmitry.png" alt="Дмитрий Сидоров" class="team-photo">
-                    <h3>Дмитрий Сидоров</h3>
-                    <p class="team-role">Технический специалист</p>
-                    <p>Занимается настройкой и предпродажной подготовкой всех инструментов. Перфекционист в звуке.</p>
-                </div>
+            <div class="team-member">
+                <img src="/images/shop/team-dmitry.png" alt="Дмитрий Сидоров" class="team-photo">
+                <h3>Дмитрий Сидоров</h3>
+                <p class="team-role">Технический специалист</p>
+                <p>Занимается настройкой и предпродажной подготовкой всех инструментов. Перфекционист в звуке.</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="values-section">
-        <div class="container">
-            <h2 class="section-title">Наши ценности</h2>
-            <div class="values-grid">
-                <div class="value-card">
-                    <h3>🎵 Качество</h3>
-                    <p>Мы тщательно отбираем каждый инструмент и даем официальную гарантию 2 года</p>
-                </div>
-                <div class="value-card">
-                    <h3>🤝 Честность</h3>
-                    <p>Прозрачные цены, честные консультации и никаких скрытых платежей</p>
-                </div>
-                <div class="value-card">
-                    <h3>🎸 Экспертиза</h3>
-                    <p>Наша команда - практикующие музыканты с многолетним опытом</p>
-                </div>
-                <div class="value-card">
-                    <h3>❤️ Любовь к музыке</h3>
-                    <p>Мы не просто продаем гитары - мы помогаем создавать музыку</p>
-                </div>
+<section class="values-section">
+    <div class="container">
+        <h2 class="section-title">Наши ценности</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <h3>🎵 Качество</h3>
+                <p>Мы тщательно отбираем каждый инструмент и даем официальную гарантию 2 года</p>
+            </div>
+            <div class="value-card">
+                <h3>🤝 Честность</h3>
+                <p>Прозрачные цены, честные консультации и никаких скрытых платежей</p>
+            </div>
+            <div class="value-card">
+                <h3>🎸 Экспертиза</h3>
+                <p>Наша команда - практикующие музыканты с многолетним опытом</p>
+            </div>
+            <div class="value-card">
+                <h3>❤️ Любовь к музыке</h3>
+                <p>Мы не просто продаем гитары - мы помогаем создавать музыку</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="api-testimonials">
-        <div class="container">
-            <h2 class="section-title">Отзывы клиентов со всего мира</h2>
-            <p class="section-subtitle">Реальные мнения, загруженные из внешнего API</p>
+<section class="api-testimonials">
+    <div class="container">
+        <h2 class="section-title">Отзывы клиентов со всего мира</h2>
+        <p class="section-subtitle">Реальные мнения, загруженные из внешнего API</p>
 
-            <div class="reviews-controls">
-                <button class="button button--primary" id="loadReviewsBtn">
-                    <span class="btn-text">Загрузить отзывы</span>
-                    <span class="btn-loader" style="display: none;">⌛</span>
-                </button>
+        <div class="reviews-controls">
+            <button class="button button--primary" id="loadReviewsBtn">
+                <span class="btn-text">Загрузить отзывы</span>
+                <span class="btn-loader" style="display: none;">⌛</span>
+            </button>
 
-                <div class="filter-controls">
-                    <select id="reviewFilter" class="filter-select">
-                        <option value="all">Все отзывы</option>
-                        <option value="guitar">О гитарах</option>
-                        <option value="service">Об услугах</option>
-                        <option value="delivery">О доставке</option>
-                    </select>
+            <div class="filter-controls">
+                <select id="reviewFilter" class="filter-select">
+                    <option value="all">Все отзывы</option>
+                    <option value="guitar">О гитарах</option>
+                    <option value="service">Об услугах</option>
+                    <option value="delivery">О доставке</option>
+                </select>
 
-                    <select id="reviewSort" class="filter-select">
-                        <option value="newest">Сначала новые</option>
-                        <option value="oldest">Сначала старые</option>
-                        <option value="rating">По рейтингу</option>
-                    </select>
-                </div>
+                <select id="reviewSort" class="filter-select">
+                    <option value="newest">Сначала новые</option>
+                    <option value="oldest">Сначала старые</option>
+                    <option value="rating">По рейтингу</option>
+                </select>
             </div>
+        </div>
 
-            <div class="preloader-container" id="preloaderContainer" style="display: none;">
-                <div class="preloader">
-                    <div class="preloader__spinner"></div>
-                    <p class="preloader__text">Загружаем отзывы...</p>
-                </div>
+        <div class="preloader-container" id="preloaderContainer" style="display: none;">
+            <div class="preloader">
+                <div class="preloader__spinner"></div>
+                <p class="preloader__text">Загружаем отзывы...</p>
             </div>
+        </div>
 
-            <div class="error-container" id="errorContainer" style="display: none;">
-                <div class="error-message">
-                    <span class="error-icon">⚠️</span>
-                    <h3 class="error-title" id="errorTitle"></h3>
-                    <p class="error-text" id="errorText"></p>
-                    <button class="button button--secondary" id="retryBtn">Попробовать снова</button>
-                </div>
+        <div class="error-container" id="errorContainer" style="display: none;">
+            <div class="error-message">
+                <span class="error-icon">⚠️</span>
+                <h3 class="error-title" id="errorTitle"></h3>
+                <p class="error-text" id="errorText"></p>
+                <button class="button button--secondary" id="retryBtn">Попробовать снова</button>
             </div>
+        </div>
 
-            <div class="reviews-container" id="reviewsContainer">
-                <p class="no-reviews">Нажмите "Загрузить отзывы", чтобы увидеть мнения наших клиентов</p>
-            </div>
+        <div class="reviews-container" id="reviewsContainer">
+            <p class="no-reviews">Нажмите "Загрузить отзывы", чтобы увидеть мнения наших клиентов</p>
+        </div>
 
-            <template id="reviewTemplate">
-                <article class="review-card">
-                    <div class="review-card__header">
-                        <div class="review-card__user">
-                            <div class="review-card__avatar">
-                                <img src="" alt="Аватар" class="review-card__avatar-img">
-                            </div>
-                            <div class="review-card__user-info">
-                                <h3 class="review-card__username"></h3>
-                                <span class="review-card__date"></span>
-                            </div>
+        <template id="reviewTemplate">
+            <article class="review-card">
+                <div class="review-card__header">
+                    <div class="review-card__user">
+                        <div class="review-card__avatar">
+                            <img src="" alt="Аватар" class="review-card__avatar-img">
                         </div>
-                        <div class="review-card__rating">
-                            <span class="rating-stars"></span>
-                            <span class="review-card__category"></span>
+                        <div class="review-card__user-info">
+                            <h3 class="review-card__username"></h3>
+                            <span class="review-card__date"></span>
                         </div>
                     </div>
-                    <div class="review-card__content">
-                        <h4 class="review-card__title"></h4>
-                        <p class="review-card__text"></p>
+                    <div class="review-card__rating">
+                        <span class="rating-stars"></span>
+                        <span class="review-card__category"></span>
                     </div>
-                    <div class="review-card__footer">
-                        <span class="review-card__instrument"></span>
-                        <button class="review-card__like-btn">❤️ <span class="like-count">0</span></button>
-                    </div>
-                </article>
-            </template>
-        </div>
-    </section>
-</main>
-
-<footer class="footer">
-    <div class="container">
-        <h2 class="footer__title">Контакты</h2>
-        <address class="footer__address">
-            <p class="footer__text">г. Санкт-Петербург, ул. Пушкина, д. 15</p>
-            <p class="footer__text">Телефон: <a href="tel:+74951234567" class="footer__link">+7 (495) 123-45-67</a></p>
-            <p class="footer__text">Email: <a href="mailto:info@musicstore.ru" class="footer__link">info@musicstore.ru</a></p>
-        </address>
-
-        <pre class="ascii-art">
-                              ,
-                          ,   |
-       _,,._              |  0'
-     ,'     `.__,--.     0'
-    /   .--.        |           ,,,
-    | [=========|==|==|=|==|=|==___]
-    \   "--"  __    |           '''
-     `._   _,'  `--'
-        ""'     ,   ,0     ,
-    hjm         |)  |)   ,'|
-      ____     0'   '   | 0'
-      |  |             0'
-     0' 0'
-            </pre>
-
-        <p class="footer__copyright">&copy; 2025 MusicStore. Все права защищены.</p>
+                </div>
+                <div class="review-card__content">
+                    <h4 class="review-card__title"></h4>
+                    <p class="review-card__text"></p>
+                </div>
+                <div class="review-card__footer">
+                    <span class="review-card__instrument"></span>
+                    <button class="review-card__like-btn">❤️ <span class="like-count">0</span></button>
+                </div>
+            </article>
+        </template>
     </div>
-</footer>
+</section>
 
 <script>
     const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
@@ -749,5 +699,5 @@
         }
     }
 </style>
-</body>
-</html>
+
+<%- include('../partials/footer', { loadTime: typeof loadTime !== 'undefined' ? loadTime : 0 }) %>

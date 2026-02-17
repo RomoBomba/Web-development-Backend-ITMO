@@ -1,0 +1,30 @@
+<div class="session-block">
+    <% if (isAuthenticated) { %>
+        <!-- СОСТОЯНИЕ: ПОЛЬЗОВАТЕЛЬ АВТОРИЗОВАН -->
+        <div class="user-info">
+            <div class="user-avatar">
+                <img src="/images/default-avatar.png" alt="Аватар" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'20\' fill=\'%233498db\'/%3E%3Ctext x=\'20\' y=\'25\' font-size=\'16\' text-anchor=\'middle\' fill=\'white\' font-family=\'Arial\'%3E👤%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="user-details">
+                <span class="user-greeting">Привет, <strong>Гость</strong>!</span>
+                <div class="user-actions">
+                    <a href="/profile" class="session-link">Профиль</a>
+                    <span class="separator">|</span>
+                    <a href="/?auth=false" class="session-link logout-link">Выйти</a>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <!-- СОСТОЯНИЕ: ПОЛЬЗОВАТЕЛЬ НЕ АВТОРИЗОВАН -->
+        <div class="auth-buttons">
+            <a href="/?auth=true" class="session-link login-link">
+                <span class="icon">🔐</span>
+                Войти
+            </a>
+            <a href="/register" class="session-link register-link">
+                <span class="icon">📝</span>
+                Регистрация
+            </a>
+        </div>
+    <% } %>
+</div>
