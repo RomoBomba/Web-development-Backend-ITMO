@@ -1298,16 +1298,19 @@ p {
     margin-bottom: 1rem;
 }
 
-/* для корзины */
+/*!* для корзины *!*/
+/* ===== ИСПРАВЛЕННАЯ КОРЗИНА ===== */
 .cart-section {
     padding: 2rem 0;
     background: var(--white);
+    overflow-x: hidden;
 }
 
 .cart-layout {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 3rem;
+    max-width: 100%;
 }
 
 .cart-title {
@@ -1325,6 +1328,12 @@ p {
     margin-bottom: 1rem;
     background: var(--white);
     transition: all 0.3s ease;
+    max-width: 100%;
+}
+
+.cart-item-image {
+    width: 100%;
+    max-width: 100px;
 }
 
 .cart-item-image img {
@@ -1334,18 +1343,30 @@ p {
     border-radius: var(--border-radius);
 }
 
-.cart-item-details h3 {
+.cart-item-details {
+    min-width: 0;
+    word-wrap: break-word;
+}
+
+.cart-item-title {
+    font-size: 1.1rem;
     margin-bottom: 0.5rem;
-    color: var(--primary-color);
+    white-space: normal;
 }
 
 .cart-item-description {
     color: var(--text-light);
     margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .cart-item-meta {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     font-size: 0.8rem;
     color: var(--text-light);
@@ -1362,6 +1383,8 @@ p {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .quantity-btn {
@@ -1371,11 +1394,23 @@ p {
     background: var(--white);
     border-radius: 50%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+    background: var(--primary-color);
+    color: white;
 }
 
 .quantity {
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     font-weight: 600;
+    min-width: 30px;
+    text-align: center;
 }
 
 .remove-btn {
@@ -1397,6 +1432,7 @@ p {
     height: fit-content;
     position: sticky;
     top: 100px;
+    max-width: 100%;
 }
 
 .summary-title {
@@ -1435,13 +1471,20 @@ p {
     display: flex;
     gap: 0.5rem;
     margin-top: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .promo-input-group input {
     flex: 1;
-    padding: 0.5rem;
+    min-width: 150px;
+    padding: 0.75rem;
     border: 1px solid #e1e8ed;
     border-radius: var(--border-radius);
+}
+
+.promo-input-group button {
+    white-space: nowrap;
+    padding: 0.75rem 1rem;
 }
 
 .shipping-options {
@@ -1478,22 +1521,36 @@ p {
     background: #f8f9fa;
 }
 
-/* адаптивность */
+/* МОБИЛЬНАЯ ВЕРСИЯ КОРЗИНЫ */
+@media (max-width: 1024px) {
+    .cart-layout {
+        grid-template-columns: 1.5fr 1fr;
+        gap: 2rem;
+    }
+}
+
 @media (max-width: 768px) {
-    .history-content {
-        grid-template-columns: 1fr;
+    .cart-section {
+        padding: 1rem 0;
     }
 
     .cart-layout {
         grid-template-columns: 1fr;
-    }
-
-    .calculator {
-        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 
     .cart-item {
         grid-template-columns: 80px 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .cart-item-image {
+        max-width: 80px;
+    }
+
+    .cart-item-image img {
+        height: 70px;
     }
 
     .cart-item-controls {
@@ -1501,11 +1558,73 @@ p {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #e1e8ed;
     }
 
-    .filters {
+    .cart-item-price {
+        font-size: 1.1rem;
+    }
+
+    .quantity-controls {
+        justify-content: flex-start;
+    }
+
+    .cart-summary {
+        position: static;
+        padding: 1.5rem;
+    }
+
+    .summary-row {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .promo-input-group {
         flex-direction: column;
+    }
+
+    .promo-input-group button {
+        width: 100%;
+    }
+
+    .shipping-options {
+        margin-bottom: 1.5rem;
+    }
+
+    .checkout-btn {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-item {
+        grid-template-columns: 60px 1fr;
+        padding: 0.75rem;
+    }
+
+    .cart-item-image img {
+        height: 60px;
+    }
+
+    .cart-item-title {
+        font-size: 1rem;
+    }
+
+    .cart-item-description {
+        -webkit-line-clamp: 1;
+    }
+
+    .cart-item-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .quantity-btn {
+        width: 36px;
+        height: 36px;
     }
 }
 
@@ -1614,23 +1733,20 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: #f5f5f5;
     border-radius: 10px;
     overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.swiper-slide:hover {
-    transform: scale(1.02);
 }
 
 .swiper-slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
+    object-fit: contain;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 10px;
 }
 
-/* Кнопки навигации */
+/* Кнопки навигации для Swiper */
 .swiper-button-next,
 .swiper-button-prev {
     color: var(--primary-color);
@@ -1655,7 +1771,7 @@ p {
     transform: scale(1.1);
 }
 
-/* Пагинация (точки) */
+/* Пагинация (точки) для Swiper */
 .swiper-pagination-bullet {
     width: 12px;
     height: 12px;
@@ -1668,6 +1784,28 @@ p {
     background: var(--primary-color);
     opacity: 1;
     transform: scale(1.2);
+}
+
+/* адаптивность для Swiper */
+@media (max-width: 768px) {
+    .gallery-swiper {
+        height: 300px;
+    }
+
+    .swiper-slide img {
+        object-fit: contain;
+        padding: 5px;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+        display: none;
+    }
+
+    .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+    }
 }
 
 /* Для Inputmask и форм */
@@ -2103,7 +2241,7 @@ p {
 .price--current { color: var(--secondary-color); font-weight: 700; }
 .price--old { color: var(--text-light); margin-left: 0.5rem; font-size: 1rem; }
 
-/* Таблица */
+/* Таблица сравнения */
 .comparison-table {
     width: 100%;
     border-collapse: collapse;
@@ -2111,8 +2249,79 @@ p {
     min-width: 600px;
 }
 
-.comparison-table th { background: var(--primary-color); color: white; padding: 1.2rem 1rem; }
-.comparison-table td { padding: 1.2rem 1rem; border-bottom: 1px solid #e1e8ed; }
+.comparison-table th,
+.comparison-table td {
+    padding: 1.2rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e1e8ed;
+}
+
+.comparison-table th {
+    background: var(--primary-color);
+    color: var(--white);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.comparison-table tr:nth-child(even) td {
+    background: #f0f3f5;
+}
+
+.comparison-table tr:hover td {
+    background: #e3f2fd;
+}
+
+/* адаптивность таблицы сравнения */
+@media (max-width: 768px) {
+    .comparison-table {
+        min-width: 100%;
+        display: block;
+        border: none;
+    }
+
+    .comparison-table thead {
+        display: none;
+    }
+
+    .comparison-table tbody {
+        display: block;
+    }
+
+    .comparison-table tr {
+        display: block;
+        margin-bottom: 1.5rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        padding: 1rem;
+        border: 1px solid #e1e8ed;
+    }
+
+    .comparison-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0.5rem;
+        border-bottom: 1px dashed #e1e8ed;
+        border-right: none;
+    }
+
+    .comparison-table td:last-child {
+        border-bottom: none;
+    }
+
+    .comparison-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-right: 1rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
 
 /* Галерея swiper */
 .gallery-swiper { width: 100%; height: 400px; margin: 2rem 0; border-radius: 12px; overflow: hidden; }
