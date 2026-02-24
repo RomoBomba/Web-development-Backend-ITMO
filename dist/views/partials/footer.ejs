@@ -1,0 +1,38 @@
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <h2 class="footer__title">Контакты</h2>
+        <address class="footer__address">
+            <p class="footer__text">г. Санкт-Петербург, ул. Пушкина, д. 15</p>
+            <p class="footer__text">Телефон: <a href="tel:+74951234567" class="footer__link">+7 (495) 123-45-67</a></p>
+            <p class="footer__text">Email: <a href="mailto:info@musicstore.ru" class="footer__link">info@musicstore.ru</a></p>
+        </address>
+
+        <pre class="ascii-art">
+                              ,
+                          ,   |
+       _,,._              |  0'
+     ,'     `.__,--.     0'
+    /   .--.        |           ,,,
+    | [=========|==|==|=|==|=|==___]
+    \   "--"  __    |           '''
+     `._   _,'  `--'
+        ""'     ,   ,0     ,
+    hjm         |)  |)   ,'|
+      ____     0'   '   | 0'
+      |  |             0'
+     0' 0'
+            </pre>
+
+        <% if (typeof loadTime !== 'undefined') { %>
+            <div class="load-time-info">⏱️ Страница загружена за <%= loadTime %> мс</div>
+        <% } %>
+
+        <p class="footer__copyright">&copy; 2025 MusicStore. Все права защищены.</p>
+    </div>
+</footer>
+
+<%- include('scripts') %>
+</body>
+</html>

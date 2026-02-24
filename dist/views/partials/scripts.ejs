@@ -1,0 +1,26 @@
+<script src="/js/main.js" defer></script>
+<script src="/js/api.js" defer></script>
+
+<% if (useSwiper) { %>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new Swiper('.gallery-swiper', {
+                loop: true,
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+            });
+        });
+    </script>
+<% } %>
+
+<% if (useInputMask) { %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
+    <script>
+        Inputmask({ mask: '+7 (999) 999-99-99' }).mask('.phone-mask');
+    </script>
+<% } %>
+
+<% if (pageScript) { %>
+    <script type="module" src="/js/<%= pageScript %>" defer></script>
+<% } %>

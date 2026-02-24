@@ -1,0 +1,703 @@
+<%- include('../partials/header', {
+title: 'MusicStore - О нас',
+metaKeywords: 'о магазине MusicStore, история, команда, отзывы',
+metaDescription: 'О магазине MusicStore - наша история, команда и философия. Более 10 лет на рынке музыкальных инструментов',
+currentPage: 'about',
+useSwiper: false,
+useInputMask: false,
+pageScript: 'main.js',
+cartCount: typeof cartCount !== 'undefined' ? cartCount : 0,
+isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : false
+}) %>
+
+<section class="hero">
+    <div class="container">
+        <h2 class="hero__title">О магазине MusicStore</h2>
+        <p class="hero__text">Более 10 лет мы помогаем музыкантам находить свой идеальный инструмент</p>
+    </div>
+</section>
+
+<section class="about-history">
+    <div class="container">
+        <div class="history-content">
+            <h2 class="section-title">Наша история</h2>
+            <div class="history-text">
+                <p>MusicStore был основан в 2013 году группой энтузиастов-музыкантов, которые устали от безликих музыкальных магазинов. Мы верили, что покупка инструмента должна быть вдохновляющим опытом, а не просто транзакцией.</p>
+
+                <p>Начиная с небольшого магазина в центре Санкт-Петербурга, мы выросли в один из крупнейших специализированных гитарных центров России. За эти годы мы помогли более чем 15,000 музыкантов найти свой уникальный звук.</p>
+            </div>
+
+            <div class="milestones">
+                <div class="milestone">
+                    <h3>2013</h3>
+                    <p>Открытие первого магазина</p>
+                </div>
+                <div class="milestone">
+                    <h3>2016</h3>
+                    <p>Запуск интернет-магазина</p>
+                </div>
+                <div class="milestone">
+                    <h3>2019</h3>
+                    <p>Открытие сервисного центра</p>
+                </div>
+                <div class="milestone">
+                    <h3>2023</h3>
+                    <p>Более 15,000 довольных клиентов</p>
+                </div>
+            </div>
+
+            <div class="history-image">
+                <img src="/images/shop/shop2.png" alt="Интерьер магазина" class="about-image">
+                <p class="image-caption">Наш главный магазин в Санкт-Петербурге</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="team-section">
+    <div class="container">
+        <h2 class="section-title">Наша команда</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="/images/shop/team-alexei.png" alt="Алексей Петров" class="team-photo">
+                <h3>Алексей Петров</h3>
+                <p class="team-role">Основатель, гитарный мастер</p>
+                <p>Опыт работы с гитарами более 20 лет. Специализируется на ремонте и модификации электрогитар.</p>
+            </div>
+
+            <div class="team-member">
+                <img src="/images/shop/team-maria.png" alt="Мария Иванова" class="team-photo">
+                <h3>Мария Иванова</h3>
+                <p class="team-role">Менеджер по продажам</p>
+                <p>Поможет подобрать идеальный инструмент под ваш стиль и бюджет. Сама играет на бас-гитаре.</p>
+            </div>
+
+            <div class="team-member">
+                <img src="/images/shop/team-dmitry.png" alt="Дмитрий Сидоров" class="team-photo">
+                <h3>Дмитрий Сидоров</h3>
+                <p class="team-role">Технический специалист</p>
+                <p>Занимается настройкой и предпродажной подготовкой всех инструментов. Перфекционист в звуке.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="values-section">
+    <div class="container">
+        <h2 class="section-title">Наши ценности</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <h3>🎵 Качество</h3>
+                <p>Мы тщательно отбираем каждый инструмент и даем официальную гарантию 2 года</p>
+            </div>
+            <div class="value-card">
+                <h3>🤝 Честность</h3>
+                <p>Прозрачные цены, честные консультации и никаких скрытых платежей</p>
+            </div>
+            <div class="value-card">
+                <h3>🎸 Экспертиза</h3>
+                <p>Наша команда - практикующие музыканты с многолетним опытом</p>
+            </div>
+            <div class="value-card">
+                <h3>❤️ Любовь к музыке</h3>
+                <p>Мы не просто продаем гитары - мы помогаем создавать музыку</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="api-testimonials">
+    <div class="container">
+        <h2 class="section-title">Отзывы клиентов со всего мира</h2>
+        <p class="section-subtitle">Реальные мнения, загруженные из внешнего API</p>
+
+        <div class="reviews-controls">
+            <button class="button button--primary" id="loadReviewsBtn">
+                <span class="btn-text">Загрузить отзывы</span>
+                <span class="btn-loader" style="display: none;">⌛</span>
+            </button>
+
+            <div class="filter-controls">
+                <select id="reviewFilter" class="filter-select">
+                    <option value="all">Все отзывы</option>
+                    <option value="guitar">О гитарах</option>
+                    <option value="service">Об услугах</option>
+                    <option value="delivery">О доставке</option>
+                </select>
+
+                <select id="reviewSort" class="filter-select">
+                    <option value="newest">Сначала новые</option>
+                    <option value="oldest">Сначала старые</option>
+                    <option value="rating">По рейтингу</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="preloader-container" id="preloaderContainer" style="display: none;">
+            <div class="preloader">
+                <div class="preloader__spinner"></div>
+                <p class="preloader__text">Загружаем отзывы...</p>
+            </div>
+        </div>
+
+        <div class="error-container" id="errorContainer" style="display: none;">
+            <div class="error-message">
+                <span class="error-icon">⚠️</span>
+                <h3 class="error-title" id="errorTitle"></h3>
+                <p class="error-text" id="errorText"></p>
+                <button class="button button--secondary" id="retryBtn">Попробовать снова</button>
+            </div>
+        </div>
+
+        <div class="reviews-container" id="reviewsContainer">
+            <p class="no-reviews">Нажмите "Загрузить отзывы", чтобы увидеть мнения наших клиентов</p>
+        </div>
+
+        <template id="reviewTemplate">
+            <article class="review-card">
+                <div class="review-card__header">
+                    <div class="review-card__user">
+                        <div class="review-card__avatar">
+                            <img src="" alt="Аватар" class="review-card__avatar-img">
+                        </div>
+                        <div class="review-card__user-info">
+                            <h3 class="review-card__username"></h3>
+                            <span class="review-card__date"></span>
+                        </div>
+                    </div>
+                    <div class="review-card__rating">
+                        <span class="rating-stars"></span>
+                        <span class="review-card__category"></span>
+                    </div>
+                </div>
+                <div class="review-card__content">
+                    <h4 class="review-card__title"></h4>
+                    <p class="review-card__text"></p>
+                </div>
+                <div class="review-card__footer">
+                    <span class="review-card__instrument"></span>
+                    <button class="review-card__like-btn">❤️ <span class="like-count">0</span></button>
+                </div>
+            </article>
+        </template>
+    </div>
+</section>
+
+<script>
+    const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
+
+    const loadReviewsBtn = document.getElementById('loadReviewsBtn');
+    const reviewsContainer = document.getElementById('reviewsContainer');
+    const preloaderContainer = document.getElementById('preloaderContainer');
+    const errorContainer = document.getElementById('errorContainer');
+    const errorTitle = document.getElementById('errorTitle');
+    const errorText = document.getElementById('errorText');
+    const retryBtn = document.getElementById('retryBtn');
+    const reviewFilter = document.getElementById('reviewFilter');
+    const reviewSort = document.getElementById('reviewSort');
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadReviewsBtn.addEventListener('click', loadReviews);
+        retryBtn.addEventListener('click', loadReviews);
+        reviewFilter.addEventListener('change', filterReviews);
+        reviewSort.addEventListener('change', filterReviews);
+    });
+
+    async function loadReviews() {
+        try {
+            showPreloader();
+            hideError();
+            clearReviews();
+            const posts = await fetchRandomPosts();
+            const users = await fetchUsers(posts);
+            displayReviews(posts, users);
+        } catch (error) {
+            handleError(error);
+        } finally {
+            hidePreloader();
+        }
+    }
+
+    async function fetchRandomPosts() {
+        const randomParams = getRandomFilterParams();
+        const url = `${API_BASE_URL}/posts?${randomParams}`;
+        console.log('Запрашиваем посты с параметрами:', randomParams);
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Ошибка сервера: ${response.status}`);
+        }
+        return await response.json();
+    }
+
+    async function fetchUsers(posts) {
+        const userIds = [...new Set(posts.map(post => post.userId))];
+        const users = [];
+
+        for (const userId of userIds.slice(0, 5)) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+                if (response.ok) {
+                    const user = await response.json();
+                    users.push(user);
+                }
+            } catch (error) {
+                console.warn(`Не удалось загрузить пользователя ${userId}:`, error);
+            }
+        }
+
+        return users;
+    }
+
+    function displayReviews(posts, users) {
+        const reviewTemplate = document.getElementById('reviewTemplate');
+        reviewsContainer.innerHTML = '';
+        posts.slice(0, 6).forEach((post, index) => {
+            const user = users.find(u => u.id === post.userId) || users[0] || createMockUser(post.userId);
+            const reviewClone = document.importNode(reviewTemplate.content, true);
+            fillReviewData(reviewClone, post, user, index);
+            reviewsContainer.appendChild(reviewClone);
+        });
+
+        filterReviews();
+        addLikeHandlers();
+    }
+
+    function fillReviewData(reviewElement, post, user, index) {
+        const categories = ['guitar', 'service', 'delivery'];
+        const instruments = ['Fender Stratocaster', 'Gibson Les Paul', 'Yamaha Acoustic', 'Ibanez RG', 'Epiphone ES-335', 'Bass Guitar'];
+        const category = categories[Math.floor(Math.random() * categories.length)];
+        const rating = Math.floor(Math.random() * 5) + 1;
+        const instrument = instruments[Math.floor(Math.random() * instruments.length)];
+        const likes = Math.floor(Math.random() * 50);
+        const daysAgo = Math.floor(Math.random() * 30) + 1;
+
+        const avatarUrl = `https://i.pravatar.cc/150?img=${(user.id || index) % 70}`;
+        const elements = {
+            '.review-card__avatar-img': { src: avatarUrl },
+            '.review-card__username': { textContent: user.name || `Клиент #${post.userId}` },
+            '.review-card__date': { textContent: `${daysAgo} дней назад` },
+            '.review-card__title': { textContent: post.title.length > 50 ? post.title.substring(0, 50) + '...' : post.title },
+            '.review-card__text': { textContent: post.body },
+            '.review-card__category': { textContent: getCategoryLabel(category) },
+            '.review-card__instrument': { textContent: instrument },
+            '.like-count': { textContent: likes }
+        };
+
+        Object.entries(elements).forEach(([selector, data]) => {
+            const element = reviewElement.querySelector(selector);
+            if (element) {
+                Object.entries(data).forEach(([key, value]) => {
+                    element[key] = value;
+                });
+            }
+        });
+
+        const starsElement = reviewElement.querySelector('.rating-stars');
+        if (starsElement) {
+            starsElement.innerHTML = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        }
+
+        const reviewCard = reviewElement.querySelector('.review-card');
+        if (reviewCard) {
+            reviewCard.dataset.category = category;
+            reviewCard.dataset.rating = rating;
+            reviewCard.dataset.date = daysAgo;
+        }
+    }
+
+    function createMockUser(userId) {
+        const names = ['Иван Петров', 'Мария Сидорова', 'Алексей Иванов', 'Екатерина Смирнова', 'Дмитрий Кузнецов'];
+        return {
+            id: userId,
+            name: names[userId % names.length],
+            email: `user${userId}@example.com`
+        };
+    }
+
+    function getCategoryLabel(category) {
+        const labels = {
+            'guitar': '🎸 О гитарах',
+            'service': '🔧 Об услугах',
+            'delivery': '🚚 О доставке'
+        };
+        return labels[category] || category;
+    }
+
+    function getRandomFilterParams() {
+        const filters = [
+            `_limit=${Math.floor(Math.random() * 6) + 3}`,
+            `_page=${Math.floor(Math.random() * 10) + 1}&_limit=4`,
+            `userId=${Math.floor(Math.random() * 10) + 1}`,
+            `_sort=title&_order=asc&_limit=5`,
+            `_sort=id&_order=desc&_limit=6`
+        ];
+        return filters[Math.floor(Math.random() * filters.length)];
+    }
+
+    function filterReviews() {
+        const selectedCategory = reviewFilter.value;
+        const sortType = reviewSort.value;
+        const reviewCards = Array.from(document.querySelectorAll('.review-card'));
+
+        reviewCards.forEach(card => {
+            if (selectedCategory === 'all' || card.dataset.category === selectedCategory) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        const visibleCards = reviewCards.filter(card => card.style.display !== 'none');
+        if (visibleCards.length > 0) {
+            if (sortType === 'newest') {
+                visibleCards.sort((a, b) => a.dataset.date - b.dataset.date);
+            } else if (sortType === 'oldest') {
+                visibleCards.sort((a, b) => b.dataset.date - a.dataset.date);
+            } else if (sortType === 'rating') {
+                visibleCards.sort((a, b) => b.dataset.rating - a.dataset.rating);
+            }
+
+            visibleCards.forEach(card => {
+                reviewsContainer.appendChild(card);
+            });
+        }
+    }
+
+    function addLikeHandlers() {
+        document.querySelectorAll('.review-card__like-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const likeCount = this.querySelector('.like-count');
+                let count = parseInt(likeCount.textContent);
+                count++;
+                likeCount.textContent = count;
+                this.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 300);
+            });
+        });
+    }
+
+    function handleError(error) {
+        console.error('Ошибка загрузки отзывов:', error);
+
+        let title, text;
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            title = 'Ошибка сети';
+            text = 'Проверьте подключение к интернету. Возможно, требуется VPN для доступа к API.';
+        } else if (error.message.includes('Ошибка сервера')) {
+            title = 'Ошибка сервера';
+            text = 'API временно недоступен. Попробуйте позже.';
+        } else {
+            title = 'Ошибка загрузки';
+            text = 'Не удалось загрузить отзывы. Попробуйте еще раз.';
+        }
+
+        errorTitle.textContent = title;
+        errorText.textContent = text;
+        errorContainer.style.display = 'block';
+    }
+
+    function showPreloader() {
+        const btnText = loadReviewsBtn.querySelector('.btn-text');
+        const btnLoader = loadReviewsBtn.querySelector('.btn-loader');
+        btnText.textContent = 'Загрузка...';
+        btnLoader.style.display = 'inline-block';
+        preloaderContainer.style.display = 'block';
+        loadReviewsBtn.disabled = true;
+    }
+
+    function hidePreloader() {
+        const btnText = loadReviewsBtn.querySelector('.btn-text');
+        const btnLoader = loadReviewsBtn.querySelector('.btn-loader');
+        btnText.textContent = 'Обновить отзывы';
+        btnLoader.style.display = 'none';
+        preloaderContainer.style.display = 'none';
+        loadReviewsBtn.disabled = false;
+    }
+
+    function hideError() {
+        errorContainer.style.display = 'none';
+    }
+
+    function clearReviews() {
+        const noReviews = reviewsContainer.querySelector('.no-reviews');
+        if (noReviews) {
+            noReviews.style.display = 'none';
+        }
+    }
+</script>
+
+<style>
+    .api-testimonials {
+        padding: 4rem 0;
+        background: #f8f9fa;
+    }
+
+    .api-testimonials .section-title {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .api-testimonials .section-subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    .reviews-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-controls {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .filter-select {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 2px solid #e1e8ed;
+        background: white;
+        font-family: inherit;
+        min-width: 150px;
+        transition: border-color 0.3s ease;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    /* прелоадер */
+    .preloader-container {
+        text-align: center;
+        padding: 3rem;
+    }
+
+    .preloader {
+        display: inline-block;
+        text-align: center;
+    }
+
+    .preloader__spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary-color);
+        animation: spin 1s ease-in-out infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .preloader__text {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    /* ошибка */
+    .error-container {
+        text-align: center;
+        padding: 3rem;
+    }
+
+    .error-message {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 2px solid #ff6b6b;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .error-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .error-title {
+        color: #e74c3c;
+        margin-bottom: 0.5rem;
+    }
+
+    .error-text {
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+
+    /* контейнер */
+    .reviews-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .no-reviews {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+        font-style: italic;
+    }
+
+    /* карточка */
+    .review-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .review-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .review-card__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .review-card__user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .review-card__avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .review-card__avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .review-card__user-info {
+        flex: 1;
+    }
+
+    .review-card__username {
+        margin: 0;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .review-card__date {
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    .review-card__rating {
+        text-align: right;
+    }
+
+    .rating-stars {
+        color: #ffc107;
+        font-size: 1.2rem;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .review-card__category {
+        display: inline-block;
+        background: var(--primary-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .review-card__content {
+        margin-bottom: 1.5rem;
+    }
+
+    .review-card__title {
+        margin: 0 0 0.5rem;
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .review-card__text {
+        margin: 0;
+        color: #666;
+        line-height: 1.5;
+        font-size: 0.95rem;
+    }
+
+    .review-card__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .review-card__instrument {
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    .review-card__like-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .review-card__like-btn:hover {
+        background: rgba(255, 192, 203, 0.1);
+    }
+
+    .like-count {
+        font-size: 0.9rem;
+        margin-left: 0.25rem;
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .reviews-controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-controls {
+            flex-direction: column;
+        }
+
+        .filter-select {
+            width: 100%;
+        }
+
+        .reviews-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<%- include('../partials/footer', { loadTime: typeof loadTime !== 'undefined' ? loadTime : 0 }) %>

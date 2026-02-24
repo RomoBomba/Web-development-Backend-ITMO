@@ -1,0 +1,99 @@
+<%- include('../partials/header', {
+title: 'MusicStore - Каталог гитар',
+metaKeywords: 'каталог гитар, купить гитару, электрогитары, акустические гитары, бас-гитары',
+metaDescription: 'Полный каталог гитар в магазине MusicStore. Электрогитары, акустические гитары, бас-гитары и аксессуары',
+currentPage: 'catalog',
+useSwiper: false,
+useInputMask: false,
+pageScript: 'catalog-page.js',
+cartCount: typeof cartCount !== 'undefined' ? cartCount : 0,
+isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : false
+}) %>
+
+<section class="hero">
+    <div class="container">
+        <h2 class="hero__title">Каталог гитар</h2>
+        <p class="hero__text">Широкий выбор качественных инструментов для музыкантов любого уровня</p>
+    </div>
+</section>
+
+<section class="catalog-filters">
+    <div class="container">
+        <div class="filters">
+            <div class="filter-group">
+                <label for="category" class="filter-label">Тип гитары:</label>
+                <select id="category" class="filter-select">
+                    <option value="all">Все гитары</option>
+                    <option value="electric">Электрогитары</option>
+                    <option value="acoustic">Акустические гитары</option>
+                    <option value="bass">Бас-гитары</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="price" class="filter-label">Цена:</label>
+                <select id="price" class="filter-select">
+                    <option value="all">Любая</option>
+                    <option value="budget">До 30,000 руб.</option>
+                    <option value="medium">30,000 - 70,000 руб.</option>
+                    <option value="premium">От 70,000 руб.</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="brand" class="filter-label">Бренд:</label>
+                <select id="brand" class="filter-select">
+                    <option value="all">Все бренды</option>
+                    <option value="fender">Fender</option>
+                    <option value="gibson">Gibson</option>
+                    <option value="ibanez">Ibanez</option>
+                    <option value="epiphone">Epiphone</option>
+                    <option value="squier">Squier</option>
+                    <option value="yamaha">Yamaha</option>
+                    <option value="bcrich">B.C. Rich</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <button class="button button--secondary" id="reset-filters">Сбросить фильтры</button>
+            </div>
+        </div>
+        <div class="filter-results">
+            <span id="results-count">Найдено товаров: <span id="results-count-number"><%= allProducts.length %></span></span>
+        </div>
+    </div>
+</section>
+
+<section class="products">
+    <div class="container">
+        <h2 class="section-title">Все гитары в наличии</h2>
+        <div class="products__grid" id="products-grid">
+        </div>
+    </div>
+</section>
+
+<section class="catalog-info">
+    <div class="container">
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>🚚 Бесплатная доставка</h3>
+                <p>При заказе от 20,000 рублей</p>
+            </div>
+            <div class="info-card">
+                <h3>🎵 Бесплатная настройка</h3>
+                <p>Профессиональная настройка перед отправкой</p>
+            </div>
+            <div class="info-card">
+                <h3>🔧 Гарантия 2 года</h3>
+                <p>Официальная гарантия на все инструменты</p>
+            </div>
+            <div class="info-card">
+                <h3>💳 Рассрочка 0%</h3>
+                <p>Возможность покупки в рассрочку</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.__PRODUCTS__ = <%- JSON.stringify(allProducts) %>;
+</script>
+
+<%- include('../partials/footer', { loadTime: typeof loadTime !== 'undefined' ? loadTime : 0 }) %>

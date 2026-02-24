@@ -1,0 +1,1001 @@
+<%- include('../partials/header', {
+title: 'MusicStore - Корзина',
+metaKeywords: 'корзина, заказ, покупка гитары, оформление заказа',
+metaDescription: 'Корзина покупок MusicStore. Оформление заказа на гитары и музыкальное оборудование',
+currentPage: 'cart',
+useSwiper: false,
+useInputMask: true,
+pageScript: 'main.js',
+cartCount: cartItemsCount,
+isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : false
+}) %>
+
+<section class="hero">
+    <div class="container">
+        <h2 class="hero__title">Корзина покупок</h2>
+        <p class="hero__text">Проверьте ваш заказ перед оформлением</p>
+    </div>
+</section>
+
+<section class="cart-section">
+    <div class="container">
+        <div class="cart-layout">
+            <div class="cart-items">
+                <h2 class="cart-title">Товары в корзине</h2>
+
+                <div class="custom-product-form">
+                    <div class="form-header">
+                        <button type="button" class="form-toggle-button" id="serviceFormToggle">
+                            <span class="toggle-icon">+</span>
+                            <h3>Добавить услугу по настройке</h3>
+                        </button>
+                        <button type="button" class="button button--secondary" id="cancelEditBtn" style="display: none;">
+                            Отменить редактирование
+                        </button>
+                    </div>
+                    <form class="service-form" id="serviceForm" style="display: none;">
+                        <div class="form-row">
+                            <div class="form__group">
+                                <label for="service-type" class="form__label">Тип услуги *</label>
+                                <select id="service-type" name="serviceType" class="form__input" required>
+                                    <option value="">Выберите услугу</option>
+                                    <option value="full-setup">Полная настройка гитары</option>
+                                    <option value="partial-setup">Частичная настройка</option>
+                                    <option value="polish">Полировка и уход</option>
+                                    <option value="strings">Замена струн</option>
+                                    <option value="electronics">Ремонт электроники</option>
+                                    <option value="custom">Индивидуальная услуга</option>
+                                </select>
+                            </div>
+
+                            <div class="form__group">
+                                <label for="service-price" class="form__label">Стоимость (руб) *</label>
+                                <input type="number" id="service-price" name="price" class="form__input"
+                                       min="500" max="20000" step="50" required readonly>
+                            </div>
+                        </div>
+
+                        <div class="form__group">
+                            <label for="service-description" class="form__label">Описание услуги</label>
+                            <textarea id="service-description" name="description" class="form__input form__textarea"
+                                      placeholder="Опишите детали услуги (необязательно)" maxlength="200"></textarea>
+                            <div class="char-counter">
+                                <span id="service-char-count">0</span>/200 символов
+                            </div>
+                        </div>
+
+                        <div class="form__group">
+                            <label for="client-name" class="form__label">Ваше имя *</label>
+                            <input type="text" id="client-name" name="clientName" class="form__input"
+                                   placeholder="Иван Иванов" required minlength="2" maxlength="50">
+                        </div>
+
+                        <div class="form__group">
+                            <label for="client-phone" class="form__label">Телефон *</label>
+                            <input type="tel" id="client-phone" name="clientPhone" class="form__input phone-mask"
+                                   placeholder="+7 (999) 123-45-67" required>
+                            <small class="form__hint">Формат: +7 (999) 123-45-67 или 89991234567</small>
+                        </div>
+
+                        <div class="form__group">
+                            <label class="form-checkbox">
+                                <input type="checkbox" id="service-urgent" name="urgent">
+                                <span class="checkmark"></span>
+                                Срочный заказ (+50% к стоимости)
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="button button--primary" id="submitBtn">Добавить услугу в корзину</button>
+                            <button type="button" class="button button--secondary" onclick="resetServiceForm()">Очистить форму</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Элементы корзины будут добавлены через JavaScript -->
+            </div>
+
+            <div class="cart-summary">
+                <h3 class="summary-title">Итого</h3>
+
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span>Товары (<span id="items-count">0</span>)</span>
+                        <span id="subtotal">0 руб.</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Доставка</span>
+                        <span id="shipping-cost">0 руб.</span>
+                    </div>
+                    <div class="summary-row discount-row">
+                        <span>Скидка</span>
+                        <span id="discount">0 руб.</span>
+                    </div>
+                    <div class="summary-row total-row">
+                        <strong>К оплате</strong>
+                        <strong id="total-amount">0 руб.</strong>
+                    </div>
+                </div>
+
+                <div class="promo-code">
+                    <label for="promo-input">Промокод:</label>
+                    <div class="promo-input-group">
+                        <input type="text" id="promo-input" placeholder="Введите промокод">
+                        <button class="button button--secondary" onclick="applyPromo()">Применить</button>
+                    </div>
+                </div>
+
+                <div class="shipping-options">
+                    <h4>Способ доставки</h4>
+                    <div class="shipping-option">
+                        <input type="radio" id="delivery-courier" name="shipping" checked>
+                        <label for="delivery-courier">Курьерская доставка - бесплатно</label>
+                    </div>
+                    <div class="shipping-option">
+                        <input type="radio" id="delivery-pickup" name="shipping">
+                        <label for="delivery-pickup">Самовывоз из магазина</label>
+                    </div>
+                </div>
+
+                <button class="button button--primary checkout-btn" onclick="proceedToCheckout()">
+                    Перейти к оформлению
+                </button>
+
+                <div class="secure-payment">
+                    <p>Безопасная оплата</p>
+                    <h4>Бонус: попробуйте следующие промокоды</h4>
+                    <div class="promo-info">
+                        <p>MUSIC2024 для скидки 5000 руб</p>
+                        <p>GUITAR10 для скидки 10%</p>
+                        <p>FIRSTBUY для скидки 3000 руб</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="recommendations-section">
+    <div class="container">
+        <h2 class="section-title">Рекомендуем добавить</h2>
+        <div class="products__grid">
+            <% recommendedProducts.forEach(product => { %>
+                <%- include('../partials/product-card', { product }) %>
+            <% }) %>
+        </div>
+    </div>
+</section>
+
+<script>
+    let cartData = {
+        items: {},
+        discount: 0,
+        discountCode: null,
+        shipping: 0
+    };
+
+    let editingServiceId = null;
+
+    const productCatalog = {
+        'elixir-strings': {
+            name: 'Комплект струн Elixir',
+            price: 2200,
+            image: 'images/addition/strings-elixir.png',
+            description: 'Наноструктурное покрытие для долгого срока службы.'
+        },
+        'dunlop-picks': {
+            name: 'Медиаторы Dunlop',
+            price: 800,
+            image: 'images/addition/picks-dunlop.png',
+            description: 'Набор из 12 медиаторов разной толщины.'
+        },
+        'cort-cable': {
+            name: 'Гитарный кабель Cort',
+            price: 1500,
+            image: 'images/addition/cable.png',
+            description: 'Качественный кабель длиной 3 метра.'
+        },
+        'fender-strat': {
+            name: 'Fender American Professional II Stratocaster',
+            price: 145000,
+            image: 'images/guitars/fender-strat.png',
+            description: 'Электрогитара, цвет sunburst'
+        },
+        'yamaha-fg800': {
+            name: 'Yamaha FG800',
+            price: 18500,
+            image: 'images/guitars/yamaha-fg800.png',
+            description: 'Акустическая гитара, натуральный цвет'
+        },
+        'guitar-case': {
+            name: 'Чехол для акустической гитары',
+            price: 3200,
+            image: 'images/addition/case.png',
+            description: 'Прочный чехол с мягкой подкладкой'
+        }
+    };
+
+    function initializeCart() {
+        loadCartFromStorage();
+        initializeServiceForm();
+        renderCartItems();
+        updateCartTotals();
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                addProductToCart(productId);
+            });
+        });
+    }
+
+    function addProductToCart(productId) {
+        const product = productCatalog[productId];
+        if (!product) return;
+
+        if (cartData.items[productId]) {
+            cartData.items[productId].quantity += 1;
+        } else {
+            cartData.items[productId] = {
+                type: 'product',
+                name: product.name,
+                price: product.price,
+                quantity: 1,
+                image: product.image,
+                description: product.description
+            };
+        }
+
+        saveCartToStorage();
+        renderCartItems();
+        updateCartTotals();
+        showNotification(`Товар "${product.name}" добавлен в корзину!`, 'success');
+    }
+
+    function initializeServiceForm() {
+        const form = document.getElementById('serviceForm');
+        const charCounter = document.getElementById('service-char-count');
+        const textarea = document.getElementById('service-description');
+
+        textarea.addEventListener('input', function() {
+            charCounter.textContent = this.value.length;
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            addServiceToCart();
+        });
+
+        document.getElementById('service-type').addEventListener('change', function() {
+            updateServicePrice(this.value);
+        });
+
+        document.getElementById('service-urgent').addEventListener('change', function() {
+            updateServicePrice(document.getElementById('service-type').value);
+        });
+
+        document.getElementById('cancelEditBtn').addEventListener('click', function() {
+            cancelEditing();
+        });
+
+        document.getElementById('serviceFormToggle').addEventListener('click', function() {
+            const form = document.getElementById('serviceForm');
+            const isVisible = form.style.display !== 'none';
+
+            if (isVisible) {
+                form.style.display = 'none';
+                this.classList.remove('active');
+            } else {
+                form.style.display = 'block';
+                this.classList.add('active');
+            }
+        });
+
+        updateServicePrice(document.getElementById('service-type').value);
+    }
+
+    function updateServicePrice(serviceType) {
+        const basePrices = {
+            'full-setup': 6000,
+            'partial-setup': 3500,
+            'polish': 2000,
+            'strings': 1200,
+            'electronics': 5500,
+            'custom': 5500
+        };
+
+        const isUrgent = document.getElementById('service-urgent').checked;
+        const basePrice = basePrices[serviceType] || 0;
+        const finalPrice = isUrgent ? Math.round(basePrice * 1.5 / 50) * 50 : basePrice;
+
+        document.getElementById('service-price').value = finalPrice;
+    }
+
+    function addServiceToCart() {
+        const formData = {
+            type: document.getElementById('service-type').value,
+            price: parseInt(document.getElementById('service-price').value),
+            description: document.getElementById('service-description').value,
+            clientName: document.getElementById('client-name').value,
+            clientPhone: document.getElementById('client-phone').value,
+            urgent: document.getElementById('service-urgent').checked
+        };
+
+        if (!validateServiceForm(formData)) {
+            return;
+        }
+
+        let serviceId;
+        if (editingServiceId) {
+            serviceId = editingServiceId;
+            cartData.items[serviceId] = {
+                ...cartData.items[serviceId],
+                name: getServiceName(formData.type),
+                price: formData.price,
+                description: formData.description,
+                clientName: formData.clientName,
+                clientPhone: formData.clientPhone,
+                urgent: formData.urgent
+            };
+        } else {
+            serviceId = 'service-' + Date.now();
+            cartData.items[serviceId] = {
+                type: 'service',
+                name: getServiceName(formData.type),
+                price: formData.price,
+                quantity: 1,
+                description: formData.description,
+                clientName: formData.clientName,
+                clientPhone: formData.clientPhone,
+                urgent: formData.urgent,
+                addedDate: new Date().toLocaleString('ru-RU')
+            };
+        }
+
+        saveCartToStorage();
+        renderCartItems();
+        updateCartTotals();
+
+        showNotification(editingServiceId ? 'Услуга обновлена!' : 'Услуга добавлена в корзину!', 'success');
+        resetServiceForm();
+
+        editingServiceId = null;
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        document.getElementById('submitBtn').textContent = 'Добавить услугу в корзину';
+    }
+
+    function validateServiceForm(formData) {
+        let isValid = true;
+        clearValidationErrors();
+        if (!formData.type) {
+            showError('service-type', 'Выберите тип услуги');
+            isValid = false;
+        }
+
+        if (!formData.clientName || formData.clientName.length < 2) {
+            showError('client-name', 'Введите корректное имя (минимум 2 символа)');
+            isValid = false;
+        }
+
+        const phoneRegex = /^(\+7|8)[\s\-]?\(?[0-9]{3}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+        const cleanPhone = formData.clientPhone.replace(/[\s\-\(\)]/g, '');
+
+        if (!formData.clientPhone || !phoneRegex.test(formData.clientPhone) || cleanPhone.length < 11) {
+            showError('client-phone', 'Введите корректный номер телефона');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function clearValidationErrors() {
+        document.querySelectorAll('.validation-error').forEach(error => error.remove());
+        document.querySelectorAll('.form__input.invalid').forEach(input => {
+            input.classList.remove('invalid');
+        });
+    }
+
+    function showError(fieldId, message) {
+        const errorElement = document.getElementById(fieldId + '-error') ||
+            document.createElement('span');
+        errorElement.className = 'validation-error';
+        errorElement.id = fieldId + '-error';
+        errorElement.textContent = message;
+
+        const field = document.getElementById(fieldId);
+        field.classList.add('invalid');
+
+        if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('validation-error')) {
+            field.parentNode.insertBefore(errorElement, field.nextSibling);
+        }
+    }
+
+    function getServiceName(serviceType) {
+        const names = {
+            'full-setup': 'Полная настройка гитары',
+            'partial-setup': 'Частичная настройка',
+            'polish': 'Полировка и уход',
+            'strings': 'Замена струн',
+            'electronics': 'Ремонт электроники',
+            'custom': 'Индивидуальная услуга'
+        };
+        return names[serviceType] || 'Услуга';
+    }
+
+    function resetServiceForm() {
+        document.getElementById('serviceForm').reset();
+        document.getElementById('service-char-count').textContent = '0';
+        clearValidationErrors();
+        updateServicePrice(document.getElementById('service-type').value);
+        document.getElementById('serviceFormToggle').click();
+    }
+
+    function cancelEditing() {
+        editingServiceId = null;
+        resetServiceForm();
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        document.getElementById('submitBtn').textContent = 'Добавить услугу в корзину';
+        showNotification('Редактирование отменено', 'info');
+    }
+
+    function renderCartItems() {
+        const cartItemsContainer = document.querySelector('.cart-items');
+        const serviceForm = cartItemsContainer.querySelector('.custom-product-form');
+
+        cartItemsContainer.innerHTML = `
+            <h2 class="cart-title">Товары в корзине</h2>
+        `;
+
+        cartItemsContainer.appendChild(serviceForm);
+
+        if (Object.keys(cartData.items).length === 0) {
+            showEmptyCartMessage();
+            return;
+        }
+
+        Object.keys(cartData.items).forEach(itemId => {
+            const item = cartData.items[itemId];
+            let element;
+            if (item.type === 'service') {
+                element = createServiceElement(itemId, item);
+            } else {
+                element = createProductElement(itemId, item);
+            }
+            cartItemsContainer.appendChild(element);
+        });
+    }
+
+    function createProductElement(itemId, product) {
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.setAttribute('data-item-id', itemId);
+
+        div.innerHTML = `
+            <div class="cart-item-image">
+                <img src="${product.image}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Y0ZjRmNCIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIj5ObyBpbWFnZTwvdGV4dD48L3N2Zz4='">
+            </div>
+            <div class="cart-item-details">
+                <h3 class="cart-item-title">${product.name}</h3>
+                <p class="cart-item-description">${product.description || ''}</p>
+                <div class="cart-item-meta">
+                    <span class="cart-item-sku">Артикул: ${itemId}</span>
+                    <span class="cart-item-stock">В наличии</span>
+                </div>
+            </div>
+            <div class="cart-item-controls">
+                <div class="quantity-controls">
+                    <button class="quantity-btn" onclick="updateQuantity('${itemId}', -1)">-</button>
+                    <span class="quantity" id="quantity-${itemId}">${product.quantity}</span>
+                    <button class="quantity-btn" onclick="updateQuantity('${itemId}', 1)">+</button>
+                </div>
+                <div class="cart-item-price">
+                    <strong>${formatPrice(product.price * product.quantity)}</strong>
+                </div>
+                <button class="remove-btn" onclick="removeItem('${itemId}')">🗑️</button>
+            </div>
+        `;
+
+        return div;
+    }
+
+    function createServiceElement(itemId, service) {
+        const div = document.createElement('div');
+        div.className = 'cart-item service-item';
+        div.setAttribute('data-item-id', itemId);
+
+        div.innerHTML = `
+            <div class="cart-item-icon">
+                <span class="service-icon">🔧</span>
+            </div>
+            <div class="cart-item-details">
+                <h3 class="cart-item-title">${service.name} ${service.urgent ? '⚡ (Срочно)' : ''}</h3>
+                ${service.description ? `<p class="cart-item-description">${service.description}</p>` : ''}
+                <div class="cart-item-meta">
+                    <span class="cart-item-client">Клиент: ${service.clientName}</span>
+                    <span class="cart-item-phone">Тел: ${service.clientPhone}</span>
+                    <span class="cart-item-date">Добавлено: ${service.addedDate}</span>
+                </div>
+                <div class="service-actions">
+                    <button class="button button--secondary edit-service-btn" onclick="editService('${itemId}')">Редактировать</button>
+                </div>
+            </div>
+            <div class="cart-item-controls">
+                <div class="quantity-controls">
+                    <button class="quantity-btn" onclick="updateQuantity('${itemId}', -1)">-</button>
+                    <span class="quantity" id="quantity-${itemId}">${service.quantity}</span>
+                    <button class="quantity-btn" onclick="updateQuantity('${itemId}', 1)">+</button>
+                </div>
+                <div class="cart-item-price">
+                    <strong>${formatPrice(service.price * service.quantity)}</strong>
+                </div>
+                <button class="remove-btn" onclick="removeItem('${itemId}')">🗑️</button>
+            </div>
+        `;
+
+        return div;
+    }
+
+    function editService(serviceId) {
+        const service = cartData.items[serviceId];
+        if (!service) return;
+
+        document.getElementById('service-type').value = getServiceTypeByName(service.name);
+        document.getElementById('service-price').value = service.price;
+        document.getElementById('service-description').value = service.description || '';
+        document.getElementById('client-name').value = service.clientName;
+        document.getElementById('client-phone').value = service.clientPhone;
+        document.getElementById('service-urgent').checked = service.urgent;
+        document.getElementById('service-char-count').textContent = service.description ? service.description.length : 0;
+
+        editingServiceId = serviceId;
+        document.getElementById('cancelEditBtn').style.display = 'inline-block';
+        document.getElementById('submitBtn').textContent = 'Сохранить изменения';
+        document.getElementById('serviceForm').scrollIntoView({ behavior: 'smooth' });
+
+        showNotification('Редактируйте услугу и нажмите "Сохранить изменения"', 'info');
+    }
+
+    function getServiceTypeByName(serviceName) {
+        const types = {
+            'Полная настройка гитары': 'full-setup',
+            'Частичная настройка': 'partial-setup',
+            'Полировка и уход': 'polish',
+            'Замена струн': 'strings',
+            'Ремонт электроники': 'electronics',
+            'Индивидуальная услуга': 'custom'
+        };
+        return types[serviceName] || 'custom';
+    }
+
+    function saveCartToStorage() {
+        try {
+            localStorage.setItem('musicstore-cart', JSON.stringify(cartData));
+        } catch (error) {
+            console.error('Ошибка сохранения корзины:', error);
+        }
+    }
+
+    function loadCartFromStorage() {
+        try {
+            const stored = localStorage.getItem('musicstore-cart');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                cartData = { ...cartData, ...parsed };
+            }
+        } catch (error) {
+            console.error('Ошибка загрузки корзины:', error);
+        }
+    }
+
+    function updateCartTotals() {
+        let subtotal = 0;
+        let totalQuantity = 0;
+
+        Object.values(cartData.items).forEach(item => {
+            subtotal += item.price * item.quantity;
+            totalQuantity += item.quantity;
+        });
+
+        const shippingCost = subtotal > 20000 ? 0 : 500;
+        cartData.shipping = shippingCost;
+        const discountAmount = cartData.discount;
+        const total = subtotal + shippingCost - discountAmount;
+
+        document.getElementById('subtotal').textContent = formatPrice(subtotal);
+        document.getElementById('shipping-cost').textContent = shippingCost === 0 ? '0 руб.' : formatPrice(shippingCost);
+        document.getElementById('discount').textContent = discountAmount > 0 ? `-${formatPrice(discountAmount)}` : '0 руб.';
+        document.getElementById('total-amount').textContent = formatPrice(total);
+        document.getElementById('items-count').textContent = totalQuantity;
+
+        updateCartTitle(totalQuantity);
+    }
+
+    function updateCartTitle(totalQuantity) {
+        const cartTitle = document.querySelector('.cart-title');
+        if (cartTitle) {
+            cartTitle.textContent = `Товары и услуги в корзине (${totalQuantity})`;
+        }
+    }
+
+    function updateQuantity(itemId, change) {
+        if (cartData.items[itemId]) {
+            let newQuantity = cartData.items[itemId].quantity + change;
+
+            if (newQuantity < 1) newQuantity = 1;
+            if (newQuantity > 10) newQuantity = 10;
+
+            cartData.items[itemId].quantity = newQuantity;
+
+            saveCartToStorage();
+            renderCartItems();
+            updateCartTotals();
+        }
+    }
+
+    function removeItem(itemId) {
+        if (cartData.items[itemId]) {
+            const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+            if (itemElement) {
+                itemElement.style.transform = 'translateX(-100%)';
+                itemElement.style.opacity = '0';
+
+                setTimeout(() => {
+                    delete cartData.items[itemId];
+                    saveCartToStorage();
+                    renderCartItems();
+                    updateCartTotals();
+                }, 300);
+            }
+        }
+    }
+
+    function applyPromo() {
+        const promoInput = document.getElementById('promo-input');
+        const promoCode = promoInput.value.trim().toUpperCase();
+
+        const validPromoCodes = {
+            'MUSIC2024': 5000,
+            'GUITAR10': 0.1,
+            'FIRSTBUY': 3000
+        };
+
+        if (validPromoCodes[promoCode]) {
+            let discount = validPromoCodes[promoCode];
+
+            if (discount < 1) {
+                const subtotal = Object.values(cartData.items).reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                discount = Math.round(subtotal * discount);
+            }
+
+            cartData.discount = discount;
+            cartData.discountCode = promoCode;
+            showNotification(`Промокод применен! Скидка ${formatPrice(discount)}`, 'success');
+            updateCartTotals();
+        } else if (promoCode) {
+            showNotification('Промокод недействителен', 'error');
+            cartData.discount = 0;
+            cartData.discountCode = null;
+            updateCartTotals();
+        } else {
+            showNotification('Введите промокод', 'error');
+        }
+    }
+
+    function proceedToCheckout() {
+        const totalItems = Object.values(cartData.items).reduce((sum, item) => sum + item.quantity, 0);
+
+        if (totalItems === 0) {
+            showNotification('Добавьте товары в корзину перед оформлением заказа', 'error');
+            return;
+        }
+        const orderSummary = Object.values(cartData.items).map(item =>
+            `${item.name} × ${item.quantity} - ${formatPrice(item.price * item.quantity)}`
+        ).join('\n');
+
+        const subtotal = Object.values(cartData.items).reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const total = subtotal + cartData.shipping - cartData.discount;
+
+        const receipt = `
+=== ЧЕК ЗАКАЗА ===
+${orderSummary}
+-------------------
+Доставка: ${cartData.shipping === 0 ? 'Бесплатно' : formatPrice(cartData.shipping)}
+Скидка: -${formatPrice(cartData.discount)}
+ИТОГО: ${formatPrice(total)}
+===================
+        `.trim();
+
+        console.log('Оформление заказа:', receipt);
+        showNotification('Переход к оформлению заказа...', 'success');
+
+        setTimeout(() => {
+            alert(`Заказ оформлен!\n\n${receipt}\n\nОжидайте звонка менеджера для подтверждения.`);
+
+            cartData.items = {};
+            cartData.discount = 0;
+            cartData.discountCode = null;
+            saveCartToStorage();
+            renderCartItems();
+            updateCartTotals();
+        }, 2000);
+    }
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat('ru-RU').format(price) + ' руб.';
+    }
+
+    function showNotification(message, type = 'info') {
+        let notification = document.querySelector('.notification');
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.className = 'notification';
+            document.body.appendChild(notification);
+        }
+
+        notification.textContent = message;
+        notification.className = `notification notification--${type} notification--show`;
+
+        setTimeout(() => {
+            notification.classList.remove('notification--show');
+        }, 3000);
+    }
+
+    function showEmptyCartMessage() {
+        const cartItems = document.querySelector('.cart-items');
+        if (cartItems && Object.keys(cartData.items).length === 0) {
+            const emptyCartDiv = document.createElement('div');
+            emptyCartDiv.className = 'empty-cart';
+            emptyCartDiv.innerHTML = `
+                <div class="empty-cart__icon">🎸</div>
+                <h3>Корзина пуста</h3>
+                <p>Добавьте товары из каталога или рекомендаций</p>
+                <a href="catalog.html" class="button button--primary">Перейти в каталог</a>
+            `;
+            cartItems.appendChild(emptyCartDiv);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeCart();
+
+        document.getElementById('promo-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applyPromo();
+            }
+        });
+    });
+</script>
+
+<style>
+    .custom-product-form {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        border: 2px dashed #e1e8ed;
+        margin-bottom: 2rem;
+    }
+
+    .custom-product-form h3 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .service-form .form__group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .form-actions .button {
+        flex: 1;
+    }
+
+    .form__hint {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--text-light);
+        margin-top: 0.25rem;
+    }
+
+    .service-item {
+        border-left: 4px solid var(--accent-color);
+    }
+
+    .cart-item-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+    }
+
+    .service-icon {
+        font-size: 2rem;
+    }
+
+    .service-actions {
+        margin-top: 1rem;
+    }
+
+    .edit-service-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .cart-item-client,
+    .cart-item-phone,
+    .cart-item-date {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--text-light);
+        margin-bottom: 0.25rem;
+    }
+
+    .validation-error {
+        color: #e74c3c;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .form__input.invalid {
+        border-color: #e74c3c;
+        background-color: #fee;
+    }
+
+    .char-counter {
+        text-align: right;
+        font-size: 0.8rem;
+        color: var(--text-light);
+        margin-top: 0.25rem;
+    }
+
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: var(--border-radius);
+        color: white;
+        z-index: 1000;
+        transform: translateX(150%);
+        transition: transform 0.3s ease;
+    }
+
+    .notification--show {
+        transform: translateX(0);
+    }
+
+    .notification--success {
+        background-color: #27ae60;
+    }
+
+    .notification--error {
+        background-color: #e74c3c;
+    }
+
+    .notification--info {
+        background-color: #3498db;
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+        margin: 2rem 0;
+    }
+
+    .empty-cart__icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .custom-product-form {
+            padding: 1rem;
+        }
+
+        .form-header {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+    }
+
+    .form-toggle-button {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        background: white;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    .form-toggle-button:hover {
+        border-color: var(--primary-color);
+        background: #f8f9fa;
+    }
+
+    .form-toggle-button h3 {
+        margin: 0;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+    }
+
+    .toggle-icon {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        transition: transform 0.3s ease;
+    }
+
+    .form-toggle-button.active .toggle-icon {
+        transform: rotate(45deg);
+    }
+
+    .service-form {
+        margin-top: 1rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e1e8ed;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .form-toggle-button {
+            padding: 0.75rem 1rem;
+        }
+
+        .form-toggle-button h3 {
+            font-size: 1rem;
+        }
+
+        .service-form {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<%- include('../partials/footer', { loadTime: typeof loadTime !== 'undefined' ? loadTime : 0 }) %>
