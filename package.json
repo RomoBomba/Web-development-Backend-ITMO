@@ -10,8 +10,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "prebuild": "rm -rf dist || rd /s /q dist",
-    "postbuild": "cp -r views dist/views && cp -r public dist/public || xcopy /E /I views dist\\views && xcopy /E /I public dist\\public",
+    "prebuild": "rm -rf dist",
+    "postbuild": "cp -r views dist/views && cp -r public dist/public",
     "format": "prettier --write \"src//*.ts\" \"test//*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
