@@ -2,18 +2,7 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "assets": [
-      {
-        "include": "../views/**/*.ejs",
-        "outDir": "./dist/views",
-        "watchAssets": true
-      },
-      {
-        "include": "../public/**/*",
-        "outDir": "./dist/public",
-        "watchAssets": true
-      }
-    ],
+    "assets": ["**/*.ejs", "**/*.css", "**/*.js"],
     "watchAssets": true
   }
 }
