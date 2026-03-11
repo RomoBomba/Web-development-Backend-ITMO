@@ -1,8 +1,9 @@
-import { productCatalog, createProductElement, getCategoryCaption } from './modules/catalog.js';
+import { createProductElement, getCategoryCaption } from './modules/catalog.js';
 import { addProductToCart, showNotification, animateAddToCartButton, formatPrice } from './modules/cart.js';
 import { startLoadTimer, setActiveNavItem, displayLoadTime } from './modules/utils.js';
 
-let currentFilteredProducts = { ...productCatalog };
+const serverProducts = window.__PRODUCTS__ || [];
+let currentFilteredProducts = [...serverProducts];
 
 function initCatalogPage() {
     console.log('Инициализация страницы каталога...');
@@ -11,7 +12,7 @@ function initCatalogPage() {
 
     setActiveNavItem();
 
-    renderProducts();
+    renderProducts(currentFilteredProducts);
 
     setupFilterHandlers();
 
@@ -22,7 +23,7 @@ function initCatalogPage() {
     console.log('Страница каталога инициализирована');
 }
 
-function renderProducts(productsToRender = currentFilteredProducts) {
+function renderProducts(productsToRender) {
     const productsGrid = document.getElementById('products-grid');
     const resultsCountElement = document.getElementById('results-count-number');
 
@@ -30,18 +31,30 @@ function renderProducts(productsToRender = currentFilteredProducts) {
 
     productsGrid.innerHTML = '';
 
-    Object.keys(productsToRender).forEach(productId => {
-        const product = productsToRender[productId];
-        const productElement = createProductElement(productId, product, formatPrice);
+    if (productsToRender.length === 0) {
+        productsGrid.innerHTML = '<p class="no-products">Товары не найдены</p>';
+        if (resultsCountElement) resultsCountElement.textContent = '0';
+        return;
+    }
+
+    productsToRender.forEach(product => {
+        const productForElement = {
+            name: product.name,
+            price: product.price,
+            description: product.description,
+            image: product.image,
+            caption: product.caption || getCategoryCaption(product.categoryId)
+        };
+
+        const productElement = createProductElement(product.id, productForElement, formatPrice);
         productsGrid.appendChild(productElement);
     });
 
-    const productCount = Object.keys(productsToRender).length;
     if (resultsCountElement) {
-        resultsCountElement.textContent = productCount;
+        resultsCountElement.textContent = productsToRender.length;
     }
 
-    console.log(`Отображено товаров: ${productCount}`);
+    console.log(`Отображено товаров: ${productsToRender.length}`);
 }
 
 function setupFilterHandlers() {
@@ -74,18 +87,35 @@ function filterProducts() {
 
     console.log('Применение фильтров:', { categoryFilter, priceFilter, brandFilter });
 
-    currentFilteredProducts = {};
-
-    Object.keys(productCatalog).forEach(productId => {
-        const product = productCatalog[productId];
+    currentFilteredProducts = serverProducts.filter(product => {
         let matches = true;
 
-        if (categoryFilter !== 'all' && product.category !== categoryFilter) {
-            matches = false;
+        if (categoryFilter !== 'all') {
+            const categoryMap = {
+                'electric': 1,
+                'acoustic': 2,
+                'bass': 3,
+                'accessories': 4
+            };
+            if (product.categoryId !== categoryMap[categoryFilter]) {
+                matches = false;
+            }
         }
 
-        if (brandFilter !== 'all' && product.brand !== brandFilter) {
-            matches = false;
+        if (brandFilter !== 'all' && product.name) {
+            const brandMap = {
+                'fender': 'Fender',
+                'gibson': 'Gibson',
+                'ibanez': 'Ibanez',
+                'epiphone': 'Epiphone',
+                'squier': 'Squier',
+                'yamaha': 'Yamaha',
+                'bcrich': 'B.C. Rich'
+            };
+            const brandName = brandMap[brandFilter];
+            if (brandName && !product.name.includes(brandName)) {
+                matches = false;
+            }
         }
 
         if (priceFilter !== 'all') {
@@ -99,9 +129,7 @@ function filterProducts() {
             }
         }
 
-        if (matches) {
-            currentFilteredProducts[productId] = product;
-        }
+        return matches;
     });
 
     renderProducts(currentFilteredProducts);
@@ -118,7 +146,7 @@ function resetFilters() {
 
     console.log('Фильтры сброшены');
 
-    currentFilteredProducts = { ...productCatalog };
+    currentFilteredProducts = [...serverProducts];
     renderProducts(currentFilteredProducts);
 }
 
@@ -132,14 +160,25 @@ function setupCartHandlers() {
         }
     });
 }
+
 function handleAddToCart(productId) {
-    const addedProduct = addProductToCart(productId, productCatalog);
-    if (addedProduct) {
-        showNotification(`"${addedProduct.name}" добавлен в корзину!`, 'success');
+    const product = serverProducts.find(p => p.id == productId);
+    if (product) {
+        const productForCart = {
+            [productId]: {
+                name: product.name,
+                price: product.price,
+                description: product.description,
+                image: product.image
+            }
+        };
 
-        animateAddToCartButton(productId);
-
-        console.log(`Товар добавлен в корзину: ${addedProduct.name}`);
+        const addedProduct = addProductToCart(productId, productForCart);
+        if (addedProduct) {
+            showNotification(`"${product.name}" добавлен в корзину!`, 'success');
+            animateAddToCartButton(productId);
+            console.log(`Товар добавлен в корзину: ${product.name}`);
+        }
     }
 }
 
@@ -147,7 +186,7 @@ document.addEventListener('DOMContentLoaded', initCatalogPage);
 
 if (typeof window !== 'undefined') {
     window.catalog = {
-        productCatalog,
+        serverProducts,
         filterProducts,
         resetFilters
     };

@@ -1,26 +1,124 @@
-<script src="/js/main.js" defer></script>
-<script src="/js/api.js" defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<% if (useSwiper) { %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script type="module" src="/js/main.js"></script>
+
+<% if (typeof useSwiper !== 'undefined' && useSwiper) { %>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            new Swiper('.gallery-swiper', {
-                loop: true,
-                pagination: { el: '.swiper-pagination', clickable: true },
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
-            });
+            if (typeof Swiper !== 'undefined') {
+                const swiper = new Swiper('.gallery-swiper', {
+                    loop: true,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    },
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false
+                    },
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 2,
+                            spaceBetween: 20
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 30
+                        }
+                    }
+                });
+                console.log('Swiper инициализирован успешно');
+            } else {
+                console.error('Swiper не загружен');
+            }
         });
     </script>
 <% } %>
 
-<% if (useInputMask) { %>
+<% if (typeof useInputMask !== 'undefined' && useInputMask) { %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
     <script>
         Inputmask({ mask: '+7 (999) 999-99-99' }).mask('.phone-mask');
     </script>
 <% } %>
 
-<% if (pageScript) { %>
+<% if (typeof pageScript !== 'undefined' && pageScript) { %>
     <script type="module" src="/js/<%= pageScript %>" defer></script>
 <% } %>
+
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.EventSource) {
+            const eventSource = new EventSource('/products/events');
+
+            eventSource.onopen = function () {
+                console.log('SSE подключен к /products/events');
+            };
+
+            eventSource.onmessage = function (event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    console.log('📦 SSE событие:', data);
+
+                    switch (data.type) {
+                        case 'product_created':
+                            toastr.success(
+                                `${data.message}<br>Цена: ${data.price} руб.`,
+                                '🎸 Новый товар'
+                            );
+                            break;
+                        case 'product_updated':
+                            toastr.info(
+                                data.message,
+                                '📝 Обновление товара'
+                            );
+                            break;
+                        case 'product_deleted':
+                            toastr.warning(
+                                data.message,
+                                '🗑️ Удаление товара'
+                            );
+                            break;
+                        default:
+                            console.log('Неизвестный тип события:', data.type);
+                    }
+                } catch (e) {
+                    console.error('Ошибка обработки SSE события:', e);
+                }
+            };
+
+            eventSource.onerror = function () {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 10000);
+            };
+        }
+    });
+</script>

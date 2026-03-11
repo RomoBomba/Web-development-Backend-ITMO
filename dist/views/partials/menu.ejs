@@ -19,4 +19,12 @@
             <% } %>
         </a>
     </li>
+    </li>
+    <% if (isAuthenticated) { %>
+        <li class="nav__item">
+            <a href="/products" class="nav__link <%= currentPage === 'products' ? 'nav__link--active' : '' %>">
+                ⚙️ Управление
+            </a>
+        </li>
+    <% } %>
 </ul>

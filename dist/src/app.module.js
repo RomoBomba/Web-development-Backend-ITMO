@@ -18,6 +18,10 @@ const product_entity_1 = require("./entities/product.entity");
 const order_entity_1 = require("./entities/order.entity");
 const order_item_entity_1 = require("./entities/order-item.entity");
 const review_entity_1 = require("./entities/review.entity");
+const products_module_1 = require("./products/products.module");
+const orders_module_1 = require("./orders/orders.module");
+const users_module_1 = require("./users/users.module");
+const reviews_module_1 = require("./reviews/reviews.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -50,6 +54,10 @@ exports.AppModule = AppModule = __decorate([
                     };
                 },
             }),
+            products_module_1.ProductsModule,
+            orders_module_1.OrdersModule,
+            users_module_1.UsersModule,
+            reviews_module_1.ReviewsModule,
         ],
         controllers: [pages_controller_1.PagesController],
         providers: [],

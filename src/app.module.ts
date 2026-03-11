@@ -9,6 +9,10 @@ import { Product } from './entities/product.entity';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { Review } from './entities/review.entity';
+import { ProductsModule } from './products/products.module';
+import { OrdersModule } from './orders/orders.module';
+import { UsersModule } from './users/users.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
     imports: [
@@ -41,6 +45,14 @@ import { Review } from './entities/review.entity';
                 };
             },
         }),
+
+        ProductsModule,
+
+        OrdersModule,
+
+        UsersModule,
+
+        ReviewsModule,
 
         // UserModule,
         // CategoryModule,

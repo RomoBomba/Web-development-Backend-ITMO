@@ -9,4 +9,5 @@ export declare class User {
     updatedAt: Date;
     orders: Order[];
     reviews: Review[];
+    isAdmin: boolean;
 }

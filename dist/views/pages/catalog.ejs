@@ -23,10 +23,11 @@ isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : fals
             <div class="filter-group">
                 <label for="category" class="filter-label">Тип гитары:</label>
                 <select id="category" class="filter-select">
-                    <option value="all">Все гитары</option>
-                    <option value="electric">Электрогитары</option>
-                    <option value="acoustic">Акустические гитары</option>
-                    <option value="bass">Бас-гитары</option>
+                    <option value="all">Все товары</option>
+                    <option value="electric">🎸 Электрогитары</option>
+                    <option value="acoustic">🎵 Акустические гитары</option>
+                    <option value="bass">🎸 Бас-гитары</option>
+                    <option value="accessories">🔧 Аксессуары</option>
                 </select>
             </div>
             <div class="filter-group">
@@ -65,6 +66,31 @@ isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : fals
     <div class="container">
         <h2 class="section-title">Все гитары в наличии</h2>
         <div class="products__grid" id="products-grid">
+            <% if (allProducts && allProducts.length > 0) { %>
+                <% allProducts.forEach(product => { %>
+                    <article class="product-card">
+                        <div class="product-card__image-wrapper">
+                            <img src="<%= product.image || '/images/default-product.png' %>"
+                                 alt="<%= product.name %>"
+                                 class="product-card__image"
+                                 onerror="this.src='/images/default-product.png'">
+                        </div>
+                        <h3 class="product-card__title">
+                            <a href="/products/<%= product.id %>" class="product-card__link"><%= product.name %></a>
+                        </h3>
+                        <p class="product-card__description"><%= product.description?.substring(0, 100) || '' %></p>
+                        <p class="product-card__price">
+                            <strong class="price--current"><%= Number(product.price).toLocaleString() %> руб.</strong>
+                            <% if (product.oldPrice) { %>
+                                <del class="price--old"><%= Number(product.oldPrice).toLocaleString() %> руб.</del>
+                            <% } %>
+                        </p>
+                        <button class="button button--primary add-to-cart" data-product-id="<%= product.id %>">В корзину</button>
+                    </article>
+                <% }) %>
+            <% } else { %>
+                <p class="no-products">Товары временно отсутствуют</p>
+            <% } %>
         </div>
     </div>
 </section>

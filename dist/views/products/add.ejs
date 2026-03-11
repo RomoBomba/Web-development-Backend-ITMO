@@ -1,0 +1,73 @@
+<%- include('../partials/header', {
+title: 'Добавить товар',
+metaKeywords: 'добавить товар, новый товар, MusicStore',
+metaDescription: 'Добавление нового товара в каталог MusicStore',
+currentPage: 'products',
+cartCount: 0,
+isAuthenticated: true,
+useSwiper: false,
+useInputMask: false,
+pageScript: null
+}) %>
+
+<div class="container">
+    <h1>Добавить новый товар</h1>
+
+    <form action="/products" method="POST" class="form" enctype="application/x-www-form-urlencoded">
+        <div class="form__group">
+            <label for="name" class="form__label">Название товара *</label>
+            <input type="text" id="name" name="name" required class="form__input"
+                   placeholder="Например: Fender Stratocaster">
+        </div>
+
+        <div class="form__group">
+            <label for="description" class="form__label">Описание</label>
+            <textarea id="description" name="description" rows="5" class="form__input"
+                      placeholder="Подробное описание товара"></textarea>
+        </div>
+
+        <div class="form__row">
+            <div class="form__group">
+                <label for="price" class="form__label">Цена (руб.) *</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required class="form__input">
+            </div>
+
+            <div class="form__group">
+                <label for="categoryId" class="form__label">Категория *</label>
+                <select id="categoryId" name="categoryId" class="form__input">
+                    <option value="">Выберите категорию</option>
+                    <option value="1">🎸 Электрогитары</option>
+                    <option value="8">🎵 Акустические гитары</option>
+                    <option value="3">🎸 Бас-гитары</option>
+                    <option value="4">🔧 Аксессуары</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form__group">
+            <label for="image" class="form__label">URL изображения</label>
+            <input type="url" id="image" name="image" class="form__input"
+                   placeholder="https://example.com/image.jpg">
+        </div>
+
+        <div class="form__actions">
+            <button type="submit" class="button button--primary">💾 Сохранить товар</button>
+            <a href="/products" class="button button--secondary">↩️ Отмена</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    .form__actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+</style>
+
+<%- include('../partials/footer') %>

@@ -22,6 +22,7 @@ let User = class User {
     updatedAt;
     orders;
     reviews;
+    isAdmin;
 };
 exports.User = User;
 __decorate([
@@ -56,6 +57,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => review_entity_1.Review, review => review.user),
     __metadata("design:type", Array)
 ], User.prototype, "reviews", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], User.prototype, "isAdmin", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);

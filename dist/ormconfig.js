@@ -50,8 +50,8 @@ exports.AppDataSource = new typeorm_1.DataSource({
     migrations: [(0, path_1.join)(__dirname, 'src', 'migrations', '*.{ts,js}')],
     synchronize: false,
     logging: true,
-    connectTimeoutMS: 30000,
-    maxQueryExecutionTime: 30000,
+    connectTimeoutMS: 60000,
+    maxQueryExecutionTime: 60000,
     ...(isRender ? {
         ssl: {
             rejectUnauthorized: false
@@ -60,9 +60,9 @@ exports.AppDataSource = new typeorm_1.DataSource({
             ssl: {
                 rejectUnauthorized: false
             },
-            connectionTimeoutMillis: 30000,
-            query_timeout: 30000,
-            statement_timeout: 30000
+            connectionTimeoutMillis: 60000,
+            query_timeout: 60000,
+            statement_timeout: 60000
         }
     } : {})
 });

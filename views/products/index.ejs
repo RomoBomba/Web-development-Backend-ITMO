@@ -1,0 +1,88 @@
+<%- include('../partials/header', {
+title: 'Управление товарами',
+metaKeywords: 'управление товарами, администрирование, MusicStore',
+metaDescription: 'Панель управления товарами магазина MusicStore',
+currentPage: 'products',
+cartCount: 0,
+isAuthenticated: true,
+useSwiper: false,
+useInputMask: false,
+pageScript: null
+}) %>
+
+<div class="container">
+    <h1>Управление товарами</h1>
+    <div class="actions-bar">
+        <a href="/products/add" class="button button--primary">➕ Добавить товар</a>
+        <a href="/" class="button button--secondary">🏠 На главную</a>
+    </div>
+
+    <% if (products.length === 0) { %>
+        <div class="empty-state">
+            <p>В базе данных пока нет товаров. Добавьте первый товар!</p>
+        </div>
+    <% } else { %>
+        <div class="products__grid">
+            <% products.forEach(product => { %>
+                <article class="product-card">
+                    <div class="product-card__image-wrapper">
+                        <img src="<%= product.image || '/images/default-product.png' %>"
+                             alt="<%= product.name %>"
+                             class="product-card__image">
+                    </div>
+                    <h3 class="product-card__title"><%= product.name %></h3>
+                    <p class="product-card__description"><%= product.description?.substring(0, 100) %></p>
+                    <p class="product-card__price">
+                        <strong class="price--current"><%= Number(product.price).toLocaleString() %> руб.</strong>
+                    </p>
+                    <p class="product-card__category">Категория: <%= product.category?.name || 'Не указана' %></p>
+                    <div class="product-card__actions">
+                        <a href="/products/<%= product.id %>" class="button button--small">👁️ Просмотр</a>
+                        <a href="/products/<%= product.id %>/edit" class="button button--small button--secondary">✏️ Ред.</a>
+                        <form action="/products/<%= product.id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="button button--small button--danger" onclick="return confirm('Удалить товар?')">🗑️ Удалить</button>
+                        </form>
+                    </div>
+                </article>
+            <% }) %>
+        </div>
+    <% } %>
+</div>
+
+<style>
+    .actions-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+    }
+    .product-card__actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .button--small {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    .button--danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    .button--danger:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<%- include('../partials/footer') %>

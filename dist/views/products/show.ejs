@@ -1,0 +1,115 @@
+<%- include('../partials/header', {
+title: typeof product !== 'undefined' && product ? product.name : 'Товар не найден',
+metaKeywords: typeof product !== 'undefined' && product ? `${product.name}, купить, MusicStore` : 'товар не найден',
+metaDescription: typeof product !== 'undefined' && product ? (product.description || `Купить ${product.name} в MusicStore`) : 'Товар не найден',
+currentPage: 'products',
+cartCount: 0,
+isAuthenticated: true,
+useSwiper: false,
+useInputMask: false,
+pageScript: null
+}) %>
+
+<div class="container">
+    <% if (typeof product === 'undefined' || !product) { %>
+        <div class="error-message">
+            <h1>Товар не найден</h1>
+            <p>Запрошенный товар не существует или был удален.</p>
+            <a href="/products" class="button button--primary">Вернуться к списку</a>
+        </div>
+    <% } else { %>
+        <div class="product-detail">
+            <div class="product-detail__image">
+                <img src="<%= product.image || '/images/default-product.png' %>"
+                     alt="<%= product.name %>"
+                     onerror="this.src='/images/default-product.png'">
+            </div>
+
+            <div class="product-detail__info">
+                <h1><%= product.name %></h1>
+
+                <div class="product-detail__meta">
+                    <span class="product-detail__category">
+                        Категория: <strong><%= product.category?.name || 'Не указана' %></strong>
+                    </span>
+                    <span class="product-detail__price">
+                        Цена: <strong><%= Number(product.price).toLocaleString() %> руб.</strong>
+                    </span>
+                </div>
+
+                <div class="product-detail__description">
+                    <h3>Описание</h3>
+                    <p><%= product.description || 'Описание отсутствует' %></p>
+                </div>
+
+                <div class="product-detail__actions">
+                    <a href="/products/<%= product.id %>/edit" class="button button--primary">✏️ Редактировать</a>
+                    <form action="/products/<%= product.id %>?_method=DELETE" method="POST" style="display: inline;">
+                        <button type="submit" class="button button--danger" onclick="return confirm('Удалить товар?')">🗑️ Удалить</button>
+                    </form>
+                    <a href="/products" class="button button--secondary">↩️ К списку</a>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<style>
+    .error-message {
+        text-align: center;
+        padding: 3rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+        margin: 2rem 0;
+    }
+    .product-detail {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin: 2rem 0;
+    }
+    .product-detail__image img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+    }
+    .product-detail__meta {
+        display: flex;
+        gap: 2rem;
+        margin: 1rem 0;
+        padding: 1rem 0;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+    .product-detail__price {
+        font-size: 1.5rem;
+        color: #e74c3c;
+    }
+    .product-detail__description {
+        margin: 2rem 0;
+    }
+    .product-detail__actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    .button--danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    .button--danger:hover {
+        background-color: #c82333;
+    }
+    @media (max-width: 768px) {
+        .product-detail {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<%- include('../partials/footer') %>

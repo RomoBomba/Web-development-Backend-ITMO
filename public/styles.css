@@ -2560,3 +2560,47 @@ p {
     .ascii-art { display: none; }
     .swiper-pagination-bullet { width: 10px; height: 10px; }
 }
+
+/* Toastr */
+.toast-success {
+    background-color: #27ae60 !important;
+    background-image: none !important;
+}
+
+.toast-info {
+    background-color: #3498db !important;
+    background-image: none !important;
+}
+
+.toast-warning {
+    background-color: #f39c12 !important;
+    background-image: none !important;
+}
+
+.toast-error {
+    background-color: #e74c3c !important;
+    background-image: none !important;
+}
+
+.toast-top-right {
+    top: 70px;
+    right: 20px;
+}
+
+#toast-container > div {
+    opacity: 1;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#toast-container > div:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.nav__link--active {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}

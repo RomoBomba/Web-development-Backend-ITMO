@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <%- include('head') %>
+    <%- include('head', {
+    title: typeof title !== 'undefined' ? title : 'MusicStore',
+    metaKeywords: typeof metaKeywords !== 'undefined' ? metaKeywords : null,
+    metaDescription: typeof metaDescription !== 'undefined' ? metaDescription : null,
+    useSwiper: typeof useSwiper !== 'undefined' ? useSwiper : false
+    }) %>
 </head>
 <body class="page">
 <header class="header">
@@ -10,22 +15,15 @@
             <div class="header__left">
                 <h1 class="header__title">MusicStore</h1>
                 <nav class="nav">
-                    <%- include('menu', { currentPage: currentPage }) %>
+                    <%- include('menu', { currentPage: typeof currentPage !== 'undefined' ? currentPage : '' }) %>
                 </nav>
             </div>
             <div class="header__right">
-                <%- include('session', { isAuthenticated: isAuthenticated }) %>
+                <%- include('session', {
+                isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : false
+                }) %>
             </div>
         </div>
     </div>
 </header>
-
-<script>
-    document.querySelector('.header').addEventListener('click', function(e) {
-        if (e.target === this || e.target.classList.contains('header')) {
-            this.classList.toggle('header--expanded');
-        }
-    });
-</script>
-
 <main class="main">

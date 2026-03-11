@@ -1,18 +1,21 @@
 <article class="product-card" data-product-id="<%= product.id %>">
     <h3 class="product-card__title">
-        <a href="#<%= product.id %>" class="product-card__link"><%= product.name %></a>
+        <a href="/products/<%= product.id %>" class="product-card__link"><%= product.name %></a>
     </h3>
     <div class="product-card__image-wrapper">
-        <img src="<%= product.image %>" alt="<%= product.name %>" class="product-card__image">
+        <img src="<%= product.image || '/images/default-product.png' %>"
+             alt="<%= product.name %>"
+             class="product-card__image"
+             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7Ql9Cw0LPRg9GI0LrQsDwvdGV4dD48L3N2Zz4=';">
         <% if (product.caption) { %>
             <span class="image-caption"><%= product.caption %></span>
         <% } %>
     </div>
-    <p class="product-card__description"><%= product.description %></p>
+    <p class="product-card__description"><%= product.description || '' %></p>
     <p class="product-card__price">
-        <strong class="price--current"><%= product.currentPrice.toLocaleString() %> руб.</strong>
+        <strong class="price--current"><%= Number(product.price).toLocaleString() %> руб.</strong>
         <% if (product.oldPrice) { %>
-            <del class="price--old"><%= product.oldPrice.toLocaleString() %> руб.</del>
+            <del class="price--old"><%= Number(product.oldPrice).toLocaleString() %> руб.</del>
         <% } %>
     </p>
     <button class="button button--primary add-to-cart" data-product-id="<%= product.id %>">В корзину</button>

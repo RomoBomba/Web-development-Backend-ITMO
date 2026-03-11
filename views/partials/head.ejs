@@ -1,13 +1,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="<%= metaKeywords || 'гитары, купить гитару, музыкальные инструменты, электрогитара, акустическая гитара, бас-гитара' %>">
-<meta name="description" content="<%= metaDescription || 'MusicStore - лучший магазин гитар в городе. Широкий выбор, гарантия качества, рассрочка и кредит' %>">
-<title><%= title || 'MusicStore - Магазин гитар' %></title>
+<meta name="keywords" content="<%= typeof metaKeywords !== 'undefined' ? metaKeywords : 'гитары, купить гитару, музыкальные инструменты, электрогитара, акустическая гитара, бас-гитара' %>">
+<meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'MusicStore - лучший магазин гитар в городе. Широкий выбор, гарантия качества, рассрочка и кредит' %>">
+<title><%= typeof title !== 'undefined' ? title : 'MusicStore - Магазин гитар' %></title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
-<% if (useSwiper) { %>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+<% if (typeof useSwiper !== 'undefined' && useSwiper) { %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <% } %>
 

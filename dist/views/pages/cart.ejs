@@ -92,7 +92,6 @@ isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : fals
                     </form>
                 </div>
 
-                <!-- Элементы корзины будут добавлены через JavaScript -->
             </div>
 
             <div class="cart-summary">
@@ -158,11 +157,30 @@ isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : fals
 <section class="recommendations-section">
     <div class="container">
         <h2 class="section-title">Рекомендуем добавить</h2>
-        <div class="products__grid">
-            <% recommendedProducts.forEach(product => { %>
-                <%- include('../partials/product-card', { product }) %>
-            <% }) %>
-        </div>
+        <% if (recommendedProducts && recommendedProducts.length > 0) { %>
+            <div class="products__grid">
+                <% recommendedProducts.forEach(product => { %>
+                    <article class="product-card" data-product-id="<%= product.id %>">
+                        <h3 class="product-card__title">
+                            <a href="/products/<%= product.id %>" class="product-card__link"><%= product.name %></a>
+                        </h3>
+                        <div class="product-card__image-wrapper">
+                            <img src="<%= product.image || '/images/default-product.png' %>"
+                                 alt="<%= product.name %>"
+                                 class="product-card__image"
+                                 onerror="this.src='/images/default-product.png'">
+                        </div>
+                        <p class="product-card__description"><%= product.description?.substring(0, 100) || '' %></p>
+                        <p class="product-card__price">
+                            <strong class="price--current"><%= Number(product.price).toLocaleString() %> руб.</strong>
+                        </p>
+                        <button class="button button--primary add-to-cart" data-product-id="<%= product.id %>">В корзину</button>
+                    </article>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p class="no-products">Рекомендации временно отсутствуют</p>
+        <% } %>
     </div>
 </section>
 
