@@ -47,7 +47,11 @@
 <% if (typeof useInputMask !== 'undefined' && useInputMask) { %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
     <script>
-        Inputmask({ mask: '+7 (999) 999-99-99' }).mask('.phone-mask');
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Inputmask !== 'undefined') {
+                Inputmask({ mask: '+7 (999) 999-99-99' }).mask('.phone-mask');
+            }
+        });
     </script>
 <% } %>
 

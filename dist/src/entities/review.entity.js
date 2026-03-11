@@ -49,12 +49,12 @@ __decorate([
     __metadata("design:type", Date)
 ], Review.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, user => user.reviews),
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.reviews),
     (0, typeorm_1.JoinColumn)({ name: 'userId' }),
     __metadata("design:type", user_entity_1.User)
 ], Review.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => product_entity_1.Product, product => product.reviews),
+    (0, typeorm_1.ManyToOne)(() => product_entity_1.Product, (product) => product.reviews),
     (0, typeorm_1.JoinColumn)({ name: 'productId' }),
     __metadata("design:type", product_entity_1.Product)
 ], Review.prototype, "product", void 0);

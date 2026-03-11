@@ -15,52 +15,52 @@ import { UsersModule } from './users/users.module';
 import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            isGlobal: true,
-        }),
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
 
-        TypeOrmModule.forRootAsync({
-            useFactory: () => {
-                const connectionString = process.env.DATABASE_URL;
-                if (!connectionString) {
-                    throw new Error('DATABASE_URL environment variable is not defined');
-                }
+    TypeOrmModule.forRootAsync({
+      useFactory: () => {
+        const connectionString = process.env.DATABASE_URL;
+        if (!connectionString) {
+          throw new Error('DATABASE_URL environment variable is not defined');
+        }
 
-                const config = parse(connectionString);
+        const config = parse(connectionString);
 
-                return {
-                    type: 'postgres',
-                    host: config.host || undefined,
-                    port: config.port ? parseInt(config.port, 10) : 5432,
-                    username: config.user || undefined,
-                    password: config.password || undefined,
-                    database: config.database || undefined,
-                    entities: [User, Category, Product, Order, OrderItem, Review],
-                    synchronize: false,
-                    logging: true,
-                    ssl: {
-                        rejectUnauthorized: false,
-                    },
-                };
-            },
-        }),
+        return {
+          type: 'postgres',
+          host: config.host || undefined,
+          port: config.port ? parseInt(config.port, 10) : 5432,
+          username: config.user || undefined,
+          password: config.password || undefined,
+          database: config.database || undefined,
+          entities: [User, Category, Product, Order, OrderItem, Review],
+          synchronize: false,
+          logging: true,
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        };
+      },
+    }),
 
-        ProductsModule,
+    ProductsModule,
 
-        OrdersModule,
+    OrdersModule,
 
-        UsersModule,
+    UsersModule,
 
-        ReviewsModule,
+    ReviewsModule,
 
-        // UserModule,
-        // CategoryModule,
-        // ProductModule,
-        // OrderModule,
-        // FeedbackModule,
-    ],
-    controllers: [PagesController],
-    providers: [],
+    // UserModule,
+    // CategoryModule,
+    // ProductModule,
+    // OrderModule,
+    // FeedbackModule,
+  ],
+  controllers: [PagesController],
+  providers: [],
 })
 export class AppModule {}

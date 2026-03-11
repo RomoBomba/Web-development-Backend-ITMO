@@ -24,11 +24,12 @@ let ProductsController = class ProductsController {
     productCreatedSubject = new rxjs_1.Subject();
     productUpdatedSubject = new rxjs_1.Subject();
     productDeletedSubject = new rxjs_1.Subject();
+    destroy$ = new rxjs_1.Subject();
     constructor(productsService) {
         this.productsService = productsService;
     }
-    sse() {
-        return (0, rxjs_1.merge)(this.productCreatedSubject.asObservable().pipe((0, operators_1.map)((product) => ({
+    events() {
+        return (0, rxjs_1.merge)(this.productCreatedSubject.pipe((0, operators_1.takeUntil)(this.destroy$), (0, operators_1.map)((product) => ({
             data: JSON.stringify({
                 id: product.id,
                 name: product.name,
@@ -37,7 +38,7 @@ let ProductsController = class ProductsController {
                 timestamp: new Date().toISOString(),
                 type: 'product_created'
             })
-        }))), this.productUpdatedSubject.asObservable().pipe((0, operators_1.map)((product) => ({
+        }))), this.productUpdatedSubject.pipe((0, operators_1.takeUntil)(this.destroy$), (0, operators_1.map)((product) => ({
             data: JSON.stringify({
                 id: product.id,
                 name: product.name,
@@ -46,7 +47,7 @@ let ProductsController = class ProductsController {
                 timestamp: new Date().toISOString(),
                 type: 'product_updated'
             })
-        }))), this.productDeletedSubject.asObservable().pipe((0, operators_1.map)((product) => ({
+        }))), this.productDeletedSubject.pipe((0, operators_1.takeUntil)(this.destroy$), (0, operators_1.map)((product) => ({
             data: JSON.stringify({
                 id: product.id,
                 name: product.name,
@@ -55,6 +56,13 @@ let ProductsController = class ProductsController {
                 type: 'product_deleted'
             })
         }))));
+    }
+    onModuleDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.productCreatedSubject.complete();
+        this.productUpdatedSubject.complete();
+        this.productDeletedSubject.complete();
     }
     async findAll() {
         const products = await this.productsService.findAll();
@@ -93,7 +101,8 @@ let ProductsController = class ProductsController {
                 name: newProduct.name,
                 price: newProduct.price,
                 message: `Создан новый товар: ${newProduct.name}`,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                type: 'product_created'
             });
             res.redirect('/products');
         }
@@ -192,7 +201,8 @@ let ProductsController = class ProductsController {
                 name: updatedProduct.name,
                 price: updatedProduct.price,
                 message: `Товар обновлен: ${updatedProduct.name}`,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                type: 'product_updated'
             });
             res.redirect('/products');
         }
@@ -212,7 +222,7 @@ let ProductsController = class ProductsController {
                 const product = await this.productsService.findOne(productId);
                 productName = product?.name || `Товар #${productId}`;
             }
-            catch (e) {
+            catch {
                 productName = `Товар #${productId}`;
             }
             await this.productsService.remove(productId);
@@ -221,7 +231,8 @@ let ProductsController = class ProductsController {
                 id: productId,
                 name: productName,
                 message: `Товар удален: ${productName}`,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                type: 'product_deleted'
             });
             res.redirect('/products');
         }
@@ -233,11 +244,11 @@ let ProductsController = class ProductsController {
 };
 exports.ProductsController = ProductsController;
 __decorate([
-    (0, common_1.Sse)('events'),
+    (0, common_1.Get)('events'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", rxjs_1.Observable)
-], ProductsController.prototype, "sse", null);
+], ProductsController.prototype, "events", null);
 __decorate([
     (0, common_1.Get)(),
     (0, common_1.Render)('products/index'),

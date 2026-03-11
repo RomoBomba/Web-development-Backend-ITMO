@@ -24,15 +24,26 @@ export function saveCartToStorage(cartData) {
 }
 
 export function addProductToCart(productId, productCatalog) {
-    const product = productCatalog[productId];
-    if (!product) return null;
+    let product = productCatalog[productId];
+
+    if (!product && productId) {
+        const numericId = parseInt(productId, 10);
+        if (!isNaN(numericId)) {
+            product = productCatalog[numericId];
+        }
+    }
+
+    if (!product) {
+        return null;
+    }
 
     const cartData = loadCartFromStorage();
 
     if (cartData.items[productId]) {
         cartData.items[productId].quantity += 1;
     } else {
-        cartData.items[productId] = {
+        const cartKey = String(productId);
+        cartData.items[cartKey] = {
             type: 'product',
             name: product.name,
             price: product.price,

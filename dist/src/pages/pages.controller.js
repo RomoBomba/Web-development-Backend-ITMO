@@ -32,7 +32,7 @@ let PagesController = class PagesController {
             useSwiper: true,
             useInputMask: true,
             pageScript: 'main.js',
-            currentPage: 'index'
+            currentPage: 'index',
         };
     }
     async getCatalogPage(auth) {
@@ -47,7 +47,7 @@ let PagesController = class PagesController {
             useSwiper: false,
             useInputMask: false,
             pageScript: 'catalog-page.js',
-            currentPage: 'catalog'
+            currentPage: 'catalog',
         };
     }
     async getCartPage(auth) {
@@ -62,7 +62,7 @@ let PagesController = class PagesController {
             useSwiper: false,
             useInputMask: true,
             pageScript: 'main.js',
-            currentPage: 'cart'
+            currentPage: 'cart',
         };
     }
     getAboutPage(auth) {
@@ -75,7 +75,7 @@ let PagesController = class PagesController {
             useSwiper: false,
             useInputMask: false,
             pageScript: 'main.js',
-            currentPage: 'about'
+            currentPage: 'about',
         };
     }
     getCreditPage(auth) {
@@ -88,7 +88,7 @@ let PagesController = class PagesController {
             useSwiper: false,
             useInputMask: true,
             pageScript: 'main.js',
-            currentPage: 'credit'
+            currentPage: 'credit',
         };
     }
 };

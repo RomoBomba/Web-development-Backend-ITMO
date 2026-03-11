@@ -28,6 +28,10 @@ isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : fals
     </div>
 </section>
 
+<script>
+    window.__PRODUCTS__ = <%- JSON.stringify(products) %>;
+</script>
+
 <section class="comparison-section">
     <div class="container">
         <h2 class="section-title">Сравнение характеристик</h2>

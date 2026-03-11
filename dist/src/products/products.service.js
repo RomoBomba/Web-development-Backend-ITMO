@@ -27,7 +27,7 @@ let ProductsService = class ProductsService {
     }
     async create(createProductDto) {
         const category = await this.categoryRepository.findOne({
-            where: { id: createProductDto.categoryId }
+            where: { id: createProductDto.categoryId },
         });
         if (!category) {
             throw new common_1.NotFoundException('Category not found');
@@ -60,7 +60,7 @@ let ProductsService = class ProductsService {
         const product = await this.findOne(id);
         if (updateProductDto.categoryId) {
             const category = await this.categoryRepository.findOne({
-                where: { id: updateProductDto.categoryId }
+                where: { id: updateProductDto.categoryId },
             });
             if (!category) {
                 throw new common_1.NotFoundException('Category not found');

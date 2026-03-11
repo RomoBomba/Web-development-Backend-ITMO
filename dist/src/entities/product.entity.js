@@ -61,16 +61,16 @@ __decorate([
     __metadata("design:type", Date)
 ], Product.prototype, "updatedAt", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => category_entity_1.Category, category => category.products),
+    (0, typeorm_1.ManyToOne)(() => category_entity_1.Category, (category) => category.products),
     (0, typeorm_1.JoinColumn)({ name: 'categoryId' }),
     __metadata("design:type", category_entity_1.Category)
 ], Product.prototype, "category", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => order_item_entity_1.OrderItem, orderItem => orderItem.product),
+    (0, typeorm_1.OneToMany)(() => order_item_entity_1.OrderItem, (orderItem) => orderItem.product),
     __metadata("design:type", Array)
 ], Product.prototype, "orderItems", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => review_entity_1.Review, review => review.product),
+    (0, typeorm_1.OneToMany)(() => review_entity_1.Review, (review) => review.product),
     __metadata("design:type", Array)
 ], Product.prototype, "reviews", void 0);
 exports.Product = Product = __decorate([

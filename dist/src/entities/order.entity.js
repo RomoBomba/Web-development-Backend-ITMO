@@ -49,12 +49,12 @@ __decorate([
     __metadata("design:type", Date)
 ], Order.prototype, "updatedAt", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, user => user.orders),
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.orders),
     (0, typeorm_1.JoinColumn)({ name: 'userId' }),
     __metadata("design:type", user_entity_1.User)
 ], Order.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => order_item_entity_1.OrderItem, orderItem => orderItem.order),
+    (0, typeorm_1.OneToMany)(() => order_item_entity_1.OrderItem, (orderItem) => orderItem.order),
     __metadata("design:type", Array)
 ], Order.prototype, "orderItems", void 0);
 exports.Order = Order = __decorate([

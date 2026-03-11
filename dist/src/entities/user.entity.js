@@ -50,11 +50,11 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => order_entity_1.Order, order => order.user),
+    (0, typeorm_1.OneToMany)(() => order_entity_1.Order, (order) => order.user),
     __metadata("design:type", Array)
 ], User.prototype, "orders", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => review_entity_1.Review, review => review.user),
+    (0, typeorm_1.OneToMany)(() => review_entity_1.Review, (review) => review.user),
     __metadata("design:type", Array)
 ], User.prototype, "reviews", void 0);
 __decorate([

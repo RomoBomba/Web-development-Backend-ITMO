@@ -1,25 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Res, Sse } from '@nestjs/common';
+
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Res, OnModuleDestroy } from '@nestjs/common';
 import type { Response } from 'express';
-import { Observable, Subject, merge } from 'rxjs';
-import { map } from 'rxjs/operators';
-import type { MessageEvent } from '@nestjs/common';
+import { Subject, merge, Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
+interface ProductEvent {
+    id: number;
+    name: string;
+    price?: number;
+    message: string;
+    timestamp: string;
+    type: 'product_created' | 'product_updated' | 'product_deleted';
+}
+
 @Controller('products')
-export class ProductsController {
-    private productCreatedSubject = new Subject<any>();
-    private productUpdatedSubject = new Subject<any>();
-    private productDeletedSubject = new Subject<any>();
+export class ProductsController implements OnModuleDestroy {
+    private productCreatedSubject = new Subject<ProductEvent>();
+    private productUpdatedSubject = new Subject<ProductEvent>();
+    private productDeletedSubject = new Subject<ProductEvent>();
+    private destroy$ = new Subject<void>();
 
     constructor(private readonly productsService: ProductsService) {}
 
-    @Sse('events')
-    sse(): Observable<MessageEvent> {
+    @Get('events')
+    events(): Observable<{ data: string }> {
         return merge(
-            this.productCreatedSubject.asObservable().pipe(
-                map((product) => ({
+            this.productCreatedSubject.pipe(
+                takeUntil(this.destroy$),
+                map((product): { data: string } => ({
                     data: JSON.stringify({
                         id: product.id,
                         name: product.name,
@@ -28,10 +42,11 @@ export class ProductsController {
                         timestamp: new Date().toISOString(),
                         type: 'product_created'
                     })
-                } as MessageEvent))
+                }))
             ),
-            this.productUpdatedSubject.asObservable().pipe(
-                map((product) => ({
+            this.productUpdatedSubject.pipe(
+                takeUntil(this.destroy$),
+                map((product): { data: string } => ({
                     data: JSON.stringify({
                         id: product.id,
                         name: product.name,
@@ -40,10 +55,11 @@ export class ProductsController {
                         timestamp: new Date().toISOString(),
                         type: 'product_updated'
                     })
-                } as MessageEvent))
+                }))
             ),
-            this.productDeletedSubject.asObservable().pipe(
-                map((product) => ({
+            this.productDeletedSubject.pipe(
+                takeUntil(this.destroy$),
+                map((product): { data: string } => ({
                     data: JSON.stringify({
                         id: product.id,
                         name: product.name,
@@ -51,9 +67,17 @@ export class ProductsController {
                         timestamp: new Date().toISOString(),
                         type: 'product_deleted'
                     })
-                } as MessageEvent))
+                }))
             )
         );
+    }
+
+    onModuleDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.productCreatedSubject.complete();
+        this.productUpdatedSubject.complete();
+        this.productDeletedSubject.complete();
     }
 
     @Get()
@@ -102,7 +126,8 @@ export class ProductsController {
                 name: newProduct.name,
                 price: newProduct.price,
                 message: `Создан новый товар: ${newProduct.name}`,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                type: 'product_created'
             });
 
             res.redirect('/products');
@@ -224,7 +249,8 @@ export class ProductsController {
                 name: updatedProduct.name,
                 price: updatedProduct.price,
                 message: `Товар обновлен: ${updatedProduct.name}`,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                type: 'product_updated'
             });
 
             res.redirect('/products');
@@ -247,7 +273,7 @@ export class ProductsController {
             try {
                 const product = await this.productsService.findOne(productId);
                 productName = product?.name || `Товар #${productId}`;
-            } catch (e) {
+            } catch {
                 productName = `Товар #${productId}`;
             }
 
@@ -259,7 +285,8 @@ export class ProductsController {
                 id: productId,
                 name: productName,
                 message: `Товар удален: ${productName}`,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                type: 'product_deleted'
             });
 
             res.redirect('/products');

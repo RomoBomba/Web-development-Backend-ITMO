@@ -1,16 +1,20 @@
+import { OnModuleDestroy } from '@nestjs/common';
 import type { Response } from 'express';
 import { Observable } from 'rxjs';
-import type { MessageEvent } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-export declare class ProductsController {
+export declare class ProductsController implements OnModuleDestroy {
     private readonly productsService;
     private productCreatedSubject;
     private productUpdatedSubject;
     private productDeletedSubject;
+    private destroy$;
     constructor(productsService: ProductsService);
-    sse(): Observable<MessageEvent>;
+    events(): Observable<{
+        data: string;
+    }>;
+    onModuleDestroy(): void;
     findAll(): Promise<{
         products: import("../entities/product.entity").Product[];
         title: string;

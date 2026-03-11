@@ -158,6 +158,9 @@ isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : fals
     <div class="container">
         <h2 class="section-title">Рекомендуем добавить</h2>
         <% if (recommendedProducts && recommendedProducts.length > 0) { %>
+            <script>
+                window.recommendedProducts = <%- JSON.stringify(recommendedProducts) %>;
+            </script>
             <div class="products__grid">
                 <% recommendedProducts.forEach(product => { %>
                     <article class="product-card" data-product-id="<%= product.id %>">
@@ -233,6 +236,23 @@ isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : fals
         }
     };
 
+    function getAllProducts() {
+        const allProducts = { ...productCatalog };
+
+        if (window.recommendedProducts && Array.isArray(window.recommendedProducts)) {
+            window.recommendedProducts.forEach(product => {
+                allProducts[product.id] = {
+                    name: product.name,
+                    price: parseFloat(product.price),
+                    image: product.image || '/images/default-product.png',
+                    description: product.description || ''
+                };
+            });
+        }
+
+        return allProducts;
+    }
+
     function initializeCart() {
         loadCartFromStorage();
         initializeServiceForm();
@@ -248,8 +268,14 @@ isAuthenticated: typeof isAuthenticated !== 'undefined' ? isAuthenticated : fals
     }
 
     function addProductToCart(productId) {
-        const product = productCatalog[productId];
-        if (!product) return;
+        const allProducts = getAllProducts();
+        const product = allProducts[productId];
+
+        if (!product) {
+            console.error('Товар не найден:', productId);
+            showNotification('Товар не найден', 'error');
+            return;
+        }
 
         if (cartData.items[productId]) {
             cartData.items[productId].quantity += 1;
