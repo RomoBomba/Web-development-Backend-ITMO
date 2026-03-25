@@ -1,0 +1,44 @@
+<%- include('../partials/header', {
+title: `Ошибка ${statusCode}`,
+currentPage: 'error'
+}) %>
+
+<div class="container error-container">
+    <div class="error-box">
+        <h1 class="error-code"><%= statusCode %></h1>
+        <h2 class="error-title">Произошла ошибка</h2>
+        <p class="error-message"><%= message %></p>
+        <a href="/" class="button button--primary">Вернуться на главную</a>
+    </div>
+</div>
+
+<style>
+    .error-container {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .error-box {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .error-code {
+        font-size: 6rem;
+        color: #e74c3c;
+        margin: 0;
+    }
+    .error-title {
+        margin: 1rem 0;
+        color: #2c3e50;
+    }
+    .error-message {
+        margin-bottom: 2rem;
+        color: #7f8c8d;
+    }
+</style>
+
+<%- include('../partials/footer') %>

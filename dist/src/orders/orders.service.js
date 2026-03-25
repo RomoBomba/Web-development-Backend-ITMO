@@ -29,7 +29,7 @@ let OrdersService = class OrdersService {
         const order = this.orderRepository.create({
             userId: createOrderDto.userId,
             total: createOrderDto.total,
-            status: 'pending',
+            status: createOrderDto.status || 'pending',
         });
         const savedOrder = await this.orderRepository.save(order);
         for (const item of createOrderDto.items) {
@@ -48,13 +48,39 @@ let OrdersService = class OrdersService {
             relations: ['user', 'orderItems', 'orderItems.product'],
         });
     }
+    async findAllPaginated(paginationDto) {
+        const page = paginationDto.page ?? 1;
+        const limit = paginationDto.limit ?? 10;
+        const skip = (page - 1) * limit;
+        const [data, total] = await this.orderRepository.findAndCount({
+            relations: ['user', 'orderItems', 'orderItems.product'],
+            skip,
+            take: limit,
+            order: { createdAt: 'DESC' },
+        });
+        const totalPages = Math.ceil(total / limit);
+        return {
+            data,
+            meta: { page, limit, total, totalPages },
+            links: {
+                self: `/api/orders?page=${page}&limit=${limit}`,
+                first: `/api/orders?page=1&limit=${limit}`,
+                previous: page > 1 ? `/api/orders?page=${page - 1}&limit=${limit}` : null,
+                next: page < totalPages ? `/api/orders?page=${page + 1}&limit=${limit}` : null,
+                last: `/api/orders?page=${totalPages}&limit=${limit}`,
+            },
+        };
+    }
     async findOne(id) {
+        if (isNaN(id) || id <= 0) {
+            throw new common_1.NotFoundException(`Некорректный ID заказа: ${id}`);
+        }
         const order = await this.orderRepository.findOne({
             where: { id },
             relations: ['user', 'orderItems', 'orderItems.product'],
         });
         if (!order) {
-            throw new common_1.NotFoundException(`Order #${id} not found`);
+            throw new common_1.NotFoundException(`Заказ #${id} не найден`);
         }
         return order;
     }
@@ -65,7 +91,19 @@ let OrdersService = class OrdersService {
     }
     async remove(id) {
         const order = await this.findOne(id);
-        return await this.orderRepository.remove(order);
+        await this.orderRepository.delete(id);
+        return order;
+    }
+    async findByUser(userId) {
+        const orders = await this.orderRepository.find({
+            where: { userId },
+            relations: ['orderItems', 'orderItems.product'],
+            order: { createdAt: 'DESC' },
+        });
+        return {
+            data: orders,
+            meta: { userId, total: orders.length },
+        };
     }
 };
 exports.OrdersService = OrdersService;

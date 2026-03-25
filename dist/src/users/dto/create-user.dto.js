@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUserDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateUserDto {
     email;
@@ -18,22 +19,22 @@ class CreateUserDto {
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
-    (0, class_validator_1.IsEmail)({}, { message: 'Некорректный email' }),
+    (0, swagger_1.ApiProperty)({ description: 'Email пользователя', example: 'user@example.com' }),
+    (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Имя пользователя', example: 'Иван Иванов', maxLength: 50 }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.MinLength)(2, { message: 'Имя должно содержать минимум 2 символа' }),
-    (0, class_validator_1.MaxLength)(50, { message: 'Имя слишком длинное' }),
+    (0, class_validator_1.MinLength)(2),
+    (0, class_validator_1.MaxLength)(50),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Пароль', example: 'Password123!', minLength: 6 }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(6, { message: 'Пароль должен содержать минимум 6 символов' }),
-    (0, class_validator_1.Matches)(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-        message: 'Пароль должен содержать хотя бы одну заглавную букву, одну строчную и цифру или спецсимвол',
-    }),
+    (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "password", void 0);
 //# sourceMappingURL=create-user.dto.js.map

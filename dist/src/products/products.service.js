@@ -94,6 +94,57 @@ let ProductsService = class ProductsService {
         }
         return recommended;
     }
+    async findAllPaginated(paginationDto) {
+        const page = paginationDto.page ?? 1;
+        const limit = paginationDto.limit ?? 10;
+        const skip = (page - 1) * limit;
+        const [data, total] = await this.productRepository.findAndCount({
+            relations: ['category'],
+            skip,
+            take: limit,
+            order: { createdAt: 'DESC' },
+        });
+        const totalPages = Math.ceil(total / limit);
+        return {
+            data,
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages,
+            },
+            links: {
+                self: `/api/products?page=${page}&limit=${limit}`,
+                first: `/api/products?page=1&limit=${limit}`,
+                previous: page > 1 ? `/api/products?page=${page - 1}&limit=${limit}` : null,
+                next: page < totalPages ? `/api/products?page=${page + 1}&limit=${limit}` : null,
+                last: `/api/products?page=${totalPages}&limit=${limit}`,
+            },
+        };
+    }
+    async findByCategory(categoryId) {
+        const products = await this.productRepository.find({
+            where: { categoryId },
+            relations: ['category'],
+            order: { createdAt: 'DESC' },
+        });
+        if (!products.length) {
+            return {
+                data: [],
+                meta: {
+                    categoryId,
+                    total: 0,
+                },
+            };
+        }
+        return {
+            data: products,
+            meta: {
+                categoryId,
+                total: products.length,
+            },
+        };
+    }
 };
 exports.ProductsService = ProductsService;
 exports.ProductsService = ProductsService = __decorate([

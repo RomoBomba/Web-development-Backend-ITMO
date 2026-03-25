@@ -1,27 +1,20 @@
-import {
-  IsString,
-  IsEmail,
-  IsOptional,
-  MinLength,
-  MaxLength,
-  Matches,
-} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEmail, IsString, IsOptional, MinLength, MaxLength } from 'class-validator';
 
 export class CreateUserDto {
-  @IsEmail({}, { message: 'Некорректный email' })
-  email: string;
+    @ApiProperty({ description: 'Email пользователя', example: 'user@example.com' })
+    @IsEmail()
+    email: string;
 
-  @IsString()
-  @IsOptional()
-  @MinLength(2, { message: 'Имя должно содержать минимум 2 символа' })
-  @MaxLength(50, { message: 'Имя слишком длинное' })
-  name?: string;
+    @ApiPropertyOptional({ description: 'Имя пользователя', example: 'Иван Иванов', maxLength: 50 })
+    @IsString()
+    @IsOptional()
+    @MinLength(2)
+    @MaxLength(50)
+    name?: string;
 
-  @IsString()
-  @MinLength(6, { message: 'Пароль должен содержать минимум 6 символов' })
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message:
-      'Пароль должен содержать хотя бы одну заглавную букву, одну строчную и цифру или спецсимвол',
-  })
-  password: string;
+    @ApiProperty({ description: 'Пароль', example: 'Password123!', minLength: 6 })
+    @IsString()
+    @MinLength(6)
+    password: string;
 }

@@ -6,6 +6,13 @@ export declare class ReviewsController {
     constructor(reviewsService: ReviewsService);
     findAll(): Promise<{
         reviews: import("../entities/review.entity").Review[];
+        title: string;
+        currentPage: string;
+        cartCount: number;
+        isAuthenticated: boolean;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: null;
     }>;
     createForm(): {};
     create(createReviewDto: CreateReviewDto): Promise<{

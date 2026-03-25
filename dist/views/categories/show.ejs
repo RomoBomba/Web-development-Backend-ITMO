@@ -1,0 +1,104 @@
+<%- include('../partials/header', {
+title: category ? category.name : 'Категория не найдена',
+currentPage: 'categories'
+}) %>
+
+<div class="container">
+    <% if (!category) { %>
+        <div class="error-message">
+            <h1>Категория не найдена</h1>
+            <p>Запрошенная категория не существует или была удалена.</p>
+            <a href="/categories" class="button button--primary">Вернуться к списку</a>
+        </div>
+    <% } else { %>
+        <div class="category-detail">
+            <h1><%= category.name %></h1>
+
+            <div class="category-stats">
+                <p>📦 Товаров в категории: <strong><%= category.products?.length || 0 %></strong></p>
+            </div>
+
+            <div class="category-actions">
+                <a href="/categories/<%= category.id %>/edit" class="button button--primary">✏️ Редактировать</a>
+                <form action="/categories/<%= category.id %>?_method=DELETE" method="POST" style="display: inline;">
+                    <button type="submit" class="button button--danger" onclick="return confirm('Удалить категорию?')">🗑️ Удалить</button>
+                </form>
+                <a href="/categories" class="button button--secondary">↩️ К списку</a>
+            </div>
+
+            <section class="category-products">
+                <h2>Товары в этой категории</h2>
+                <div class="products__grid">
+                    <% if (category.products && category.products.length > 0) { %>
+                        <% category.products.forEach(product => { %>
+                            <article class="product-card">
+                                <h3 class="product-card__title">
+                                    <a href="/products/<%= product.id %>" class="product-card__link"><%= product.name %></a>
+                                </h3>
+                                <p class="product-card__price"><%= Number(product.price).toLocaleString() %> руб.</p>
+                            </article>
+                        <% }) %>
+                    <% } else { %>
+                        <p>В этой категории пока нет товаров.</p>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    <% } %>
+</div>
+
+<style>
+    .error-message {
+        text-align: center;
+        padding: 3rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+        margin: 2rem 0;
+    }
+    .category-detail {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin: 2rem 0;
+    }
+    .category-stats {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    .category-actions {
+        display: flex;
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    .button--danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    .button--danger:hover {
+        background-color: #c82333;
+    }
+    .category-products {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+    .category-products h2 {
+        margin-bottom: 1rem;
+    }
+    .products__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    .product-card {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+</style>
+
+<%- include('../partials/footer') %>

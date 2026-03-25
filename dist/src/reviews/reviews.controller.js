@@ -24,7 +24,16 @@ let ReviewsController = class ReviewsController {
     }
     async findAll() {
         const reviews = await this.reviewsService.findAll();
-        return { reviews };
+        return {
+            reviews,
+            title: 'Управление отзывами',
+            currentPage: 'reviews',
+            cartCount: 0,
+            isAuthenticated: true,
+            useSwiper: false,
+            useInputMask: false,
+            pageScript: null
+        };
     }
     createForm() {
         return {};

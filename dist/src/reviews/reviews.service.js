@@ -23,6 +23,15 @@ let ReviewsService = class ReviewsService {
         this.reviewRepository = reviewRepository;
     }
     async create(createReviewDto) {
+        const existingReview = await this.reviewRepository.findOne({
+            where: {
+                userId: createReviewDto.userId,
+                productId: createReviewDto.productId,
+            },
+        });
+        if (existingReview) {
+            throw new common_1.ConflictException('Вы уже оставляли отзыв на этот товар');
+        }
         const review = this.reviewRepository.create(createReviewDto);
         return await this.reviewRepository.save(review);
     }
@@ -31,13 +40,39 @@ let ReviewsService = class ReviewsService {
             relations: ['user', 'product'],
         });
     }
+    async findAllPaginated(paginationDto) {
+        const page = paginationDto.page ?? 1;
+        const limit = paginationDto.limit ?? 10;
+        const skip = (page - 1) * limit;
+        const [data, total] = await this.reviewRepository.findAndCount({
+            relations: ['user', 'product'],
+            skip,
+            take: limit,
+            order: { createdAt: 'DESC' },
+        });
+        const totalPages = Math.ceil(total / limit);
+        return {
+            data,
+            meta: { page, limit, total, totalPages },
+            links: {
+                self: `/api/reviews?page=${page}&limit=${limit}`,
+                first: `/api/reviews?page=1&limit=${limit}`,
+                previous: page > 1 ? `/api/reviews?page=${page - 1}&limit=${limit}` : null,
+                next: page < totalPages ? `/api/reviews?page=${page + 1}&limit=${limit}` : null,
+                last: `/api/reviews?page=${totalPages}&limit=${limit}`,
+            },
+        };
+    }
     async findOne(id) {
+        if (isNaN(id) || id <= 0) {
+            throw new common_1.NotFoundException(`Некорректный ID отзыва: ${id}`);
+        }
         const review = await this.reviewRepository.findOne({
             where: { id },
             relations: ['user', 'product'],
         });
         if (!review) {
-            throw new common_1.NotFoundException(`Review #${id} not found`);
+            throw new common_1.NotFoundException(`Отзыв #${id} не найден`);
         }
         return review;
     }
@@ -48,7 +83,37 @@ let ReviewsService = class ReviewsService {
     }
     async remove(id) {
         const review = await this.findOne(id);
-        return await this.reviewRepository.remove(review);
+        await this.reviewRepository.delete(id);
+        return review;
+    }
+    async findByProduct(productId) {
+        const reviews = await this.reviewRepository.find({
+            where: { productId },
+            relations: ['user'],
+            order: { createdAt: 'DESC' },
+        });
+        const averageRating = reviews.length
+            ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+            : 0;
+        return {
+            data: reviews,
+            meta: {
+                productId,
+                total: reviews.length,
+                averageRating: Math.round(averageRating * 10) / 10,
+            },
+        };
+    }
+    async findByUser(userId) {
+        const reviews = await this.reviewRepository.find({
+            where: { userId },
+            relations: ['product'],
+            order: { createdAt: 'DESC' },
+        });
+        return {
+            data: reviews,
+            meta: { userId, total: reviews.length },
+        };
     }
 };
 exports.ReviewsService = ReviewsService;

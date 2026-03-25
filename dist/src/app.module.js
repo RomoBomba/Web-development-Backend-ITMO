@@ -19,6 +19,7 @@ const order_entity_1 = require("./entities/order.entity");
 const order_item_entity_1 = require("./entities/order-item.entity");
 const review_entity_1 = require("./entities/review.entity");
 const products_module_1 = require("./products/products.module");
+const categories_module_1 = require("./categories/categories.module");
 const orders_module_1 = require("./orders/orders.module");
 const users_module_1 = require("./users/users.module");
 const reviews_module_1 = require("./reviews/reviews.module");
@@ -28,9 +29,7 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            config_1.ConfigModule.forRoot({
-                isGlobal: true,
-            }),
+            config_1.ConfigModule.forRoot({ isGlobal: true }),
             typeorm_1.TypeOrmModule.forRootAsync({
                 useFactory: () => {
                     const connectionString = process.env.DATABASE_URL;
@@ -48,13 +47,12 @@ exports.AppModule = AppModule = __decorate([
                         entities: [user_entity_1.User, category_entity_1.Category, product_entity_1.Product, order_entity_1.Order, order_item_entity_1.OrderItem, review_entity_1.Review],
                         synchronize: false,
                         logging: true,
-                        ssl: {
-                            rejectUnauthorized: false,
-                        },
+                        ssl: { rejectUnauthorized: false },
                     };
                 },
             }),
             products_module_1.ProductsModule,
+            categories_module_1.CategoriesModule,
             orders_module_1.OrdersModule,
             users_module_1.UsersModule,
             reviews_module_1.ReviewsModule,

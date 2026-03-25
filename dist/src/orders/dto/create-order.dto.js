@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateOrderDto = exports.OrderItemDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 class OrderItemDto {
@@ -19,17 +20,20 @@ class OrderItemDto {
 }
 exports.OrderItemDto = OrderItemDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID товара', example: 1 }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
 ], OrderItemDto.prototype, "productId", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Количество', example: 2 }),
     (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(1, { message: 'Количество должно быть не менее 1' }),
+    (0, class_validator_1.Min)(1),
     __metadata("design:type", Number)
 ], OrderItemDto.prototype, "quantity", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)({ maxDecimalPlaces: 2 }),
+    (0, swagger_1.ApiProperty)({ description: 'Цена на момент заказа', example: 145000 }),
+    (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(0),
     __metadata("design:type", Number)
 ], OrderItemDto.prototype, "price", void 0);
@@ -41,21 +45,25 @@ class CreateOrderDto {
 }
 exports.CreateOrderDto = CreateOrderDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID пользователя', example: 1 }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
 ], CreateOrderDto.prototype, "userId", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)({ maxDecimalPlaces: 2 }),
+    (0, swagger_1.ApiProperty)({ description: 'Общая сумма заказа', example: 290000 }),
+    (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(0),
     __metadata("design:type", Number)
 ], CreateOrderDto.prototype, "total", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Статус заказа', example: 'pending', default: 'pending' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateOrderDto.prototype, "status", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Позиции заказа', type: [OrderItemDto] }),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
     (0, class_transformer_1.Type)(() => OrderItemDto),

@@ -8,6 +8,8 @@ const app_module_1 = require("./app.module");
 const path_1 = require("path");
 const common_1 = require("@nestjs/common");
 const method_override_1 = __importDefault(require("method-override"));
+const http_exception_filter_1 = require("./filters/http-exception.filter");
+const swagger_1 = require("@nestjs/swagger");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useStaticAssets((0, path_1.join)(__dirname, '..', 'public'));
@@ -22,6 +24,20 @@ async function bootstrap() {
             enableImplicitConversion: true,
         },
     }));
+    app.useGlobalFilters(new http_exception_filter_1.AllExceptionsFilter());
+    const config = new swagger_1.DocumentBuilder()
+        .setTitle('MusicStore API')
+        .setDescription('API для интернет-магазина музыкальных инструментов')
+        .setVersion('1.0')
+        .addTag('products', 'Управление товарами')
+        .addTag('categories', 'Управление категориями')
+        .addTag('orders', 'Управление заказами')
+        .addTag('users', 'Управление пользователями')
+        .addTag('reviews', 'Управление отзывами')
+        .addBearerAuth()
+        .build();
+    const document = swagger_1.SwaggerModule.createDocument(app, config);
+    swagger_1.SwaggerModule.setup('api/docs', app, document);
     const port = process.env.PORT || 3000;
     await app.listen(port);
     console.log(`🚀 Application is running on: http://localhost:${port}`);

@@ -1,4 +1,5 @@
-<li class="nav__item">
+<ul class="nav__list">
+    <li class="nav__item">
         <a href="/" class="nav__link <%= currentPage === 'index' ? 'nav__link--active' : '' %>">Главная</a>
     </li>
     <li class="nav__item">
@@ -19,9 +20,16 @@
         </a>
     </li>
     <% if (isAuthenticated) { %>
-        <li class="nav__item">
-            <a href="/products" class="nav__link <%= currentPage === 'products' ? 'nav__link--active' : '' %>">
-                ⚙️ Управление
-            </a>
+        <li class="nav__item nav__item--dropdown">
+            <span class="nav__link nav__link--dropdown">⚙️ Управление</span>
+            <ul class="dropdown-menu">
+                <li class="dropdown-menu__item">
+                    <a href="/products" class="dropdown-menu__link">📦 Товары</a>
+                </li>
+                <li class="dropdown-menu__item">
+                    <a href="/categories" class="dropdown-menu__link">📁 Категории</a>
+                </li>
+            </ul>
         </li>
     <% } %>
+</ul>

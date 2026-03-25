@@ -1,29 +1,25 @@
-import {
-  IsNumber,
-  IsString,
-  Min,
-  Max,
-  IsOptional,
-  IsPositive,
-  MaxLength,
-} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNumber, IsString, IsOptional, Min, Max, IsPositive } from 'class-validator';
 
 export class CreateReviewDto {
-  @IsNumber()
-  @Min(1, { message: 'Оценка должна быть от 1 до 5' })
-  @Max(5, { message: 'Оценка должна быть от 1 до 5' })
-  rating: number;
+    @ApiProperty({ description: 'Оценка от 1 до 5', example: 5, minimum: 1, maximum: 5 })
+    @IsNumber()
+    @Min(1)
+    @Max(5)
+    rating: number;
 
-  @IsString()
-  @IsOptional()
-  @MaxLength(1000, { message: 'Комментарий слишком длинный' })
-  comment?: string;
+    @ApiPropertyOptional({ description: 'Текст отзыва', example: 'Отличная гитара!' })
+    @IsString()
+    @IsOptional()
+    comment?: string;
 
-  @IsNumber()
-  @IsPositive()
-  userId: number;
+    @ApiProperty({ description: 'ID пользователя', example: 1 })
+    @IsNumber()
+    @IsPositive()
+    userId: number;
 
-  @IsNumber()
-  @IsPositive()
-  productId: number;
+    @ApiProperty({ description: 'ID товара', example: 1 })
+    @IsNumber()
+    @IsPositive()
+    productId: number;
 }

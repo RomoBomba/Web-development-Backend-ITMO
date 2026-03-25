@@ -3,6 +3,7 @@ import { Product } from '../entities/product.entity';
 import { Category } from '../entities/category.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { PaginationDto } from './dto/pagination.dto';
 export declare class ProductsService {
     private productRepository;
     private categoryRepository;
@@ -14,4 +15,27 @@ export declare class ProductsService {
     remove(id: number): Promise<Product>;
     getPopularProducts(): Promise<Product[]>;
     getRecommendedProducts(): Promise<Product[]>;
+    findAllPaginated(paginationDto: PaginationDto): Promise<{
+        data: Product[];
+        meta: {
+            page: number;
+            limit: number;
+            total: number;
+            totalPages: number;
+        };
+        links: {
+            self: string;
+            first: string;
+            previous: string | null;
+            next: string | null;
+            last: string;
+        };
+    }>;
+    findByCategory(categoryId: number): Promise<{
+        data: Product[];
+        meta: {
+            categoryId: number;
+            total: number;
+        };
+    }>;
 }

@@ -5,7 +5,6 @@ import { startLoadTimer, setActiveNavItem, displayLoadTime, enhanceProductCards 
 
 let swiperInstance = null;
 
-// Хардкодированный каталог товаров
 const productCatalog = {
     'elixir-strings': { name: 'Комплект струн Elixir', price: 2200, image: 'images/addition/strings-elixir.png', description: 'Наноструктурное покрытие' },
     'dunlop-picks': { name: 'Медиаторы Dunlop', price: 800, image: 'images/addition/picks-dunlop.png', description: 'Набор из 12 медиаторов' },
@@ -15,7 +14,6 @@ const productCatalog = {
     'guitar-case': { name: 'Чехол для акустической гитары', price: 3200, image: 'images/addition/case.png', description: 'Прочный чехол' }
 };
 
-// Объединяем все источники товаров
 function getAllProducts() {
     const allProducts = { ...productCatalog };
 

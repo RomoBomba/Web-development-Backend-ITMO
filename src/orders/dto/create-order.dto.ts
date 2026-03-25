@@ -1,43 +1,43 @@
-import {
-  IsNumber,
-  IsArray,
-  ValidateNested,
-  Min,
-  IsPositive,
-  IsString,
-  IsOptional,
-} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNumber, IsArray, ValidateNested, Min, IsPositive, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class OrderItemDto {
-  @IsNumber()
-  @IsPositive()
-  productId: number;
+    @ApiProperty({ description: 'ID товара', example: 1 })
+    @IsNumber()
+    @IsPositive()
+    productId: number;
 
-  @IsNumber()
-  @Min(1, { message: 'Количество должно быть не менее 1' })
-  quantity: number;
+    @ApiProperty({ description: 'Количество', example: 2 })
+    @IsNumber()
+    @Min(1)
+    quantity: number;
 
-  @IsNumber({ maxDecimalPlaces: 2 })
-  @Min(0)
-  price: number;
+    @ApiProperty({ description: 'Цена на момент заказа', example: 145000 })
+    @IsNumber()
+    @Min(0)
+    price: number;
 }
 
 export class CreateOrderDto {
-  @IsNumber()
-  @IsPositive()
-  userId: number;
+    @ApiProperty({ description: 'ID пользователя', example: 1 })
+    @IsNumber()
+    @IsPositive()
+    userId: number;
 
-  @IsNumber({ maxDecimalPlaces: 2 })
-  @Min(0)
-  total: number;
+    @ApiProperty({ description: 'Общая сумма заказа', example: 290000 })
+    @IsNumber()
+    @Min(0)
+    total: number;
 
-  @IsString()
-  @IsOptional()
-  status?: string;
+    @ApiPropertyOptional({ description: 'Статус заказа', example: 'pending', default: 'pending' })
+    @IsString()
+    @IsOptional()
+    status?: string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => OrderItemDto)
-  items: OrderItemDto[];
+    @ApiProperty({ description: 'Позиции заказа', type: [OrderItemDto] })
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => OrderItemDto)
+    items: OrderItemDto[];
 }

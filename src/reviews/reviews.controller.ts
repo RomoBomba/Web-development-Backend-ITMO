@@ -16,12 +16,21 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
-  @Get()
-  @Render('reviews/index')
-  async findAll() {
-    const reviews = await this.reviewsService.findAll();
-    return { reviews };
-  }
+    @Get()
+    @Render('reviews/index')
+    async findAll() {
+        const reviews = await this.reviewsService.findAll();
+        return {
+            reviews,
+            title: 'Управление отзывами',
+            currentPage: 'reviews',
+            cartCount: 0,
+            isAuthenticated: true,
+            useSwiper: false,
+            useInputMask: false,
+            pageScript: null
+        };
+    }
 
   @Get('add')
   @Render('reviews/add')

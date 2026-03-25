@@ -1,40 +1,32 @@
-import {
-  IsString,
-  IsNumber,
-  IsOptional,
-  Min,
-  IsUrl,
-  IsPositive,
-  IsNotEmpty,
-} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsNumber, IsOptional, Min, IsUrl, IsNotEmpty, IsPositive } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateProductDto {
-  @IsString({ message: 'Название должно быть строкой' })
-  @IsNotEmpty({ message: 'Название обязательно' })
-  name: string;
+    @ApiProperty({ description: 'Название товара', example: 'Fender Stratocaster' })
+    @IsString()
+    @IsNotEmpty()
+    name: string;
 
-  @IsString()
-  @IsOptional()
-  description?: string;
+    @ApiPropertyOptional({ description: 'Описание товара', example: 'Легендарная электрогитара' })
+    @IsString()
+    @IsOptional()
+    description?: string;
 
-  @Transform(({ value }) => {
-    const num = parseFloat(value);
-    return isNaN(num) ? undefined : num;
-  })
-  @IsNumber({ maxDecimalPlaces: 2 }, { message: 'Цена должна быть числом' })
-  @Min(0, { message: 'Цена не может быть отрицательной' })
-  price: number;
+    @ApiProperty({ description: 'Цена в рублях', example: 145000 })
+    @Transform(({ value }) => parseFloat(value))
+    @IsNumber()
+    @Min(0)
+    price: number;
 
-  @IsUrl({}, { message: 'Некорректный URL изображения' })
-  @IsOptional()
-  image?: string;
+    @ApiPropertyOptional({ description: 'URL изображения', example: 'https://example.com/guitar.jpg' })
+    @IsUrl()
+    @IsOptional()
+    image?: string;
 
-  @Transform(({ value }) => {
-    const num = parseInt(value, 10);
-    return isNaN(num) ? undefined : num;
-  })
-  @IsNumber({}, { message: 'ID категории должен быть числом' })
-  @IsPositive({ message: 'ID категории должен быть положительным числом' })
-  categoryId: number;
+    @ApiProperty({ description: 'ID категории', example: 1 })
+    @Transform(({ value }) => parseInt(value))
+    @IsNumber()
+    @IsPositive()
+    categoryId: number;
 }

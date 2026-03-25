@@ -1,0 +1,97 @@
+<%- include('../partials/header', {
+title: 'Управление категориями',
+currentPage: 'categories',
+cartCount: 0,
+isAuthenticated: true
+}) %>
+
+<div class="container">
+    <h1>Управление категориями</h1>
+    <div class="actions-bar">
+        <a href="/categories/add" class="button button--primary">➕ Добавить категорию</a>
+        <a href="/products" class="button button--secondary">📦 Управление товарами</a>
+        <a href="/" class="button button--secondary">🏠 На главную</a>
+    </div>
+
+    <% if (categories.length === 0) { %>
+        <div class="empty-state">
+            <p>В базе данных пока нет категорий. Добавьте первую категорию!</p>
+        </div>
+    <% } else { %>
+        <div class="categories__grid">
+            <% categories.forEach(category => { %>
+                <article class="category-card">
+                    <h3 class="category-card__title"><%= category.name %></h3>
+                    <p class="category-card__count">
+                        Товаров в категории: <strong><%= category.products?.length || 0 %></strong>
+                    </p>
+                    <div class="category-card__actions">
+                        <a href="/categories/<%= category.id %>" class="button button--small">👁️ Просмотр</a>
+                        <a href="/categories/<%= category.id %>/edit" class="button button--small button--secondary">✏️ Ред.</a>
+                        <form action="/categories/<%= category.id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="button button--small button--danger" onclick="return confirm('Удалить категорию? Все товары категории останутся без категории!')">🗑️ Удалить</button>
+                        </form>
+                    </div>
+                </article>
+            <% }) %>
+        </div>
+    <% } %>
+</div>
+
+<style>
+    .actions-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+    }
+    .categories__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    .category-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    .category-card:hover {
+        transform: translateY(-3px);
+    }
+    .category-card__title {
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+    .category-card__count {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+    }
+    .category-card__actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+    .button--small {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    .button--danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    .button--danger:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<%- include('../partials/footer') %>

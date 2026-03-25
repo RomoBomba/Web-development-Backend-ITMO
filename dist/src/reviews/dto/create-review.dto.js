@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateReviewDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateReviewDto {
     rating;
@@ -19,23 +20,26 @@ class CreateReviewDto {
 }
 exports.CreateReviewDto = CreateReviewDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Оценка от 1 до 5', example: 5, minimum: 1, maximum: 5 }),
     (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(1, { message: 'Оценка должна быть от 1 до 5' }),
-    (0, class_validator_1.Max)(5, { message: 'Оценка должна быть от 1 до 5' }),
+    (0, class_validator_1.Min)(1),
+    (0, class_validator_1.Max)(5),
     __metadata("design:type", Number)
 ], CreateReviewDto.prototype, "rating", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Текст отзыва', example: 'Отличная гитара!' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.MaxLength)(1000, { message: 'Комментарий слишком длинный' }),
     __metadata("design:type", String)
 ], CreateReviewDto.prototype, "comment", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID пользователя', example: 1 }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
 ], CreateReviewDto.prototype, "userId", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'ID товара', example: 1 }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)

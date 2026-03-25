@@ -1,0 +1,31 @@
+<%- include('../partials/header', {
+title: 'Добавить категорию',
+currentPage: 'categories'
+}) %>
+
+<div class="container">
+    <h1>Добавить новую категорию</h1>
+
+    <form action="/categories" method="POST" class="form">
+        <div class="form__group">
+            <label for="name" class="form__label">Название категории *</label>
+            <input type="text" id="name" name="name" required class="form__input"
+                   placeholder="Например: Электрогитары, Аксессуары, Укулеле">
+        </div>
+
+        <div class="form__actions">
+            <button type="submit" class="button button--primary">💾 Сохранить категорию</button>
+            <a href="/categories" class="button button--secondary">↩️ Отмена</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form__actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+</style>
+
+<%- include('../partials/footer') %>

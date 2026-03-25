@@ -1,0 +1,46 @@
+<%- include('../partials/header', {
+title: category ? `Редактировать: ${category.name}` : 'Категория не найдена',
+currentPage: 'categories'
+}) %>
+
+<div class="container">
+    <% if (!category) { %>
+        <div class="error-message">
+            <h1>Категория не найдена</h1>
+            <p>Запрошенная категория не существует или была удалена.</p>
+            <a href="/categories" class="button button--primary">Вернуться к списку</a>
+        </div>
+    <% } else { %>
+        <h1>Редактировать категорию: <%= category.name %></h1>
+
+        <form action="/categories/<%= category.id %>?_method=PATCH" method="POST" class="form">
+            <div class="form__group">
+                <label for="name" class="form__label">Название категории *</label>
+                <input type="text" id="name" name="name" value="<%= category.name %>" required class="form__input">
+            </div>
+
+            <div class="form__actions">
+                <button type="submit" class="button button--primary">💾 Сохранить изменения</button>
+                <a href="/categories/<%= category.id %>" class="button button--secondary">↩️ Отмена</a>
+            </div>
+        </form>
+    <% } %>
+</div>
+
+<style>
+    .error-message {
+        text-align: center;
+        padding: 3rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+        margin: 2rem 0;
+    }
+    .form__actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+</style>
+
+<%- include('../partials/footer') %>
