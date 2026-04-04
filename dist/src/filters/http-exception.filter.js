@@ -16,6 +16,10 @@ let AllExceptionsFilter = AllExceptionsFilter_1 = class AllExceptionsFilter {
         const ctx = host.switchToHttp();
         const request = ctx.getRequest();
         const response = ctx.getResponse();
+        if (request?.url?.includes('/graphql')) {
+            this.logger.error(`GraphQL Error: ${exception instanceof Error ? exception.message : exception}`);
+            throw exception;
+        }
         let status = common_1.HttpStatus.INTERNAL_SERVER_ERROR;
         let message = 'Внутренняя ошибка сервера';
         if (exception instanceof common_1.HttpException) {
@@ -34,24 +38,39 @@ let AllExceptionsFilter = AllExceptionsFilter_1 = class AllExceptionsFilter {
                 message = 'Ошибка базы данных';
             }
         }
-        this.logger.error(`${request.method} ${request.url}`, exception instanceof Error ? exception.stack : String(exception));
-        const acceptsJson = request.headers.accept?.includes('application/json');
-        if (acceptsJson || request.url.startsWith('/api/')) {
+        this.logger.error(`${request?.method || 'UNKNOWN'} ${request?.url || 'unknown'}`);
+        const acceptsJson = request?.headers?.accept?.includes('application/json');
+        if (acceptsJson || request?.url?.startsWith('/api/')) {
             response.status(status).json({
                 statusCode: status,
                 timestamp: new Date().toISOString(),
-                path: request.url,
+                path: request?.url || 'unknown',
                 message: Array.isArray(message) ? message[0] : message,
             });
         }
         else {
-            response.status(status).render('error', {
-                statusCode: status,
-                message,
-                title: `Ошибка ${status}`,
-                currentPage: 'error',
-                isAuthenticated: false,
-            });
+            try {
+                response.status(status).render('pages/error', {
+                    statusCode: status,
+                    message,
+                    title: `Ошибка ${status}`,
+                    currentPage: 'error',
+                    isAuthenticated: false,
+                });
+            }
+            catch (renderError) {
+                response.status(status).send(`
+          <!DOCTYPE html>
+          <html>
+          <head><title>Ошибка ${status}</title></head>
+          <body>
+            <h1>Ошибка ${status}</h1>
+            <p>${message}</p>
+            <a href="/">Вернуться на главную</a>
+          </body>
+          </html>
+        `);
+            }
         }
     }
 };

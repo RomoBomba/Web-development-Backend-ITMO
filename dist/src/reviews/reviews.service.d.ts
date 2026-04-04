@@ -42,4 +42,13 @@ export declare class ReviewsService {
             total: number;
         };
     }>;
+    findAllPaginatedGraphQL(paginationDto: PaginationDto): Promise<{
+        items: Review[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+    }>;
 }

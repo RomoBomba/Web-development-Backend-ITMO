@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
 import { parse } from 'pg-connection-string';
 import { PagesController } from './pages/pages.controller';
 import { User } from './entities/user.entity';
@@ -41,6 +44,15 @@ import { ReviewsModule } from './reviews/reviews.module';
                 };
             },
         }),
+
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+            driver: ApolloDriver,
+            autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+            sortSchema: true,
+            playground: true,
+            introspection: true,
+        }),
+
         ProductsModule,
         CategoriesModule,
         OrdersModule,

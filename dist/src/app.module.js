@@ -10,6 +10,9 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
+const graphql_1 = require("@nestjs/graphql");
+const apollo_1 = require("@nestjs/apollo");
+const path_1 = require("path");
 const pg_connection_string_1 = require("pg-connection-string");
 const pages_controller_1 = require("./pages/pages.controller");
 const user_entity_1 = require("./entities/user.entity");
@@ -50,6 +53,13 @@ exports.AppModule = AppModule = __decorate([
                         ssl: { rejectUnauthorized: false },
                     };
                 },
+            }),
+            graphql_1.GraphQLModule.forRoot({
+                driver: apollo_1.ApolloDriver,
+                autoSchemaFile: (0, path_1.join)(process.cwd(), 'src/schema.gql'),
+                sortSchema: true,
+                playground: true,
+                introspection: true,
             }),
             products_module_1.ProductsModule,
             categories_module_1.CategoriesModule,

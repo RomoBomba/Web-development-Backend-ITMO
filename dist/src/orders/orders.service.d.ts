@@ -36,4 +36,13 @@ export declare class OrdersService {
             total: number;
         };
     }>;
+    findAllPaginatedGraphQL(paginationDto: PaginationDto): Promise<{
+        items: Order[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+    }>;
 }

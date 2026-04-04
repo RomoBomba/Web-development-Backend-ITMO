@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="musicstore_web@dpg-d6envgs1hm7c73fa3lc0-a.frankfurt-postgres.render.com" uuid="07c02e02-d4ea-47e0-8878-2472ce4f22b0">
+    <data-source source="LOCAL" name="musicstore_web_ligw@dpg-d75456ggjchc73bhllf0-a.frankfurt-postgres.render.com" uuid="07c02e02-d4ea-47e0-8878-2472ce4f22b0">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://dpg-d6envgs1hm7c73fa3lc0-a.frankfurt-postgres.render.com:5432/musicstore_web</jdbc-url>
+      <jdbc-url>jdbc:postgresql://dpg-d75456ggjchc73bhllf0-a.frankfurt-postgres.render.com:5432/musicstore_web_ligw</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <driver-properties>
         <property name="connectTimeout" value="50" />

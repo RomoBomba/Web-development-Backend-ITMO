@@ -115,6 +115,27 @@ let ReviewsService = class ReviewsService {
             meta: { userId, total: reviews.length },
         };
     }
+    async findAllPaginatedGraphQL(paginationDto) {
+        const page = paginationDto.page ?? 1;
+        const limit = paginationDto.limit ?? 10;
+        const skip = (page - 1) * limit;
+        const [items, total] = await this.reviewRepository.findAndCount({
+            relations: ['user', 'product'],
+            skip,
+            take: limit,
+            order: { createdAt: 'DESC' },
+        });
+        const totalPages = Math.ceil(total / limit);
+        return {
+            items,
+            total,
+            page,
+            limit,
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1,
+        };
+    }
 };
 exports.ReviewsService = ReviewsService;
 exports.ReviewsService = ReviewsService = __decorate([

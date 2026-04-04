@@ -14,6 +14,7 @@ const categories_controller_1 = require("./categories.controller");
 const categories_api_controller_1 = require("./categories-api.controller");
 const category_entity_1 = require("../entities/category.entity");
 const product_entity_1 = require("../entities/product.entity");
+const categories_resolver_1 = require("../graphql/categories.resolver");
 let CategoriesModule = class CategoriesModule {
 };
 exports.CategoriesModule = CategoriesModule;
@@ -21,7 +22,7 @@ exports.CategoriesModule = CategoriesModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([category_entity_1.Category, product_entity_1.Product])],
         controllers: [categories_controller_1.CategoriesController, categories_api_controller_1.CategoriesApiController],
-        providers: [categories_service_1.CategoriesService],
+        providers: [categories_service_1.CategoriesService, categories_resolver_1.CategoriesResolver],
         exports: [categories_service_1.CategoriesService],
     })
 ], CategoriesModule);

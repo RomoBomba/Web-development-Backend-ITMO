@@ -13,6 +13,7 @@ const reviews_service_1 = require("./reviews.service");
 const reviews_controller_1 = require("./reviews.controller");
 const reviews_api_controller_1 = require("./reviews-api.controller");
 const review_entity_1 = require("../entities/review.entity");
+const reviews_resolver_1 = require("../graphql/reviews.resolver");
 let ReviewsModule = class ReviewsModule {
 };
 exports.ReviewsModule = ReviewsModule;
@@ -20,7 +21,7 @@ exports.ReviewsModule = ReviewsModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([review_entity_1.Review])],
         controllers: [reviews_controller_1.ReviewsController, reviews_api_controller_1.ReviewsApiController],
-        providers: [reviews_service_1.ReviewsService],
+        providers: [reviews_service_1.ReviewsService, reviews_resolver_1.ReviewsResolver],
         exports: [reviews_service_1.ReviewsService],
     })
 ], ReviewsModule);

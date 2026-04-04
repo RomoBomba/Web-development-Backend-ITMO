@@ -6,9 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 const path_1 = require("path");
-const common_1 = require("@nestjs/common");
 const method_override_1 = __importDefault(require("method-override"));
-const http_exception_filter_1 = require("./filters/http-exception.filter");
 const swagger_1 = require("@nestjs/swagger");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
@@ -16,15 +14,6 @@ async function bootstrap() {
     app.setBaseViewsDir((0, path_1.join)(__dirname, '..', 'views'));
     app.setViewEngine('ejs');
     app.use((0, method_override_1.default)('_method'));
-    app.useGlobalPipes(new common_1.ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-        transformOptions: {
-            enableImplicitConversion: true,
-        },
-    }));
-    app.useGlobalFilters(new http_exception_filter_1.AllExceptionsFilter());
     const config = new swagger_1.DocumentBuilder()
         .setTitle('MusicStore API')
         .setDescription('API для интернет-магазина музыкальных инструментов')

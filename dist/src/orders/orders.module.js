@@ -14,6 +14,7 @@ const orders_controller_1 = require("./orders.controller");
 const orders_api_controller_1 = require("./orders-api.controller");
 const order_entity_1 = require("../entities/order.entity");
 const order_item_entity_1 = require("../entities/order-item.entity");
+const orders_resolver_1 = require("../graphql/orders.resolver");
 let OrdersModule = class OrdersModule {
 };
 exports.OrdersModule = OrdersModule;
@@ -21,7 +22,7 @@ exports.OrdersModule = OrdersModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([order_entity_1.Order, order_item_entity_1.OrderItem])],
         controllers: [orders_controller_1.OrdersController, orders_api_controller_1.OrdersApiController],
-        providers: [orders_service_1.OrdersService],
+        providers: [orders_service_1.OrdersService, orders_resolver_1.OrdersResolver],
         exports: [orders_service_1.OrdersService],
     })
 ], OrdersModule);

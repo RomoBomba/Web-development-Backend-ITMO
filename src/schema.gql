@@ -1,0 +1,194 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Category {
+  id: ID!
+  name: String!
+  products: [Product]
+}
+
+type CategoryTypeConnection {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  items: [Category]
+  limit: Int!
+  page: Int!
+  total: Int!
+  totalPages: Int!
+}
+
+input CreateCategoryInput {
+  name: String!
+}
+
+input CreateOrderInput {
+  items: [OrderItemInput!]!
+  status: String = "pending"
+  total: Float!
+  userId: Float!
+}
+
+input CreateProductInput {
+  categoryId: Float!
+  description: String
+  image: String
+  name: String!
+  price: Float!
+}
+
+input CreateReviewInput {
+  comment: String
+  productId: Float!
+  rating: Int!
+  userId: Float!
+}
+
+input CreateUserInput {
+  email: String!
+  name: String
+  password: String!
+}
+
+type Mutation {
+  createCategory(data: CreateCategoryInput!): Category!
+  createOrder(data: CreateOrderInput!): Order!
+  createProduct(data: CreateProductInput!): Product!
+  createReview(data: CreateReviewInput!): Review!
+  createUser(data: CreateUserInput!): User!
+  deleteCategory(id: Int!): Category!
+  deleteOrder(id: Int!): Order!
+  deleteProduct(id: Int!): Product!
+  deleteReview(id: Int!): Review!
+  deleteUser(id: Int!): User!
+  updateCategory(data: UpdateCategoryInput!): Category!
+  updateOrder(data: UpdateOrderInput!): Order!
+  updateProduct(data: UpdateProductInput!): Product!
+  updateReview(data: UpdateReviewInput!): Review!
+  updateUser(data: UpdateUserInput!): User!
+}
+
+type Order {
+  id: ID!
+  items: [OrderItem!]!
+  status: String!
+  total: Float!
+  user: User!
+}
+
+type OrderItem {
+  id: ID!
+  price: Float!
+  product: Product!
+  quantity: Float!
+}
+
+input OrderItemInput {
+  price: Float!
+  productId: Float!
+  quantity: Float!
+}
+
+type OrderTypeConnection {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  items: [Order]
+  limit: Int!
+  page: Int!
+  total: Int!
+  totalPages: Int!
+}
+
+type Product {
+  category: Category
+  description: String
+  id: ID!
+  image: String
+  name: String!
+  price: Float!
+  reviews: [Review]
+}
+
+type ProductTypeConnection {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  items: [Product]
+  limit: Int!
+  page: Int!
+  total: Int!
+  totalPages: Int!
+}
+
+type Query {
+  categories(limit: Int = 10, page: Int = 1): CategoryTypeConnection!
+  category(id: Int!): Category!
+  categoryProducts(categoryId: Int!): [Product!]!
+  order(id: Int!): Order!
+  orders(limit: Int = 10, page: Int = 1): OrderTypeConnection!
+  product(id: Int!): Product!
+  productReviews(productId: Int!): [Review!]!
+  products(limit: Int = 10, page: Int = 1): ProductTypeConnection!
+  review(id: Int!): Review!
+  reviews(limit: Int = 10, page: Int = 1): ReviewTypeConnection!
+  user(id: Int!): User!
+  userByEmail(email: String!): User!
+  userOrders(userId: Int!): [Order!]!
+  userReviews(userId: Int!): [Review!]!
+  users(limit: Int = 10, page: Int = 1): UserTypeConnection!
+}
+
+type Review {
+  comment: String
+  id: ID!
+  product: Product!
+  rating: Float!
+  user: User!
+}
+
+type ReviewTypeConnection {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  items: [Review]
+  limit: Int!
+  page: Int!
+  total: Int!
+  totalPages: Int!
+}
+
+input UpdateCategoryInput {
+  id: ID!
+}
+
+input UpdateOrderInput {
+  id: ID!
+}
+
+input UpdateProductInput {
+  id: ID!
+}
+
+input UpdateReviewInput {
+  id: ID!
+}
+
+input UpdateUserInput {
+  id: ID!
+}
+
+type User {
+  email: String!
+  id: ID!
+  name: String
+  orders: [Order]
+  reviews: [Review]
+}
+
+type UserTypeConnection {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  items: [User]
+  limit: Int!
+  page: Int!
+  total: Int!
+  totalPages: Int!
+}

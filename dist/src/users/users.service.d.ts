@@ -29,4 +29,13 @@ export declare class UsersService {
     remove(id: number): Promise<User>;
     findByEmail(email: string): Promise<User>;
     findOrders(userId: number): Promise<import("../entities/order.entity").Order[]>;
+    findAllPaginatedGraphQL(paginationDto: PaginationDto): Promise<{
+        items: User[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+    }>;
 }

@@ -14,18 +14,23 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('ejs');
   app.use(methodOverride('_method'));
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    }),
-  );
 
-    app.useGlobalFilters(new AllExceptionsFilter());
+  // временно убираем чтобы работал GraphQL
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     forbidNonWhitelisted: true,
+  //     transform: true,
+  //     transformOptions: {
+  //       enableImplicitConversion: true,
+  //     },
+  //       skipUndefinedProperties: true,
+  //       skipNullProperties: true,
+  //       skipMissingProperties: true,
+  //   }),
+  // );
+
+    //app.useGlobalFilters(new AllExceptionsFilter());
 
     const config = new DocumentBuilder()
         .setTitle('MusicStore API')
