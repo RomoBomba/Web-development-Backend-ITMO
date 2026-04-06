@@ -14,15 +14,18 @@ const categories_controller_1 = require("./categories.controller");
 const categories_api_controller_1 = require("./categories-api.controller");
 const category_entity_1 = require("../entities/category.entity");
 const product_entity_1 = require("../entities/product.entity");
-const categories_resolver_1 = require("../graphql/categories.resolver");
+const users_module_1 = require("../users/users.module");
 let CategoriesModule = class CategoriesModule {
 };
 exports.CategoriesModule = CategoriesModule;
 exports.CategoriesModule = CategoriesModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([category_entity_1.Category, product_entity_1.Product])],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([category_entity_1.Category, product_entity_1.Product]),
+            users_module_1.UsersModule,
+        ],
         controllers: [categories_controller_1.CategoriesController, categories_api_controller_1.CategoriesApiController],
-        providers: [categories_service_1.CategoriesService, categories_resolver_1.CategoriesResolver],
+        providers: [categories_service_1.CategoriesService],
         exports: [categories_service_1.CategoriesService],
     })
 ], CategoriesModule);

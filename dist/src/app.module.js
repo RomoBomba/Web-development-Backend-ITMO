@@ -26,7 +26,16 @@ const categories_module_1 = require("./categories/categories.module");
 const orders_module_1 = require("./orders/orders.module");
 const users_module_1 = require("./users/users.module");
 const reviews_module_1 = require("./reviews/reviews.module");
+const cache_manager_1 = require("@nestjs/cache-manager");
+const storage_module_1 = require("./storage/storage.module");
+const auth_module_1 = require("./auth/auth.module");
+const session_middleware_1 = require("./middleware/session.middleware");
+const auth_debug_middleware_1 = require("./middleware/auth-debug.middleware");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer.apply(auth_debug_middleware_1.AuthDebugMiddleware).forRoutes('*');
+        consumer.apply(session_middleware_1.SessionMiddleware).forRoutes('*');
+    }
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
@@ -61,11 +70,19 @@ exports.AppModule = AppModule = __decorate([
                 playground: true,
                 introspection: true,
             }),
+            cache_manager_1.CacheModule.register({
+                ttl: 10,
+                max: 100,
+                isGlobal: true,
+            }),
             products_module_1.ProductsModule,
             categories_module_1.CategoriesModule,
             orders_module_1.OrdersModule,
             users_module_1.UsersModule,
             reviews_module_1.ReviewsModule,
+            storage_module_1.StorageModule,
+            products_module_1.ProductsModule,
+            auth_module_1.AuthModule.forRoot(),
         ],
         controllers: [pages_controller_1.PagesController],
         providers: [],

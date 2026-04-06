@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -17,6 +17,14 @@ import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { UsersModule } from './users/users.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import {CacheModule} from "@nestjs/cache-manager";
+import {StorageModule} from "./storage/storage.module";
+import { AuthModule } from './auth/auth.module';
+import {SessionMiddleware} from "./middleware/session.middleware";
+import {AuthDebugMiddleware} from "./middleware/auth-debug.middleware";
+import {APP_GUARD} from "@nestjs/core";
+import {SuperTokensAuthGuard} from "supertokens-nestjs";
+import {RolesGuard} from "./auth/roles.guard";
 
 @Module({
     imports: [
@@ -53,13 +61,34 @@ import { ReviewsModule } from './reviews/reviews.module';
             introspection: true,
         }),
 
+        CacheModule.register({
+            ttl: 10,
+            max: 100,
+            isGlobal: true,
+        }),
+
         ProductsModule,
         CategoriesModule,
         OrdersModule,
         UsersModule,
         ReviewsModule,
+        StorageModule,
+        ProductsModule,
+        AuthModule.forRoot(),
     ],
     controllers: [PagesController],
+    // providers:  [
+    //     {
+    //         provide: APP_GUARD,
+    //         useClass: SuperTokensAuthGuard,
+    //     },
+    //     RolesGuard,
+    // ],
     providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(AuthDebugMiddleware).forRoutes('*');
+        consumer.apply(SessionMiddleware).forRoutes('*');
+    }
+}

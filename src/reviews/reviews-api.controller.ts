@@ -10,19 +10,23 @@ import {
     HttpCode,
     HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import {ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth} from '@nestjs/swagger';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { PaginationDto } from '../products/dto/pagination.dto';
 import { Review } from '../entities/review.entity';
+import {Public} from "../common/decorators/public.decorator";
+import {Roles} from "../common/decorators/roles.decorator";
 
 @ApiTags('reviews')
+@ApiBearerAuth()
 @Controller('api/reviews')
 export class ReviewsApiController {
     constructor(private readonly reviewsService: ReviewsService) {}
 
     @Post()
+    @Roles('admin')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Создать новый отзыв' })
     @ApiResponse({ status: 201, description: 'Отзыв создан', type: Review })
@@ -33,6 +37,7 @@ export class ReviewsApiController {
     }
 
     @Get()
+    @Public()
     @ApiOperation({ summary: 'Получить список отзывов (с пагинацией)' })
     @ApiResponse({ status: 200, description: 'Список отзывов', type: [Review] })
     findAll(@Query() paginationDto: PaginationDto) {
@@ -40,6 +45,7 @@ export class ReviewsApiController {
     }
 
     @Get(':id')
+    @Public()
     @ApiOperation({ summary: 'Получить отзыв по ID' })
     @ApiParam({ name: 'id', description: 'ID отзыва', example: 1 })
     @ApiResponse({ status: 200, description: 'Отзыв найден', type: Review })
@@ -49,6 +55,7 @@ export class ReviewsApiController {
     }
 
     @Patch(':id')
+    @Roles('admin')
     @ApiOperation({ summary: 'Обновить отзыв' })
     @ApiParam({ name: 'id', description: 'ID отзыва', example: 1 })
     @ApiResponse({ status: 200, description: 'Отзыв обновлен', type: Review })
@@ -58,6 +65,7 @@ export class ReviewsApiController {
     }
 
     @Delete(':id')
+    @Roles('admin')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: 'Удалить отзыв' })
     @ApiParam({ name: 'id', description: 'ID отзыва', example: 1 })
@@ -68,6 +76,7 @@ export class ReviewsApiController {
     }
 
     @Get('product/:productId')
+    @Public()
     @ApiOperation({ summary: 'Получить отзывы на товар' })
     @ApiParam({ name: 'productId', description: 'ID товара', example: 1 })
     @ApiResponse({ status: 200, description: 'Список отзывов на товар', type: [Review] })
@@ -76,6 +85,7 @@ export class ReviewsApiController {
     }
 
     @Get('user/:userId')
+    @Public()
     @ApiOperation({ summary: 'Получить отзывы пользователя' })
     @ApiParam({ name: 'userId', description: 'ID пользователя', example: 1 })
     @ApiResponse({ status: 200, description: 'Список отзывов пользователя', type: [Review] })

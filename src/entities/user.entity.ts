@@ -1,40 +1,36 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Order } from './order.entity';
 import { Review } from './review.entity';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({ unique: true })
-  email: string;
+    @Column({ unique: true })
+    email: string;
 
-  @Column({ nullable: true })
-  name: string;
+    @Column({ type: 'varchar', nullable: true })
+    name: string | null;
 
-  @Column()
-  password: string;
+    @Column({ type: 'varchar', nullable: true })
+    password: string | null;
 
-  @CreateDateColumn()
-  createdAt: Date;
+    @Column({ type: 'varchar', nullable: true, unique: true })
+    supertokensUserId: string | null;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-  @OneToMany(() => Order, (order) => order.user)
-  orders: Order[];
+    @UpdateDateColumn()
+    updatedAt: Date;
 
-  @OneToMany(() => Review, (review) => review.user)
-  reviews: Review[];
+    @OneToMany(() => Order, order => order.user)
+    orders: Order[];
 
-  @Column({ default: false })
-  isAdmin: boolean;
+    @OneToMany(() => Review, review => review.user)
+    reviews: Review[];
+
+    @Column({ type: 'varchar', default: 'user' })
+    role: string;
 }

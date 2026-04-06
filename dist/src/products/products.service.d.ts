@@ -1,4 +1,5 @@
 import { Repository } from 'typeorm';
+import { Cache } from '@nestjs/cache-manager';
 import { Product } from '../entities/product.entity';
 import { Category } from '../entities/category.entity';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -7,13 +8,14 @@ import { PaginationDto } from './dto/pagination.dto';
 export declare class ProductsService {
     private productRepository;
     private categoryRepository;
-    constructor(productRepository: Repository<Product>, categoryRepository: Repository<Category>);
+    private cacheManager;
+    constructor(productRepository: Repository<Product>, categoryRepository: Repository<Category>, cacheManager: Cache);
     create(createProductDto: CreateProductDto): Promise<Product>;
     findAll(): Promise<Product[]>;
     findOne(id: number): Promise<Product>;
     update(id: number, updateProductDto: UpdateProductDto): Promise<Product>;
     remove(id: number): Promise<Product>;
-    getPopularProducts(): Promise<Product[]>;
+    getPopularProducts(): Promise<{}>;
     getRecommendedProducts(): Promise<Product[]>;
     findAllPaginated(paginationDto: PaginationDto): Promise<{
         data: Product[];

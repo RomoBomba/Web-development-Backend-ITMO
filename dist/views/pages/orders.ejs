@@ -1,0 +1,44 @@
+<%- include('../partials/header', {
+title: 'Мои заказы',
+currentPage: 'orders',
+cartCount: 0,
+isAuthenticated: true,
+userName: userName,
+userRole: userRole,
+useSwiper: false,
+useInputMask: false,
+pageScript: null
+}) %>
+
+<div class="container">
+    <div class="orders-container">
+        <h1>Мои заказы</h1>
+
+        <div class="orders-list">
+            <p class="empty-message">У вас пока нет заказов.</p>
+            <a href="/catalog" class="button button--primary">Перейти в каталог</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .orders-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    .orders-container h1 {
+        margin-bottom: 2rem;
+        color: var(--primary-color);
+    }
+    .empty-message {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<%- include('../partials/footer') %>

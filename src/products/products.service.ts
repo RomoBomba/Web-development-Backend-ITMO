@@ -1,11 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {Inject, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Cache } from '@nestjs/cache-manager';
 import { Product } from '../entities/product.entity';
 import { Category } from '../entities/category.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationDto } from './dto/pagination.dto';
+import {CACHE_MANAGER} from "@nestjs/cache-manager";
 
 @Injectable()
 export class ProductsService {
@@ -14,6 +16,7 @@ export class ProductsService {
         private productRepository: Repository<Product>,
         @InjectRepository(Category)
         private categoryRepository: Repository<Category>,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
     ) {}
 
     async create(createProductDto: CreateProductDto) {
@@ -80,10 +83,21 @@ export class ProductsService {
     }
 
     async getPopularProducts() {
-        return await this.productRepository.find({
+        const cached = await this.cacheManager.get('popular_products');
+        if (cached) {
+            console.log('✅ Возвращаем из кэша popular_products');
+            return cached;
+        }
+
+        const products = await this.productRepository.find({
             take: 3,
             order: { createdAt: 'DESC' },
         });
+
+        await this.cacheManager.set('popular_products', products);
+        console.log('💾 Сохранили popular_products в кэш');
+
+        return products;
     }
 
     async getRecommendedProducts() {

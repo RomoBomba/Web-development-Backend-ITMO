@@ -20,10 +20,18 @@ const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
 const pagination_dto_1 = require("./dto/pagination.dto");
 const product_entity_1 = require("../entities/product.entity");
+const storage_service_1 = require("../storage/storage.service");
+const platform_express_1 = require("@nestjs/platform-express");
+const file_validation_pipe_1 = require("./file-validation.pipe");
+const public_decorator_1 = require("../common/decorators/public.decorator");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
+const supertokens_nestjs_1 = require("supertokens-nestjs");
 let ProductsApiController = class ProductsApiController {
     productsService;
-    constructor(productsService) {
+    storageService;
+    constructor(productsService, storageService) {
         this.productsService = productsService;
+        this.storageService = storageService;
     }
     create(createProductDto) {
         return this.productsService.create(createProductDto);
@@ -43,10 +51,21 @@ let ProductsApiController = class ProductsApiController {
     findByCategory(categoryId) {
         return this.productsService.findByCategory(+categoryId);
     }
+    async uploadImage(file) {
+        const key = await this.storageService.uploadFile(file, 'products');
+        const url = await this.storageService.getFileUrl(key);
+        return {
+            success: true,
+            key,
+            url,
+            message: 'Изображение успешно загружено',
+        };
+    }
 };
 exports.ProductsApiController = ProductsApiController;
 __decorate([
     (0, common_1.Post)(),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, swagger_1.ApiOperation)({ summary: 'Создать новый товар' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Товар успешно создан', type: product_entity_1.Product }),
@@ -59,6 +78,7 @@ __decorate([
 ], ProductsApiController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить список товаров (с пагинацией)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список товаров', type: [product_entity_1.Product] }),
     (0, swagger_1.ApiResponse)({ status: 400, description: 'Некорректные параметры' }),
@@ -69,6 +89,7 @@ __decorate([
 ], ProductsApiController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить товар по ID' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID товара', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Товар найден', type: product_entity_1.Product }),
@@ -80,6 +101,7 @@ __decorate([
 ], ProductsApiController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, swagger_1.ApiOperation)({ summary: 'Обновить товар' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID товара', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Товар обновлен', type: product_entity_1.Product }),
@@ -93,6 +115,7 @@ __decorate([
 ], ProductsApiController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     (0, swagger_1.ApiOperation)({ summary: 'Удалить товар' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID товара', example: 1 }),
@@ -105,6 +128,7 @@ __decorate([
 ], ProductsApiController.prototype, "remove", null);
 __decorate([
     (0, common_1.Get)('category/:categoryId'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить товары по категории' }),
     (0, swagger_1.ApiParam)({ name: 'categoryId', description: 'ID категории', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список товаров категории', type: [product_entity_1.Product] }),
@@ -113,9 +137,36 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ProductsApiController.prototype, "findByCategory", null);
+__decorate([
+    (0, common_1.Post)('upload-image'),
+    (0, public_decorator_1.Public)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Загрузить изображение товара' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Изображение успешно загружено' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Ошибка загрузки' }),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    __param(0, (0, common_1.UploadedFile)(new file_validation_pipe_1.FileValidationPipe())),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProductsApiController.prototype, "uploadImage", null);
 exports.ProductsApiController = ProductsApiController = __decorate([
     (0, swagger_1.ApiTags)('products'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(supertokens_nestjs_1.SuperTokensAuthGuard),
     (0, common_1.Controller)('api/products'),
-    __metadata("design:paramtypes", [products_service_1.ProductsService])
+    __metadata("design:paramtypes", [products_service_1.ProductsService,
+        storage_service_1.StorageService])
 ], ProductsApiController);
 //# sourceMappingURL=products-api.controller.js.map

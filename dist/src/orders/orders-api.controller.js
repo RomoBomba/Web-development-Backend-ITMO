@@ -20,6 +20,8 @@ const create_order_dto_1 = require("./dto/create-order.dto");
 const update_order_dto_1 = require("./dto/update-order.dto");
 const pagination_dto_1 = require("../products/dto/pagination.dto");
 const order_entity_1 = require("../entities/order.entity");
+const public_decorator_1 = require("../common/decorators/public.decorator");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
 let OrdersApiController = class OrdersApiController {
     ordersService;
     constructor(ordersService) {
@@ -47,6 +49,7 @@ let OrdersApiController = class OrdersApiController {
 exports.OrdersApiController = OrdersApiController;
 __decorate([
     (0, common_1.Post)(),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, swagger_1.ApiOperation)({ summary: 'Создать новый заказ' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Заказ создан', type: order_entity_1.Order }),
@@ -58,6 +61,7 @@ __decorate([
 ], OrdersApiController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить список заказов (с пагинацией)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список заказов', type: [order_entity_1.Order] }),
     __param(0, (0, common_1.Query)()),
@@ -67,6 +71,7 @@ __decorate([
 ], OrdersApiController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить заказ по ID' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID заказа', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Заказ найден', type: order_entity_1.Order }),
@@ -78,6 +83,7 @@ __decorate([
 ], OrdersApiController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, swagger_1.ApiOperation)({ summary: 'Обновить заказ' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID заказа', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Заказ обновлен', type: order_entity_1.Order }),
@@ -90,6 +96,7 @@ __decorate([
 ], OrdersApiController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     (0, swagger_1.ApiOperation)({ summary: 'Удалить заказ' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID заказа', example: 1 }),
@@ -102,6 +109,7 @@ __decorate([
 ], OrdersApiController.prototype, "remove", null);
 __decorate([
     (0, common_1.Get)('user/:userId'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить заказы пользователя' }),
     (0, swagger_1.ApiParam)({ name: 'userId', description: 'ID пользователя', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список заказов пользователя', type: [order_entity_1.Order] }),
@@ -112,6 +120,7 @@ __decorate([
 ], OrdersApiController.prototype, "findByUser", null);
 exports.OrdersApiController = OrdersApiController = __decorate([
     (0, swagger_1.ApiTags)('orders'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('api/orders'),
     __metadata("design:paramtypes", [orders_service_1.OrdersService])
 ], OrdersApiController);

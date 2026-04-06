@@ -1,26 +1,59 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Res, UseGuards, Req } from '@nestjs/common';
 import express from 'express';
 import {CategoriesService} from './categories.service';
 import {CreateCategoryDto} from './dto/create-category.dto';
 import {UpdateCategoryDto} from './dto/update-category.dto';
+import {RolesGuard} from "../auth/roles.guard";
+import {Roles} from "../common/decorators/roles.decorator";
+import Session from "supertokens-node/recipe/session";
+import {UsersService} from '../users/users.service';
 
 @Controller('categories')
+@UseGuards(RolesGuard)
 export class CategoriesController {
-    constructor(private readonly categoriesService: CategoriesService) {
+    constructor(
+        private readonly categoriesService: CategoriesService,
+        private readonly usersService: UsersService,
+    ) {
+    }
+
+    private async getSessionInfo(req: express.Request) {
+        try {
+            const session = await Session.getSession(req, req.res as any);
+            if (session) {
+                const payload = session.getAccessTokenPayload();
+                const userId = session.getUserId();
+                const user = await this.usersService.findBySupertokensId(userId);
+                return {
+                    isAuthenticated: true,
+                    userName: user?.name || 'Пользователь',
+                    userRole: payload.role || user?.role || 'user',
+                    userId,
+                };
+            }
+        } catch (error) {
+            console.log('🔍 getSessionInfo error:', error.message);
+        }
+        return {isAuthenticated: false, userName: null, userRole: null, userId: null};
     }
 
     @Get()
+    @Roles('admin')
     @Render('categories/index')
-    async findAll() {
+    async findAll(@Req() req: express.Request) {
+        console.log('🔍 CategoriesController.findAll called');
+        const sessionInfo = await this.getSessionInfo(req);
+        console.log('📊 Session info:', sessionInfo);
+
         const categories = await this.categoriesService.findAll();
         return {
             categories,
+            ...sessionInfo,
             title: 'Управление категориями',
             metaKeywords: 'управление категориями, администрирование',
             metaDescription: 'Панель управления категориями магазина MusicStore',
             currentPage: 'categories',
             cartCount: 0,
-            isAuthenticated: true,
             useSwiper: false,
             useInputMask: false,
             pageScript: null
@@ -28,15 +61,17 @@ export class CategoriesController {
     }
 
     @Get('add')
+    @Roles('admin')
     @Render('categories/add')
-    createForm() {
+    async createForm(@Req() req: express.Request) {
+        const sessionInfo = await this.getSessionInfo(req);
         return {
+            ...sessionInfo,
             title: 'Добавить категорию',
             metaKeywords: 'добавить категорию, новая категория',
             metaDescription: 'Добавление новой категории в каталог MusicStore',
             currentPage: 'categories',
             cartCount: 0,
-            isAuthenticated: true,
             useSwiper: false,
             useInputMask: false,
             pageScript: null
@@ -51,7 +86,8 @@ export class CategoriesController {
 
     @Get(':id')
     @Render('categories/show')
-    async findOne(@Param('id') id: string) {
+    async findOne(@Param('id') id: string, @Req() req: express.Request) {
+        const sessionInfo = await this.getSessionInfo(req);
         const categoryId = parseInt(id, 10);
 
         if (isNaN(categoryId)) {
@@ -62,12 +98,12 @@ export class CategoriesController {
             const category = await this.categoriesService.findOne(categoryId);
             return {
                 category,
+                ...sessionInfo,
                 title: category.name,
                 metaKeywords: `${category.name}, категория, MusicStore`,
                 metaDescription: `Категория ${category.name} в магазине MusicStore`,
                 currentPage: 'categories',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -75,10 +111,10 @@ export class CategoriesController {
         } catch (error) {
             return {
                 category: null,
+                ...sessionInfo,
                 title: 'Категория не найдена',
                 currentPage: 'categories',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -88,7 +124,8 @@ export class CategoriesController {
 
     @Get(':id/edit')
     @Render('categories/edit')
-    async editForm(@Param('id') id: string) {
+    async editForm(@Param('id') id: string, @Req() req: express.Request) {
+        const sessionInfo = await this.getSessionInfo(req);
         const categoryId = parseInt(id, 10);
 
         if (isNaN(categoryId)) {
@@ -99,12 +136,12 @@ export class CategoriesController {
             const category = await this.categoriesService.findOne(categoryId);
             return {
                 category,
+                ...sessionInfo,
                 title: `Редактировать: ${category.name}`,
                 metaKeywords: 'редактировать категорию',
                 metaDescription: `Редактирование категории ${category.name}`,
                 currentPage: 'categories',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -112,10 +149,10 @@ export class CategoriesController {
         } catch (error) {
             return {
                 category: null,
+                ...sessionInfo,
                 title: 'Категория не найдена',
                 currentPage: 'categories',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null

@@ -1,0 +1,162 @@
+<%- include('../partials/header', {
+title: 'Регистрация в MusicStore',
+currentPage: 'register',
+cartCount: 0,
+isAuthenticated: false,
+useSwiper: false,
+useInputMask: false,
+pageScript: null
+}) %>
+
+<div class="auth-container">
+    <div class="auth-box">
+        <h1>Регистрация</h1>
+
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+        <div id="successMessage" class="success-message" style="display: none;"></div>
+
+        <form id="registerForm" class="auth-form">
+            <div class="form__group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required class="form__input"
+                       placeholder="user@example.com">
+            </div>
+
+            <div class="form__group">
+                <label for="name">Имя (необязательно)</label>
+                <input type="text" id="name" name="name" class="form__input"
+                       placeholder="Иван Иванов">
+            </div>
+
+            <div class="form__group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required class="form__input"
+                       placeholder="••••••••" minlength="6">
+            </div>
+
+            <div class="form__group">
+                <label for="confirmPassword">Подтверждение пароля</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required class="form__input"
+                       placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="button button--primary">Зарегистрироваться</button>
+        </form>
+
+        <p class="auth-link">
+            Уже есть аккаунт? <a href="/login">Войти</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('registerForm');
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const name = document.getElementById('name').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+        errorDiv.textContent = '';
+        successDiv.textContent = '';
+
+        if (password !== confirmPassword) {
+            errorDiv.textContent = 'Пароли не совпадают';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        if (password.length < 6) {
+            errorDiv.textContent = 'Пароль должен содержать минимум 6 символов';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        try {
+            // const response = await fetch('/auth/signup', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ email, password })
+            // });
+            const response = await fetch('/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                successDiv.textContent = 'Регистрация успешна! Теперь вы можете войти.';
+                successDiv.style.display = 'block';
+                form.reset();
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+            } else {
+                errorDiv.textContent = data.message || 'Ошибка регистрации';
+                errorDiv.style.display = 'block';
+            }
+        } catch (error) {
+            errorDiv.textContent = 'Ошибка подключения к серверу';
+            errorDiv.style.display = 'block';
+        }
+    });
+</script>
+
+<style>
+    .auth-container {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+    .auth-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+    .auth-box h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+    }
+    .auth-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+    .error-message {
+        background: #fee;
+        color: #e74c3c;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #e74c3c;
+    }
+    .success-message {
+        background: #e8f5e9;
+        color: #27ae60;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #27ae60;
+    }
+</style>
+
+<%- include('../partials/footer') %>

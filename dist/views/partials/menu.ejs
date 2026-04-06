@@ -19,17 +19,50 @@
             <% } %>
         </a>
     </li>
+
     <% if (isAuthenticated) { %>
         <li class="nav__item nav__item--dropdown">
-            <span class="nav__link nav__link--dropdown">⚙️ Управление</span>
+            <span class="nav__link nav__link--dropdown">👤 <%= userName || 'Профиль' %></span>
             <ul class="dropdown-menu">
                 <li class="dropdown-menu__item">
-                    <a href="/products" class="dropdown-menu__link">📦 Товары</a>
+                    <a href="/profile" class="dropdown-menu__link">📋 Мой профиль</a>
                 </li>
                 <li class="dropdown-menu__item">
-                    <a href="/categories" class="dropdown-menu__link">📁 Категории</a>
+                    <a href="/orders" class="dropdown-menu__link">📦 Мои заказы</a>
+                </li>
+                <% if (userRole === 'admin') { %>
+                    <li class="dropdown-menu__item dropdown-divider"></li>
+                    <li class="dropdown-menu__item">
+                        <a href="/products" class="dropdown-menu__link">📦 Управление товарами</a>
+                    </li>
+                    <li class="dropdown-menu__item">
+                        <a href="/categories" class="dropdown-menu__link">📁 Управление категориями</a>
+                    </li>
+                    <li class="dropdown-menu__item">
+                        <a href="/users" class="dropdown-menu__link">👥 Управление пользователями</a>
+                    </li>
+                <% } %>
+                <li class="dropdown-menu__item dropdown-divider"></li>
+                <li class="dropdown-menu__item">
+                    <a href="#" id="logoutDropdownBtn" class="dropdown-menu__link">🚪 Выйти</a>
                 </li>
             </ul>
         </li>
     <% } %>
 </ul>
+
+<style>
+    .dropdown-divider {
+        height: 1px;
+        margin: 0.5rem 0;
+        background-color: rgba(255,255,255,0.1);
+    }
+</style>
+
+<script>
+    document.getElementById('logoutDropdownBtn')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/auth/signout', { method: 'POST', credentials: 'include' });
+        window.location.href = '/';
+    });
+</script>

@@ -16,6 +16,8 @@ class CreateUserDto {
     email;
     name;
     password;
+    supertokensUserId;
+    role;
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
@@ -32,9 +34,21 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ description: 'Пароль', example: 'Password123!', minLength: 6 }),
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Пароль (необязателен для SuperTokens)', example: 'password123' }),
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "password", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'ID из SuperTokens' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "supertokensUserId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "role", void 0);
 //# sourceMappingURL=create-user.dto.js.map

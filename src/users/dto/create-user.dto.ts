@@ -13,8 +13,18 @@ export class CreateUserDto {
     @MaxLength(50)
     name?: string;
 
-    @ApiProperty({ description: 'Пароль', example: 'Password123!', minLength: 6 })
+    @ApiPropertyOptional({ description: 'Пароль (необязателен для SuperTokens)', example: 'password123' })
     @IsString()
+    @IsOptional()
     @MinLength(6)
-    password: string;
+    password?: string;
+
+    @ApiPropertyOptional({ description: 'ID из SuperTokens' })
+    @IsString()
+    @IsOptional()
+    supertokensUserId?: string;
+
+    @IsOptional()
+    @IsString()
+    role?: string;
 }

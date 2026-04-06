@@ -1,0 +1,113 @@
+<%- include('../partials/header', {
+title: 'Вход в MusicStore',
+currentPage: 'login',
+cartCount: 0,
+isAuthenticated: false,
+useSwiper: false,
+useInputMask: false,
+pageScript: null
+}) %>
+
+<div class="auth-container">
+    <div class="auth-box">
+        <h1>Вход в MusicStore</h1>
+
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <form id="loginForm" class="auth-form">
+            <div class="form__group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required class="form__input"
+                       placeholder="user@example.com">
+            </div>
+
+            <div class="form__group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required class="form__input"
+                       placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="button button--primary">Войти</button>
+        </form>
+
+        <p class="auth-link">
+            Нет аккаунта? <a href="/register">Зарегистрироваться</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('errorMessage');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+
+        try {
+            const response = await fetch('/auth/signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+                credentials: 'include',
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                window.location.href = data.redirect || '/';
+            } else {
+                errorDiv.textContent = data.message || 'Неверный email или пароль';
+                errorDiv.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            errorDiv.textContent = 'Ошибка подключения к серверу';
+            errorDiv.style.display = 'block';
+        }
+    });
+</script>
+
+<style>
+    .auth-container {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+    .auth-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+    .auth-box h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+    }
+    .auth-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+    .error-message {
+        background: #fee;
+        color: #e74c3c;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #e74c3c;
+    }
+</style>
+
+<%- include('../partials/footer') %>

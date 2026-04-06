@@ -21,34 +21,64 @@ const express_1 = __importDefault(require("express"));
 const categories_service_1 = require("./categories.service");
 const create_category_dto_1 = require("./dto/create-category.dto");
 const update_category_dto_1 = require("./dto/update-category.dto");
+const roles_guard_1 = require("../auth/roles.guard");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
+const session_1 = __importDefault(require("supertokens-node/recipe/session"));
+const users_service_1 = require("../users/users.service");
 let CategoriesController = class CategoriesController {
     categoriesService;
-    constructor(categoriesService) {
+    usersService;
+    constructor(categoriesService, usersService) {
         this.categoriesService = categoriesService;
+        this.usersService = usersService;
     }
-    async findAll() {
+    async getSessionInfo(req) {
+        try {
+            const session = await session_1.default.getSession(req, req.res);
+            if (session) {
+                const payload = session.getAccessTokenPayload();
+                const userId = session.getUserId();
+                const user = await this.usersService.findBySupertokensId(userId);
+                return {
+                    isAuthenticated: true,
+                    userName: user?.name || 'Пользователь',
+                    userRole: payload.role || user?.role || 'user',
+                    userId,
+                };
+            }
+        }
+        catch (error) {
+            console.log('🔍 getSessionInfo error:', error.message);
+        }
+        return { isAuthenticated: false, userName: null, userRole: null, userId: null };
+    }
+    async findAll(req) {
+        console.log('🔍 CategoriesController.findAll called');
+        const sessionInfo = await this.getSessionInfo(req);
+        console.log('📊 Session info:', sessionInfo);
         const categories = await this.categoriesService.findAll();
         return {
             categories,
+            ...sessionInfo,
             title: 'Управление категориями',
             metaKeywords: 'управление категориями, администрирование',
             metaDescription: 'Панель управления категориями магазина MusicStore',
             currentPage: 'categories',
             cartCount: 0,
-            isAuthenticated: true,
             useSwiper: false,
             useInputMask: false,
             pageScript: null
         };
     }
-    createForm() {
+    async createForm(req) {
+        const sessionInfo = await this.getSessionInfo(req);
         return {
+            ...sessionInfo,
             title: 'Добавить категорию',
             metaKeywords: 'добавить категорию, новая категория',
             metaDescription: 'Добавление новой категории в каталог MusicStore',
             currentPage: 'categories',
             cartCount: 0,
-            isAuthenticated: true,
             useSwiper: false,
             useInputMask: false,
             pageScript: null
@@ -58,7 +88,8 @@ let CategoriesController = class CategoriesController {
         await this.categoriesService.create(createCategoryDto);
         res.redirect('/categories');
     }
-    async findOne(id) {
+    async findOne(id, req) {
+        const sessionInfo = await this.getSessionInfo(req);
         const categoryId = parseInt(id, 10);
         if (isNaN(categoryId)) {
             return { redirect: '/categories' };
@@ -67,12 +98,12 @@ let CategoriesController = class CategoriesController {
             const category = await this.categoriesService.findOne(categoryId);
             return {
                 category,
+                ...sessionInfo,
                 title: category.name,
                 metaKeywords: `${category.name}, категория, MusicStore`,
                 metaDescription: `Категория ${category.name} в магазине MusicStore`,
                 currentPage: 'categories',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -81,17 +112,18 @@ let CategoriesController = class CategoriesController {
         catch (error) {
             return {
                 category: null,
+                ...sessionInfo,
                 title: 'Категория не найдена',
                 currentPage: 'categories',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
             };
         }
     }
-    async editForm(id) {
+    async editForm(id, req) {
+        const sessionInfo = await this.getSessionInfo(req);
         const categoryId = parseInt(id, 10);
         if (isNaN(categoryId)) {
             return { redirect: '/categories' };
@@ -100,12 +132,12 @@ let CategoriesController = class CategoriesController {
             const category = await this.categoriesService.findOne(categoryId);
             return {
                 category,
+                ...sessionInfo,
                 title: `Редактировать: ${category.name}`,
                 metaKeywords: 'редактировать категорию',
                 metaDescription: `Редактирование категории ${category.name}`,
                 currentPage: 'categories',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -114,10 +146,10 @@ let CategoriesController = class CategoriesController {
         catch (error) {
             return {
                 category: null,
+                ...sessionInfo,
                 title: 'Категория не найдена',
                 currentPage: 'categories',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -154,17 +186,21 @@ let CategoriesController = class CategoriesController {
 exports.CategoriesController = CategoriesController;
 __decorate([
     (0, common_1.Get)(),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.Render)('categories/index'),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)('add'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.Render)('categories/add'),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "createForm", null);
 __decorate([
     (0, common_1.Post)(),
@@ -178,16 +214,18 @@ __decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.Render)('categories/show'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Get)(':id/edit'),
     (0, common_1.Render)('categories/edit'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "editForm", null);
 __decorate([
@@ -209,6 +247,8 @@ __decorate([
 ], CategoriesController.prototype, "remove", null);
 exports.CategoriesController = CategoriesController = __decorate([
     (0, common_1.Controller)('categories'),
-    __metadata("design:paramtypes", [categories_service_1.CategoriesService])
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    __metadata("design:paramtypes", [categories_service_1.CategoriesService,
+        users_service_1.UsersService])
 ], CategoriesController);
 //# sourceMappingURL=categories.controller.js.map

@@ -11,22 +11,51 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsController = void 0;
 const common_1 = require("@nestjs/common");
+const express_1 = __importDefault(require("express"));
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 const products_service_1 = require("./products.service");
 const create_product_dto_1 = require("./dto/create-product.dto");
 const update_product_dto_1 = require("./dto/update-product.dto");
+const roles_guard_1 = require("../auth/roles.guard");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
+const session_1 = __importDefault(require("supertokens-node/recipe/session"));
+const users_service_1 = require("../users/users.service");
 let ProductsController = class ProductsController {
     productsService;
+    usersService;
     productCreatedSubject = new rxjs_1.Subject();
     productUpdatedSubject = new rxjs_1.Subject();
     productDeletedSubject = new rxjs_1.Subject();
     destroy$ = new rxjs_1.Subject();
-    constructor(productsService) {
+    constructor(productsService, usersService) {
         this.productsService = productsService;
+        this.usersService = usersService;
+    }
+    async getSessionInfo(req) {
+        try {
+            const session = await session_1.default.getSession(req, req.res);
+            if (session) {
+                const payload = session.getAccessTokenPayload();
+                const userId = session.getUserId();
+                const user = await this.usersService.findBySupertokensId(userId);
+                return {
+                    isAuthenticated: true,
+                    userName: user?.name || 'Пользователь',
+                    userRole: payload.role || user?.role || 'user',
+                    userId,
+                };
+            }
+        }
+        catch (error) {
+        }
+        return { isAuthenticated: false, userName: null, userRole: null, userId: null };
     }
     events() {
         return (0, rxjs_1.merge)(this.productCreatedSubject.pipe((0, operators_1.takeUntil)(this.destroy$), (0, operators_1.map)((product) => ({
@@ -64,29 +93,31 @@ let ProductsController = class ProductsController {
         this.productUpdatedSubject.complete();
         this.productDeletedSubject.complete();
     }
-    async findAll() {
+    async findAll(req) {
+        const sessionInfo = await this.getSessionInfo(req);
         const products = await this.productsService.findAll();
         return {
             products,
+            ...sessionInfo,
             title: 'Управление товарами',
             metaKeywords: 'управление товарами, администрирование, MusicStore',
             metaDescription: 'Панель управления товарами магазина MusicStore',
             currentPage: 'products',
             cartCount: 0,
-            isAuthenticated: true,
             useSwiper: false,
             useInputMask: false,
             pageScript: null
         };
     }
-    createForm() {
+    async createForm(req) {
+        const sessionInfo = await this.getSessionInfo(req);
         return {
+            ...sessionInfo,
             title: 'Добавить товар',
             metaKeywords: 'добавить товар, новый товар, MusicStore',
             metaDescription: 'Добавление нового товара в каталог MusicStore',
             currentPage: 'products',
             cartCount: 0,
-            isAuthenticated: true,
             useSwiper: false,
             useInputMask: false,
             pageScript: null
@@ -111,7 +142,8 @@ let ProductsController = class ProductsController {
             res.redirect('/products/add');
         }
     }
-    async findOne(id) {
+    async findOne(id, req) {
+        const sessionInfo = await this.getSessionInfo(req);
         const productId = parseInt(id, 10);
         if (isNaN(productId)) {
             return { redirect: '/products' };
@@ -123,12 +155,12 @@ let ProductsController = class ProductsController {
             }
             return {
                 product,
+                ...sessionInfo,
                 title: product.name,
                 metaKeywords: `${product.name}, купить, MusicStore`,
                 metaDescription: product.description || `Купить ${product.name} в MusicStore`,
                 currentPage: 'products',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -138,17 +170,18 @@ let ProductsController = class ProductsController {
             console.error(`Ошибка поиска товара ${productId}:`, error);
             return {
                 product: null,
+                ...sessionInfo,
                 title: 'Товар не найден',
                 currentPage: 'products',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
             };
         }
     }
-    async editForm(id) {
+    async editForm(id, req) {
+        const sessionInfo = await this.getSessionInfo(req);
         const productId = parseInt(id, 10);
         if (isNaN(productId)) {
             return { redirect: '/products' };
@@ -160,12 +193,12 @@ let ProductsController = class ProductsController {
             }
             return {
                 product,
+                ...sessionInfo,
                 title: `Редактировать: ${product.name}`,
                 metaKeywords: 'редактировать товар, MusicStore',
                 metaDescription: `Редактирование товара ${product.name}`,
                 currentPage: 'products',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -175,10 +208,10 @@ let ProductsController = class ProductsController {
             console.error(`Ошибка поиска товара ${productId}:`, error);
             return {
                 product: null,
+                ...sessionInfo,
                 title: 'Товар не найден',
                 currentPage: 'products',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -251,17 +284,21 @@ __decorate([
 ], ProductsController.prototype, "events", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.Render)('products/index'),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)('add'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.Render)('products/add'),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "createForm", null);
 __decorate([
     (0, common_1.Post)(),
@@ -275,16 +312,18 @@ __decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.Render)('products/show'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Get)(':id/edit'),
     (0, common_1.Render)('products/edit'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "editForm", null);
 __decorate([
@@ -306,6 +345,8 @@ __decorate([
 ], ProductsController.prototype, "remove", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),
-    __metadata("design:paramtypes", [products_service_1.ProductsService])
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    __metadata("design:paramtypes", [products_service_1.ProductsService,
+        users_service_1.UsersService])
 ], ProductsController);
 //# sourceMappingURL=products.controller.js.map

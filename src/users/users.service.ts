@@ -23,13 +23,26 @@ export class UsersService {
             throw new ConflictException('Пользователь с таким email уже существует');
         }
 
-        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-        const user = this.userRepository.create({
-            ...createUserDto,
-            password: hashedPassword,
-        });
+        let hashedPassword: string | null = null;
+        if (createUserDto.password) {
+            hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+        }
+
+        const user = new User();
+        user.email = createUserDto.email;
+        user.name = createUserDto.name || createUserDto.email.split('@')[0];
+        user.password = hashedPassword;
+        user.supertokensUserId = createUserDto.supertokensUserId || null;
+        user.role = createUserDto.role || 'user';
 
         return await this.userRepository.save(user);
+    }
+
+    async findBySupertokensId(supertokensUserId: string | null) {
+        if (!supertokensUserId) return null;
+        return await this.userRepository.findOne({
+            where: { supertokensUserId: supertokensUserId },
+        });
     }
 
     async findAll() {

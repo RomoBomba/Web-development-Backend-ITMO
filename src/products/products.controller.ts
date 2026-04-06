@@ -1,14 +1,27 @@
-
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Controller, Get, Post, Body, Patch, Param, Delete, Render, Res, OnModuleDestroy } from '@nestjs/common';
-import type { Response } from 'express';
-import { Subject, merge, Observable } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    Render,
+    Res,
+    OnModuleDestroy,
+    UseGuards,
+    Req
+} from '@nestjs/common';
+import express from 'express';
+import {Subject, merge, Observable} from 'rxjs';
+import {map, takeUntil} from 'rxjs/operators';
+import {ProductsService} from './products.service';
+import {CreateProductDto} from './dto/create-product.dto';
+import {UpdateProductDto} from './dto/update-product.dto';
+import {RolesGuard} from "../auth/roles.guard";
+import {Roles} from "../common/decorators/roles.decorator";
+import Session from "supertokens-node/recipe/session";
+import {UsersService} from '../users/users.service';
 
 interface ProductEvent {
     id: number;
@@ -20,13 +33,37 @@ interface ProductEvent {
 }
 
 @Controller('products')
+@UseGuards(RolesGuard)
 export class ProductsController implements OnModuleDestroy {
     private productCreatedSubject = new Subject<ProductEvent>();
     private productUpdatedSubject = new Subject<ProductEvent>();
     private productDeletedSubject = new Subject<ProductEvent>();
     private destroy$ = new Subject<void>();
 
-    constructor(private readonly productsService: ProductsService) {}
+    constructor(
+        private readonly productsService: ProductsService,
+        private readonly usersService: UsersService,
+    ) {
+    }
+
+    private async getSessionInfo(req: express.Request) {
+        try {
+            const session = await Session.getSession(req, req.res as any);
+            if (session) {
+                const payload = session.getAccessTokenPayload();
+                const userId = session.getUserId();
+                const user = await this.usersService.findBySupertokensId(userId);
+                return {
+                    isAuthenticated: true,
+                    userName: user?.name || 'Пользователь',
+                    userRole: payload.role || user?.role || 'user',
+                    userId,
+                };
+            }
+        } catch (error) {
+        }
+        return {isAuthenticated: false, userName: null, userRole: null, userId: null};
+    }
 
     @Get('events')
     events(): Observable<{ data: string }> {
@@ -81,17 +118,19 @@ export class ProductsController implements OnModuleDestroy {
     }
 
     @Get()
+    @Roles('admin')
     @Render('products/index')
-    async findAll() {
+    async findAll(@Req() req: express.Request) {
+        const sessionInfo = await this.getSessionInfo(req);
         const products = await this.productsService.findAll();
         return {
             products,
+            ...sessionInfo,
             title: 'Управление товарами',
             metaKeywords: 'управление товарами, администрирование, MusicStore',
             metaDescription: 'Панель управления товарами магазина MusicStore',
             currentPage: 'products',
             cartCount: 0,
-            isAuthenticated: true,
             useSwiper: false,
             useInputMask: false,
             pageScript: null
@@ -99,15 +138,17 @@ export class ProductsController implements OnModuleDestroy {
     }
 
     @Get('add')
+    @Roles('admin')
     @Render('products/add')
-    createForm() {
+    async createForm(@Req() req: express.Request) {
+        const sessionInfo = await this.getSessionInfo(req);
         return {
+            ...sessionInfo,
             title: 'Добавить товар',
             metaKeywords: 'добавить товар, новый товар, MusicStore',
             metaDescription: 'Добавление нового товара в каталог MusicStore',
             currentPage: 'products',
             cartCount: 0,
-            isAuthenticated: true,
             useSwiper: false,
             useInputMask: false,
             pageScript: null
@@ -115,7 +156,7 @@ export class ProductsController implements OnModuleDestroy {
     }
 
     @Post()
-    async create(@Body() createProductDto: CreateProductDto, @Res() res: Response) {
+    async create(@Body() createProductDto: CreateProductDto, @Res() res: express.Response) {
         try {
             const newProduct = await this.productsService.create(createProductDto);
 
@@ -139,28 +180,29 @@ export class ProductsController implements OnModuleDestroy {
 
     @Get(':id')
     @Render('products/show')
-    async findOne(@Param('id') id: string) {
+    async findOne(@Param('id') id: string, @Req() req: express.Request) {
+        const sessionInfo = await this.getSessionInfo(req);
         const productId = parseInt(id, 10);
 
         if (isNaN(productId)) {
-            return { redirect: '/products' };
+            return {redirect: '/products'};
         }
 
         try {
             const product = await this.productsService.findOne(productId);
 
             if (!product) {
-                return { redirect: '/products' };
+                return {redirect: '/products'};
             }
 
             return {
                 product,
+                ...sessionInfo,
                 title: product.name,
                 metaKeywords: `${product.name}, купить, MusicStore`,
                 metaDescription: product.description || `Купить ${product.name} в MusicStore`,
                 currentPage: 'products',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -169,10 +211,10 @@ export class ProductsController implements OnModuleDestroy {
             console.error(`Ошибка поиска товара ${productId}:`, error);
             return {
                 product: null,
+                ...sessionInfo,
                 title: 'Товар не найден',
                 currentPage: 'products',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -182,28 +224,29 @@ export class ProductsController implements OnModuleDestroy {
 
     @Get(':id/edit')
     @Render('products/edit')
-    async editForm(@Param('id') id: string) {
+    async editForm(@Param('id') id: string, @Req() req: express.Request) {
+        const sessionInfo = await this.getSessionInfo(req);
         const productId = parseInt(id, 10);
 
         if (isNaN(productId)) {
-            return { redirect: '/products' };
+            return {redirect: '/products'};
         }
 
         try {
             const product = await this.productsService.findOne(productId);
 
             if (!product) {
-                return { redirect: '/products' };
+                return {redirect: '/products'};
             }
 
             return {
                 product,
+                ...sessionInfo,
                 title: `Редактировать: ${product.name}`,
                 metaKeywords: 'редактировать товар, MusicStore',
                 metaDescription: `Редактирование товара ${product.name}`,
                 currentPage: 'products',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -212,10 +255,10 @@ export class ProductsController implements OnModuleDestroy {
             console.error(`Ошибка поиска товара ${productId}:`, error);
             return {
                 product: null,
+                ...sessionInfo,
                 title: 'Товар не найден',
                 currentPage: 'products',
                 cartCount: 0,
-                isAuthenticated: true,
                 useSwiper: false,
                 useInputMask: false,
                 pageScript: null
@@ -227,7 +270,7 @@ export class ProductsController implements OnModuleDestroy {
     async update(
         @Param('id') id: string,
         @Body() updateProductDto: UpdateProductDto,
-        @Res() res: Response
+        @Res() res: express.Response
     ) {
         const productId = parseInt(id, 10);
 
@@ -261,7 +304,7 @@ export class ProductsController implements OnModuleDestroy {
     }
 
     @Delete(':id')
-    async remove(@Param('id') id: string, @Res() res: Response) {
+    async remove(@Param('id') id: string, @Res() res: express.Response) {
         const productId = parseInt(id, 10);
 
         if (isNaN(productId)) {

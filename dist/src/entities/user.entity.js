@@ -18,11 +18,12 @@ let User = class User {
     email;
     name;
     password;
+    supertokensUserId;
     createdAt;
     updatedAt;
     orders;
     reviews;
-    isAdmin;
+    role;
 };
 exports.User = User;
 __decorate([
@@ -34,13 +35,17 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
+    __metadata("design:type", Object)
 ], User.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
+    __metadata("design:type", Object)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, unique: true }),
+    __metadata("design:type", Object)
+], User.prototype, "supertokensUserId", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
@@ -50,17 +55,17 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => order_entity_1.Order, (order) => order.user),
+    (0, typeorm_1.OneToMany)(() => order_entity_1.Order, order => order.user),
     __metadata("design:type", Array)
 ], User.prototype, "orders", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => review_entity_1.Review, (review) => review.user),
+    (0, typeorm_1.OneToMany)(() => review_entity_1.Review, review => review.user),
     __metadata("design:type", Array)
 ], User.prototype, "reviews", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: false }),
-    __metadata("design:type", Boolean)
-], User.prototype, "isAdmin", void 0);
+    (0, typeorm_1.Column)({ type: 'varchar', default: 'user' }),
+    __metadata("design:type", String)
+], User.prototype, "role", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);

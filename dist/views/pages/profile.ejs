@@ -1,0 +1,100 @@
+<%- include('../partials/header', {
+title: 'Мой профиль',
+currentPage: 'profile',
+cartCount: 0,
+isAuthenticated: true,
+userName: userName,
+userRole: userRole,
+useSwiper: false,
+useInputMask: false,
+pageScript: null
+}) %>
+
+<div class="container">
+    <div class="profile-container">
+        <h1>Мой профиль</h1>
+
+        <div class="profile-info">
+            <div class="info-group">
+                <label>Имя:</label>
+                <p><strong><%= userName %></strong></p>
+            </div>
+
+            <div class="info-group">
+                <label>Email:</label>
+                <p><strong><%= userEmail %></strong></p>
+            </div>
+
+            <div class="info-group">
+                <label>Роль:</label>
+                <p>
+                    <% if (userRole === 'admin') { %>
+                        <span class="badge admin">👑 Администратор</span>
+                    <% } else { %>
+                        <span class="badge user">👤 Пользователь</span>
+                    <% } %>
+                </p>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="/orders" class="button button--secondary">📦 Мои заказы</a>
+            <a href="/" class="button button--primary">🏠 На главную</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .profile-container h1 {
+        margin-bottom: 2rem;
+        text-align: center;
+        color: var(--primary-color);
+    }
+    .info-group {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+    .info-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-light);
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+    .info-group p {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+    .badge.admin {
+        background: #e74c3c;
+        color: white;
+    }
+    .badge.user {
+        background: #3498db;
+        color: white;
+    }
+    .profile-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+</style>
+
+<%- include('../partials/footer') %>

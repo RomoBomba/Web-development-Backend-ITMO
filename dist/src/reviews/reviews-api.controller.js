@@ -20,6 +20,8 @@ const create_review_dto_1 = require("./dto/create-review.dto");
 const update_review_dto_1 = require("./dto/update-review.dto");
 const pagination_dto_1 = require("../products/dto/pagination.dto");
 const review_entity_1 = require("../entities/review.entity");
+const public_decorator_1 = require("../common/decorators/public.decorator");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
 let ReviewsApiController = class ReviewsApiController {
     reviewsService;
     constructor(reviewsService) {
@@ -50,6 +52,7 @@ let ReviewsApiController = class ReviewsApiController {
 exports.ReviewsApiController = ReviewsApiController;
 __decorate([
     (0, common_1.Post)(),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, swagger_1.ApiOperation)({ summary: 'Создать новый отзыв' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Отзыв создан', type: review_entity_1.Review }),
@@ -62,6 +65,7 @@ __decorate([
 ], ReviewsApiController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить список отзывов (с пагинацией)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список отзывов', type: [review_entity_1.Review] }),
     __param(0, (0, common_1.Query)()),
@@ -71,6 +75,7 @@ __decorate([
 ], ReviewsApiController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить отзыв по ID' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID отзыва', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Отзыв найден', type: review_entity_1.Review }),
@@ -82,6 +87,7 @@ __decorate([
 ], ReviewsApiController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, swagger_1.ApiOperation)({ summary: 'Обновить отзыв' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID отзыва', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Отзыв обновлен', type: review_entity_1.Review }),
@@ -94,6 +100,7 @@ __decorate([
 ], ReviewsApiController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     (0, swagger_1.ApiOperation)({ summary: 'Удалить отзыв' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID отзыва', example: 1 }),
@@ -106,6 +113,7 @@ __decorate([
 ], ReviewsApiController.prototype, "remove", null);
 __decorate([
     (0, common_1.Get)('product/:productId'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить отзывы на товар' }),
     (0, swagger_1.ApiParam)({ name: 'productId', description: 'ID товара', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список отзывов на товар', type: [review_entity_1.Review] }),
@@ -116,6 +124,7 @@ __decorate([
 ], ReviewsApiController.prototype, "findByProduct", null);
 __decorate([
     (0, common_1.Get)('user/:userId'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить отзывы пользователя' }),
     (0, swagger_1.ApiParam)({ name: 'userId', description: 'ID пользователя', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список отзывов пользователя', type: [review_entity_1.Review] }),
@@ -126,6 +135,7 @@ __decorate([
 ], ReviewsApiController.prototype, "findByUser", null);
 exports.ReviewsApiController = ReviewsApiController = __decorate([
     (0, swagger_1.ApiTags)('reviews'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('api/reviews'),
     __metadata("design:paramtypes", [reviews_service_1.ReviewsService])
 ], ReviewsApiController);

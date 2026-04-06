@@ -16,14 +16,18 @@ exports.ProductsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
+const cache_manager_1 = require("@nestjs/cache-manager");
 const product_entity_1 = require("../entities/product.entity");
 const category_entity_1 = require("../entities/category.entity");
+const cache_manager_2 = require("@nestjs/cache-manager");
 let ProductsService = class ProductsService {
     productRepository;
     categoryRepository;
-    constructor(productRepository, categoryRepository) {
+    cacheManager;
+    constructor(productRepository, categoryRepository, cacheManager) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.cacheManager = cacheManager;
     }
     async create(createProductDto) {
         const category = await this.categoryRepository.findOne({
@@ -76,10 +80,18 @@ let ProductsService = class ProductsService {
         return product;
     }
     async getPopularProducts() {
-        return await this.productRepository.find({
+        const cached = await this.cacheManager.get('popular_products');
+        if (cached) {
+            console.log('✅ Возвращаем из кэша popular_products');
+            return cached;
+        }
+        const products = await this.productRepository.find({
             take: 3,
             order: { createdAt: 'DESC' },
         });
+        await this.cacheManager.set('popular_products', products);
+        console.log('💾 Сохранили popular_products в кэш');
+        return products;
     }
     async getRecommendedProducts() {
         const allProducts = await this.productRepository.find({
@@ -172,7 +184,9 @@ exports.ProductsService = ProductsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(product_entity_1.Product)),
     __param(1, (0, typeorm_1.InjectRepository)(category_entity_1.Category)),
+    __param(2, (0, common_1.Inject)(cache_manager_2.CACHE_MANAGER)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository])
+        typeorm_2.Repository,
+        cache_manager_1.Cache])
 ], ProductsService);
 //# sourceMappingURL=products.service.js.map

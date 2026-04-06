@@ -2,20 +2,23 @@
     <% if (isAuthenticated) { %>
         <div class="user-info">
             <div class="user-avatar">
-                <img src="/images/default-avatar.png" alt="Аватар" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'20\' fill=\'%233498db\'/%3E%3Ctext x=\'20\' y=\'25\' font-size=\'16\' text-anchor=\'middle\' fill=\'white\' font-family=\'Arial\'%3E👤%3C/text%3E%3C/svg%3E'">
+                <div class="avatar-placeholder">👤</div>
             </div>
             <div class="user-details">
-                <span class="user-greeting">Привет, <strong>Гость</strong>!</span>
+                <span class="user-greeting">Привет, <strong><%= userName || 'Гость' %></strong>!</span>
+                <% if (userRole === 'admin') { %>
+                    <span class="user-badge">👑 Админ</span>
+                <% } %>
                 <div class="user-actions">
                     <a href="/profile" class="session-link">Профиль</a>
                     <span class="separator">|</span>
-                    <a href="/?auth=false" class="session-link logout-link">Выйти</a>
+                    <a href="#" id="logoutBtn" class="session-link logout-link">Выйти</a>
                 </div>
             </div>
         </div>
     <% } else { %>
         <div class="auth-buttons">
-            <a href="/?auth=true" class="session-link login-link">
+            <a href="/login" class="session-link login-link">
                 <span class="icon">🔐</span>
                 Войти
             </a>
@@ -26,3 +29,11 @@
         </div>
     <% } %>
 </div>
+
+<script>
+    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/auth/signout', { method: 'POST', credentials: 'include' });
+        window.location.href = '/';
+    });
+</script>

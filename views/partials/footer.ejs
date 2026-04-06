@@ -5,8 +5,22 @@
         <address class="footer__address">
             <p class="footer__text">г. Санкт-Петербург, ул. Пушкина, д. 15</p>
             <p class="footer__text">Телефон: <a href="tel:+74951234567" class="footer__link">+7 (495) 123-45-67</a></p>
-            <p class="footer__text">Email: <a href="mailto:info@musicstore.ru" class="footer__link">info@musicstore.ru</a></p>
+            <p class="footer__text">Email: <a href="mailto:info@musicstore.ru"
+                                              class="footer__link">info@musicstore.ru</a></p>
         </address>
+
+        <div class="load-time-info">
+            <div class="load-time">
+                <span>⚡ Сервер:</span>
+                <strong><%= typeof loadTime !== 'undefined' && loadTime ? loadTime : 0 %> мс</strong>
+                <span class="separator">|</span>
+                <span>🖥️ Клиент:</span>
+                <strong id="client-load-time">--</strong>
+                <span class="separator">|</span>
+                <span>📦 Кэш:</span>
+                <strong id="cache-status">--</strong>
+            </div>
+        </div>
 
         <pre class="ascii-art">
                               ,
@@ -30,3 +44,117 @@
 <%- include('scripts') %>
 </body>
 </html>
+<script>
+    async function refreshSessionInfo() {
+        try {
+            const response = await fetch('/auth/check', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            console.log('🔄 Session refresh:', data);
+
+            if (data.exists) {
+                window.__SESSION__ = data;
+                const sessionBlock = document.querySelector('.session-block');
+                if (sessionBlock && !sessionBlock.querySelector('.user-info')) {
+                    console.log('🔄 Session exists but UI not updated, reloading...');
+                }
+            } else {
+                console.log('🔄 No session');
+            }
+        } catch (e) {
+            console.log('❌ Session check failed:', e);
+        }
+    }
+
+    refreshSessionInfo();
+
+    window.addEventListener('load', function () {
+        setTimeout(() => {
+            const perfEntries = performance.getEntriesByType('navigation');
+            if (perfEntries.length > 0) {
+                const clientTime = perfEntries[0].loadEventEnd - perfEntries[0].startTime;
+                const clientTimeElement = document.getElementById('client-load-time');
+                if (clientTimeElement) {
+                    clientTimeElement.textContent = Math.round(clientTime) + ' мс';
+                }
+            } else {
+                const clientTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                const clientTimeElement = document.getElementById('client-load-time');
+                if (clientTimeElement) {
+                    clientTimeElement.textContent = clientTime + ' мс';
+                }
+            }
+        }, 0);
+    });
+
+    async function checkCacheStatus() {
+        try {
+            const response = await fetch('/api/products/popular');
+            let cacheHeader = response.headers.get('X-Cache');
+
+            if (!cacheHeader) {
+                cacheHeader = response.headers.get('CF-Cache-Status');
+            }
+
+            const cacheElement = document.getElementById('cache-status');
+            if (cacheElement && cacheHeader) {
+                if (cacheHeader === 'HIT' || cacheHeader === 'HIT') {
+                    cacheElement.textContent = '✅ Из кэша';
+                    cacheElement.style.color = '#27ae60';
+                } else {
+                    cacheElement.textContent = '🔄 Из БД';
+                    cacheElement.style.color = '#e67e22';
+                }
+            } else if (cacheElement) {
+                cacheElement.textContent = '📊 Кэш не определён';
+                cacheElement.style.color = '#95a5a6';
+            }
+        } catch (e) {
+            console.log('Cache check not available:', e);
+        }
+    }
+
+    setTimeout(checkCacheStatus, 500);
+</script>
+<style>
+    .load-time-info {
+        text-align: center;
+        margin: 1rem auto;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 40px;
+        display: inline-block;
+        width: auto;
+        font-size: 0.85rem;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .load-time {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        color: #bdc3c7;
+    }
+
+    .load-time strong {
+        color: #e74c3c;
+        font-weight: 600;
+        background: rgba(231, 76, 60, 0.15);
+        padding: 0.15rem 0.5rem;
+        border-radius: 20px;
+    }
+
+    .load-time .separator {
+        color: rgba(255, 255, 255, 0.3);
+        margin: 0 0.25rem;
+    }
+
+    .footer .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>

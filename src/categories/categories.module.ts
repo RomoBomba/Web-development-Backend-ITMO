@@ -5,12 +5,15 @@ import { CategoriesController } from './categories.controller';
 import { CategoriesApiController } from './categories-api.controller';
 import { Category } from '../entities/category.entity';
 import { Product } from '../entities/product.entity';
-import {CategoriesResolver} from "../graphql/categories.resolver";
+import {UsersModule} from "../users/users.module";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Category, Product])],
+    imports: [
+        TypeOrmModule.forFeature([Category, Product]),
+        UsersModule,
+    ],
     controllers: [CategoriesController, CategoriesApiController],
-    providers: [CategoriesService, CategoriesResolver],
+    providers: [CategoriesService],
     exports: [CategoriesService],
 })
 export class CategoriesModule {}

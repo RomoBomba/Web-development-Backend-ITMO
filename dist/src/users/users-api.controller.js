@@ -18,9 +18,10 @@ const swagger_1 = require("@nestjs/swagger");
 const users_service_1 = require("./users.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
-const pagination_dto_1 = require("../products/dto/pagination.dto");
 const user_entity_1 = require("../entities/user.entity");
 const order_entity_1 = require("../entities/order.entity");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
+const public_decorator_1 = require("../common/decorators/public.decorator");
 let UsersApiController = class UsersApiController {
     usersService;
     constructor(usersService) {
@@ -29,8 +30,20 @@ let UsersApiController = class UsersApiController {
     create(createUserDto) {
         return this.usersService.create(createUserDto);
     }
-    findAll(paginationDto) {
-        return this.usersService.findAllPaginated(paginationDto);
+    async findAll() {
+        const users = await this.usersService.findAll();
+        return {
+            users,
+            title: 'Управление пользователями',
+            metaKeywords: 'управление пользователями, администрирование',
+            metaDescription: 'Панель управления пользователями магазина MusicStore',
+            currentPage: 'users',
+            cartCount: 0,
+            isAuthenticated: true,
+            useSwiper: false,
+            useInputMask: false,
+            pageScript: null
+        };
     }
     findOne(id) {
         return this.usersService.findOne(+id);
@@ -51,6 +64,7 @@ let UsersApiController = class UsersApiController {
 exports.UsersApiController = UsersApiController;
 __decorate([
     (0, common_1.Post)(),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, swagger_1.ApiOperation)({ summary: 'Создать нового пользователя' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Пользователь создан', type: user_entity_1.User }),
@@ -63,15 +77,19 @@ __decorate([
 ], UsersApiController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить список пользователей (с пагинацией)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список пользователей', type: [user_entity_1.User] }),
-    __param(0, (0, common_1.Query)()),
+    (0, common_1.Get)(),
+    (0, roles_decorator_1.Roles)('admin'),
+    (0, common_1.Render)('users/index'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
 ], UsersApiController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить пользователя по ID' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID пользователя', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Пользователь найден', type: user_entity_1.User }),
@@ -83,6 +101,7 @@ __decorate([
 ], UsersApiController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, swagger_1.ApiOperation)({ summary: 'Обновить пользователя' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID пользователя', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Пользователь обновлен', type: user_entity_1.User }),
@@ -95,6 +114,7 @@ __decorate([
 ], UsersApiController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     (0, swagger_1.ApiOperation)({ summary: 'Удалить пользователя' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID пользователя', example: 1 }),
@@ -107,6 +127,7 @@ __decorate([
 ], UsersApiController.prototype, "remove", null);
 __decorate([
     (0, common_1.Get)('email/:email'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Найти пользователя по email' }),
     (0, swagger_1.ApiParam)({ name: 'email', description: 'Email пользователя', example: 'user@example.com' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Пользователь найден', type: user_entity_1.User }),
@@ -118,6 +139,7 @@ __decorate([
 ], UsersApiController.prototype, "findByEmail", null);
 __decorate([
     (0, common_1.Get)(':id/orders'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить заказы пользователя' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID пользователя', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список заказов пользователя', type: [order_entity_1.Order] }),
@@ -128,6 +150,7 @@ __decorate([
 ], UsersApiController.prototype, "findOrders", null);
 exports.UsersApiController = UsersApiController = __decorate([
     (0, swagger_1.ApiTags)('users'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('api/users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersApiController);

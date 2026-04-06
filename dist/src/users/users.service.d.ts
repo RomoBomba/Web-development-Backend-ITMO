@@ -7,6 +7,7 @@ export declare class UsersService {
     private userRepository;
     constructor(userRepository: Repository<User>);
     create(createUserDto: CreateUserDto): Promise<User>;
+    findBySupertokensId(supertokensUserId: string | null): Promise<User | null>;
     findAll(): Promise<User[]>;
     findAllPaginated(paginationDto: PaginationDto): Promise<{
         data: User[];

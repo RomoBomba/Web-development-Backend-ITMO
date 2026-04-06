@@ -8,20 +8,6 @@ type Category {
   products: [Product]
 }
 
-type CategoryTypeConnection {
-  hasNextPage: Boolean
-  hasPreviousPage: Boolean
-  items: [Category]
-  limit: Int!
-  page: Int!
-  total: Int!
-  totalPages: Int!
-}
-
-input CreateCategoryInput {
-  name: String!
-}
-
 input CreateOrderInput {
   items: [OrderItemInput!]!
   status: String = "pending"
@@ -44,28 +30,16 @@ input CreateReviewInput {
   userId: Float!
 }
 
-input CreateUserInput {
-  email: String!
-  name: String
-  password: String!
-}
-
 type Mutation {
-  createCategory(data: CreateCategoryInput!): Category!
   createOrder(data: CreateOrderInput!): Order!
   createProduct(data: CreateProductInput!): Product!
   createReview(data: CreateReviewInput!): Review!
-  createUser(data: CreateUserInput!): User!
-  deleteCategory(id: Int!): Category!
   deleteOrder(id: Int!): Order!
   deleteProduct(id: Int!): Product!
   deleteReview(id: Int!): Review!
-  deleteUser(id: Int!): User!
-  updateCategory(data: UpdateCategoryInput!): Category!
   updateOrder(data: UpdateOrderInput!): Order!
   updateProduct(data: UpdateProductInput!): Product!
   updateReview(data: UpdateReviewInput!): Review!
-  updateUser(data: UpdateUserInput!): User!
 }
 
 type Order {
@@ -120,9 +94,6 @@ type ProductTypeConnection {
 }
 
 type Query {
-  categories(limit: Int = 10, page: Int = 1): CategoryTypeConnection!
-  category(id: Int!): Category!
-  categoryProducts(categoryId: Int!): [Product!]!
   order(id: Int!): Order!
   orders(limit: Int = 10, page: Int = 1): OrderTypeConnection!
   product(id: Int!): Product!
@@ -130,11 +101,8 @@ type Query {
   products(limit: Int = 10, page: Int = 1): ProductTypeConnection!
   review(id: Int!): Review!
   reviews(limit: Int = 10, page: Int = 1): ReviewTypeConnection!
-  user(id: Int!): User!
-  userByEmail(email: String!): User!
   userOrders(userId: Int!): [Order!]!
   userReviews(userId: Int!): [Review!]!
-  users(limit: Int = 10, page: Int = 1): UserTypeConnection!
 }
 
 type Review {
@@ -155,10 +123,6 @@ type ReviewTypeConnection {
   totalPages: Int!
 }
 
-input UpdateCategoryInput {
-  id: ID!
-}
-
 input UpdateOrderInput {
   id: ID!
 }
@@ -171,24 +135,10 @@ input UpdateReviewInput {
   id: ID!
 }
 
-input UpdateUserInput {
-  id: ID!
-}
-
 type User {
   email: String!
   id: ID!
   name: String
   orders: [Order]
   reviews: [Review]
-}
-
-type UserTypeConnection {
-  hasNextPage: Boolean
-  hasPreviousPage: Boolean
-  items: [User]
-  limit: Int!
-  page: Int!
-  total: Int!
-  totalPages: Int!
 }

@@ -3,9 +3,11 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { Product } from '../entities/product.entity';
+import { StorageService } from "../storage/storage.service";
 export declare class ProductsApiController {
     private readonly productsService;
-    constructor(productsService: ProductsService);
+    private readonly storageService;
+    constructor(productsService: ProductsService, storageService: StorageService);
     create(createProductDto: CreateProductDto): Promise<Product>;
     findAll(paginationDto: PaginationDto): Promise<{
         data: Product[];
@@ -32,5 +34,11 @@ export declare class ProductsApiController {
             categoryId: number;
             total: number;
         };
+    }>;
+    uploadImage(file: Express.Multer.File): Promise<{
+        success: boolean;
+        key: string;
+        url: string;
+        message: string;
     }>;
 }

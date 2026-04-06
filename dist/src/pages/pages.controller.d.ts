@@ -1,63 +1,234 @@
+import express from 'express';
 import { ProductsService } from '../products/products.service';
+import { UsersService } from '../users/users.service';
 export declare class PagesController {
     private readonly productsService;
-    constructor(productsService: ProductsService);
-    getIndexPage(auth?: string): Promise<{
-        title: string;
-        metaKeywords: string;
-        metaDescription: string;
-        isAuthenticated: boolean;
-        products: import("../entities/product.entity").Product[];
+    private readonly usersService;
+    constructor(productsService: ProductsService, usersService: UsersService);
+    private getSessionInfo;
+    getIndexPage(req: express.Request, res: express.Response): Promise<{
+        products: any;
         cartCount: number;
         useSwiper: boolean;
         useInputMask: boolean;
         pageScript: string;
         currentPage: string;
-    }>;
-    getCatalogPage(auth?: string): Promise<{
+        isAuthenticated: boolean;
+        userName: string;
+        userRole: any;
+        userId: string;
         title: string;
         metaKeywords: string;
         metaDescription: string;
+    } | {
+        products: any;
+        cartCount: number;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: string;
+        currentPage: string;
         isAuthenticated: boolean;
+        userName: null;
+        userRole: null;
+        userId: null;
+        title: string;
+        metaKeywords: string;
+        metaDescription: string;
+    }>;
+    getCatalogPage(req: express.Request, res: express.Response): Promise<{
         allProducts: import("../entities/product.entity").Product[];
         cartCount: number;
         useSwiper: boolean;
         useInputMask: boolean;
         pageScript: string;
         currentPage: string;
-    }>;
-    getCartPage(auth?: string): Promise<{
+        isAuthenticated: boolean;
+        userName: string;
+        userRole: any;
+        userId: string;
         title: string;
         metaKeywords: string;
         metaDescription: string;
+    } | {
+        allProducts: import("../entities/product.entity").Product[];
+        cartCount: number;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: string;
+        currentPage: string;
         isAuthenticated: boolean;
+        userName: null;
+        userRole: null;
+        userId: null;
+        title: string;
+        metaKeywords: string;
+        metaDescription: string;
+    }>;
+    getCartPage(req: express.Request, res: express.Response): Promise<{
         cartItemsCount: number;
         recommendedProducts: import("../entities/product.entity").Product[];
         useSwiper: boolean;
         useInputMask: boolean;
         pageScript: string;
         currentPage: string;
+        isAuthenticated: boolean;
+        userName: string;
+        userRole: any;
+        userId: string;
+        title: string;
+        metaKeywords: string;
+        metaDescription: string;
+    } | {
+        cartItemsCount: number;
+        recommendedProducts: import("../entities/product.entity").Product[];
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: string;
+        currentPage: string;
+        isAuthenticated: boolean;
+        userName: null;
+        userRole: null;
+        userId: null;
+        title: string;
+        metaKeywords: string;
+        metaDescription: string;
     }>;
-    getAboutPage(auth?: string): {
-        title: string;
-        metaKeywords: string;
-        metaDescription: string;
-        isAuthenticated: boolean;
+    getAboutPage(req: express.Request, res: express.Response): Promise<{
         cartCount: number;
         useSwiper: boolean;
         useInputMask: boolean;
         pageScript: string;
         currentPage: string;
-    };
-    getCreditPage(auth?: string): {
+        isAuthenticated: boolean;
+        userName: string;
+        userRole: any;
+        userId: string;
         title: string;
         metaKeywords: string;
         metaDescription: string;
-        isAuthenticated: boolean;
+    } | {
         cartCount: number;
         useSwiper: boolean;
         useInputMask: boolean;
         pageScript: string;
         currentPage: string;
-    };
+        isAuthenticated: boolean;
+        userName: null;
+        userRole: null;
+        userId: null;
+        title: string;
+        metaKeywords: string;
+        metaDescription: string;
+    }>;
+    getCreditPage(req: express.Request, res: express.Response): Promise<{
+        cartCount: number;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: string;
+        currentPage: string;
+        isAuthenticated: boolean;
+        userName: string;
+        userRole: any;
+        userId: string;
+        title: string;
+        metaKeywords: string;
+        metaDescription: string;
+    } | {
+        cartCount: number;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: string;
+        currentPage: string;
+        isAuthenticated: boolean;
+        userName: null;
+        userRole: null;
+        userId: null;
+        title: string;
+        metaKeywords: string;
+        metaDescription: string;
+    }>;
+    getProfilePage(req: express.Request, res: express.Response): Promise<{
+        redirect: string;
+    } | {
+        userName: string | null;
+        userEmail: string | undefined;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: null;
+        isAuthenticated: boolean;
+        userRole: any;
+        userId: string;
+        title: string;
+        metaDescription: string;
+        currentPage: string;
+        cartCount: number;
+        redirect?: undefined;
+    } | {
+        userName: string | null;
+        userEmail: string | undefined;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: null;
+        isAuthenticated: boolean;
+        userRole: null;
+        userId: null;
+        title: string;
+        metaDescription: string;
+        currentPage: string;
+        cartCount: number;
+        redirect?: undefined;
+    }>;
+    getOrdersPage(req: express.Request, res: express.Response): Promise<{
+        redirect: string;
+    } | {
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: null;
+        isAuthenticated: boolean;
+        userName: string;
+        userRole: any;
+        userId: string;
+        title: string;
+        metaDescription: string;
+        currentPage: string;
+        cartCount: number;
+        redirect?: undefined;
+    } | {
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: null;
+        isAuthenticated: boolean;
+        userName: null;
+        userRole: null;
+        userId: null;
+        title: string;
+        metaDescription: string;
+        currentPage: string;
+        cartCount: number;
+        redirect?: undefined;
+    }>;
+    getLoginPage(): Promise<{
+        title: string;
+        metaDescription: string;
+        currentPage: string;
+        cartCount: number;
+        isAuthenticated: boolean;
+        userName: null;
+        userRole: null;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: null;
+    }>;
+    getRegisterPage(): Promise<{
+        title: string;
+        metaDescription: string;
+        currentPage: string;
+        cartCount: number;
+        isAuthenticated: boolean;
+        userName: null;
+        userRole: null;
+        useSwiper: boolean;
+        useInputMask: boolean;
+        pageScript: null;
+    }>;
 }

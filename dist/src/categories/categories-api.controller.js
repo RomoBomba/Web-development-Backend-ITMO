@@ -21,6 +21,8 @@ const update_category_dto_1 = require("./dto/update-category.dto");
 const pagination_dto_1 = require("../products/dto/pagination.dto");
 const category_entity_1 = require("../entities/category.entity");
 const product_entity_1 = require("../entities/product.entity");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
+const public_decorator_1 = require("../common/decorators/public.decorator");
 let CategoriesApiController = class CategoriesApiController {
     categoriesService;
     constructor(categoriesService) {
@@ -48,6 +50,7 @@ let CategoriesApiController = class CategoriesApiController {
 exports.CategoriesApiController = CategoriesApiController;
 __decorate([
     (0, common_1.Post)(),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, swagger_1.ApiOperation)({ summary: 'Создать новую категорию' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Категория создана', type: category_entity_1.Category }),
@@ -59,6 +62,7 @@ __decorate([
 ], CategoriesApiController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить список категорий (с пагинацией)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список категорий', type: [category_entity_1.Category] }),
     __param(0, (0, common_1.Query)()),
@@ -68,6 +72,7 @@ __decorate([
 ], CategoriesApiController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить категорию по ID' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID категории', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Категория найдена', type: category_entity_1.Category }),
@@ -79,6 +84,7 @@ __decorate([
 ], CategoriesApiController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, swagger_1.ApiOperation)({ summary: 'Обновить категорию' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID категории', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Категория обновлена', type: category_entity_1.Category }),
@@ -91,6 +97,7 @@ __decorate([
 ], CategoriesApiController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     (0, swagger_1.ApiOperation)({ summary: 'Удалить категорию' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID категории', example: 1 }),
@@ -103,6 +110,7 @@ __decorate([
 ], CategoriesApiController.prototype, "remove", null);
 __decorate([
     (0, common_1.Get)(':id/products'),
+    (0, public_decorator_1.Public)(),
     (0, swagger_1.ApiOperation)({ summary: 'Получить товары категории' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID категории', example: 1 }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Список товаров категории', type: [product_entity_1.Product] }),
@@ -113,6 +121,7 @@ __decorate([
 ], CategoriesApiController.prototype, "findProducts", null);
 exports.CategoriesApiController = CategoriesApiController = __decorate([
     (0, swagger_1.ApiTags)('categories'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('api/categories'),
     __metadata("design:paramtypes", [categories_service_1.CategoriesService])
 ], CategoriesApiController);
