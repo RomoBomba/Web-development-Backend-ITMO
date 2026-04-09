@@ -71,5 +71,4 @@ async function bootstrap() {
 
 bootstrap();
 
-// админ: email:"admin@example.com","password":"12345678"
 // Remove-Item -Recurse -Force dist      npm run build       npm run start:dev
